@@ -73,7 +73,43 @@ public class MainFrame {
         frame.setVisible(true);
         
 		// Создание и отображение экранной формы
-        
+        RotateLeft.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    display.Clear();
+                    display.AddCoordinateAxes();
+                    try {
+                        figure.Rotate(-1);
+                        figure.AddFigure2DOnDisplay2D();
+                        display.UpdateImage();
+                    } catch (Exception e1) {
+                        JOptionPane.showMessageDialog(null, "Фигура не помещается на изображение!");
+                    }
+                } catch (Exception e1) {
+                    JOptionPane.showMessageDialog(null, "Сначала нарисуйте оригинал изображения!");
+                }
+            }
+        });
+
+        RotateRight.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    display.Clear();
+                    display.AddCoordinateAxes();
+                    try {
+                        figure.Rotate(1);
+                        figure.AddFigure2DOnDisplay2D();
+                        display.UpdateImage();
+                    } catch (Exception e1) {
+                        JOptionPane.showMessageDialog(null, "Фигура не помещается на изображение!");
+                    }
+                } catch (Exception e1) {
+                    JOptionPane.showMessageDialog(null, "Сначала нарисуйте оригинал изображения!");
+                }
+            }
+        });
+
+
         AddRow.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
                 tableModel.addRow(new String[] {"",""});
@@ -92,13 +128,13 @@ public class MainFrame {
         
         ScaleUp.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
-                display = new Display2D();
+                display.Clear();
                 display.AddCoordinateAxes();
-            	figure = new Figure2D(Table);
+            	figure = new Figure2D(Table);//если чел вдруг чет поменял в таблице
             	try {
 					figure.ScaleUp(SearchSpace);
 					figure.AddFigure2DOnDisplay2D();
-					display.CreateAndOpenImage();
+					display.UpdateImage();
 				} catch (Exception e1) {
 					JOptionPane.showMessageDialog(null, "Фигура не помещается на изображение!");
 				}
