@@ -17,15 +17,20 @@ public class MainFrame {
 	private DefaultTableModel tableModel;
 	private JTable Table;
 	private JScrollPane scroller; 
-	private Figure2D figure;
-	private JTextField SearchSpace;
+	private Figure2D figureRealTime;
+    private Figure2D figureOriginal;
 	private JPanel FilterPanel;
 	private JButton ScaleUp;
+    private JButton ScaleDown;
     private JButton RotateRight;
     private JButton RotateLeft;
     private JToolBar toolBar2;
+    public double deltaAngel = Math.PI/18;
+    private double countRotateAngel=0;
 
     public void MakeAndShow() {
+
+
 		frame=new JFrame("Рисуем 2Д объект и увеличиваем масштаб");
         frame.setBounds(100,100, 400, 250);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -34,6 +39,7 @@ public class MainFrame {
         DeleteRow=new JButton(new ImageIcon("src/main/resources/icons/delete.png"));
         Draw = new JButton(new ImageIcon("src/main/resources/icons/Draw.png"));
         ScaleUp= new JButton(new ImageIcon("src/main/resources/icons/ScaleUp.png"));
+        ScaleDown= new JButton(new ImageIcon("src/main/resources/icons/ScaleDown.png"));
         RotateRight = new JButton(new ImageIcon("src/main/resources/icons/Draw.png"));
         RotateLeft= new JButton(new ImageIcon("src/main/resources/icons/ScaleUp.png"));
         
@@ -41,6 +47,7 @@ public class MainFrame {
         DeleteRow.setToolTipText("Delete row");
         Draw.setToolTipText("Draw");
         ScaleUp.setToolTipText("Scale up");
+        ScaleDown.setToolTipText("Scale down");
         RotateRight.setToolTipText("Rotate right");
         RotateLeft.setToolTipText("Rotate left");
 
@@ -49,8 +56,6 @@ public class MainFrame {
         toolBar1.add(DeleteRow);
         toolBar1.add(Draw);
         frame.add(toolBar1, BorderLayout.NORTH);
-
-
         
         String[] headers = {"X (0<=X<700)", "Y (0<=Y<500)"};
         String [][] data;
@@ -61,12 +66,12 @@ public class MainFrame {
         scroller=new JScrollPane(Table);
         frame.add(scroller, BorderLayout.CENTER);
 
-        SearchSpace=new JTextField("Кэф увеличения (>0)",20);
+
         toolBar2 = new JToolBar();
         toolBar2.add(RotateLeft);
         toolBar2.add(RotateRight);
         toolBar2.add(ScaleUp);
-        toolBar2.add(SearchSpace,-1);
+        toolBar2.add(ScaleDown);
         frame.add(toolBar2, BorderLayout.SOUTH);
 
         
@@ -78,15 +83,17 @@ public class MainFrame {
                 try {
                     display.Clear();
                     display.AddCoordinateAxes();
+                    figureRealTime = new Figure2D(Table);//если чел вдруг чет поменял в таблице
                     try {
-                        figure.Rotate(-1);
-                        figure.AddFigure2DOnDisplay2D();
+                        countRotateAngel +=-1*deltaAngel;
+                        figureRealTime.Rotate(-1, countRotateAngel);
+                        figureRealTime.AddFigure2DOnDisplay2D();
                         display.UpdateImage();
                     } catch (Exception e1) {
                         JOptionPane.showMessageDialog(null, "Фигура не помещается на изображение!");
                     }
                 } catch (Exception e1) {
-                    JOptionPane.showMessageDialog(null, "Сначала нарисуйте оригинал изображения!");
+                    JOptionPane.showMessageDialog(null, "Сначала нарисуйте оригинал!");
                 }
             }
         });
@@ -96,15 +103,17 @@ public class MainFrame {
                 try {
                     display.Clear();
                     display.AddCoordinateAxes();
+                    figureRealTime = new Figure2D(Table);//если чел вдруг чет поменял в таблице
                     try {
-                        figure.Rotate(1);
-                        figure.AddFigure2DOnDisplay2D();
+                        countRotateAngel +=1*deltaAngel;
+                        figureRealTime.Rotate(1, countRotateAngel);
+                        figureRealTime.AddFigure2DOnDisplay2D();
                         display.UpdateImage();
                     } catch (Exception e1) {
-                        JOptionPane.showMessageDialog(null, "Фигура не помещается на изображение!");
+                        JOptionPane.showMessageDialog(null, "Фигура не помещается на картинку!");
                     }
                 } catch (Exception e1) {
-                    JOptionPane.showMessageDialog(null, "Сначала нарисуйте оригинал изображения!");
+                    JOptionPane.showMessageDialog(null, "Сначала нарисйте оригинал!");
                 }
             }
         });
@@ -120,9 +129,10 @@ public class MainFrame {
             public void actionPerformed(ActionEvent e) {
                 display = new Display2D();
                 display.AddCoordinateAxes();
-            	figure = new Figure2D(Table);
-            	figure.AddFigure2DOnDisplay2D();
+            	figureOriginal = new Figure2D(Table);
+            	figureOriginal.AddFigure2DOnDisplay2D();
             	display.CreateAndOpenImage();
+            	figureRealTime=figureOriginal;
             }
         });
         
@@ -130,14 +140,27 @@ public class MainFrame {
             public void actionPerformed(ActionEvent e) {
                 display.Clear();
                 display.AddCoordinateAxes();
-            	figure = new Figure2D(Table);//если чел вдруг чет поменял в таблице
             	try {
-					figure.ScaleUp(SearchSpace);
-					figure.AddFigure2DOnDisplay2D();
+					figureRealTime.ScaleUp(1);
+					figureRealTime.AddFigure2DOnDisplay2D();
 					display.UpdateImage();
 				} catch (Exception e1) {
 					JOptionPane.showMessageDialog(null, "Фигура не помещается на изображение!");
 				}
+            }
+        });
+
+        ScaleDown.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                display.Clear();
+                display.AddCoordinateAxes();
+                try {
+                        figureRealTime.ScaleUp(-1);
+                        figureRealTime.AddFigure2DOnDisplay2D();
+                        display.UpdateImage();
+                } catch (Exception e1) {
+                    JOptionPane.showMessageDialog(null, "Фигура не помещается на изображение!");
+                }
             }
         });
         
