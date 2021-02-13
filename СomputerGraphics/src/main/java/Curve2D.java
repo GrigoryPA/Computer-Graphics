@@ -1,51 +1,53 @@
 import javax.swing.*;
-import java.awt.*;
+import java.util.Arrays;
 
 public class Curve2D {
-    public Point2D[] points;
-    public Point2D[] pointsResult;
+    public int[][] points;
+    public int[][] pointsResult;
     public int M;
+    private int COUNT_T= 101;
+    private double DELTA_T= 0.01;
 
     public Curve2D(JTable Table) {
         M=Table.getRowCount();
-        points = new Point2D[M];
-        double[] P = new double[2];
+        points = new int[M][2];
         try {
             for(int i=0; i<M; i++) {
-                P[0]=Integer.parseInt((String) Table.getValueAt(i, 0));
-                P[1]=Integer.parseInt((String) Table.getValueAt(i, 1));
-                points[i]=new Point2D();
-                points[i].SetLocation(P);
+                points[i][0]=Integer.parseInt((String) Table.getValueAt(i, 0));
+                points[i][1]=Integer.parseInt((String) Table.getValueAt(i, 1));
             }
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "Все значения должны быть целочисленные!\nНе должно быть пустых строк или ячеек!");
         }
     }
 
-    public Point2D OnePointWithGeometricAlgorithm(double t) {
-        Point2D[] R = new Point2D[M];
-        System.out.println(t);
-        for (int i = 0; i < M; i++)
-            R[i] = points[i];
+    public int[] OnePointWithGeometricAlgorithm(double t) {
+        double[][] R = new double[M][2];
+        for (int i = 0; i < M; i++){
+            R[i][0] = points[i][0]; R[i][1] = points[i][1];
+        }
+
         for (int j = M - 1; j > 0; j--)
             for (int i = 0; i < j; i++) {
-                R[i].x = R[i].x + t * (R[i + 1].x - R[i].x);
-                R[i].y = R[i].y + t * (R[i + 1].y - R[i].y);
+                R[i][0] = (R[i][0] + t * (R[i + 1][0] - R[i][0]));
+                R[i][1] = (R[i][1] + t * (R[i + 1][1] - R[i][1]));
             }
-        return R[0];
+        int[] res = new int[2];
+            res[0]=(int)R[0][0];
+            res[1]=(int)R[0][1];
+        return res;
     }
 
     public void ResultPoints() {
-        pointsResult=new Point2D[11];
+        pointsResult=new int[COUNT_T][2];
         double t=0;
-        for (int i=0; i < 11; t+=0.1, i++) {
+        for (int i=0; i < COUNT_T; t+=DELTA_T, i++) {
             pointsResult[i] = OnePointWithGeometricAlgorithm(t);
-            System.out.println("("+pointsResult[i].x+"  "+pointsResult[i].y+")");
         }
     }
 
     public void AddCurve2DOnDisplay2D() {
-        for(int i=0;i<points.length-1;i++)
-            Line2D.AddLineSigmentOnDisplayBresenham(pointsResult[i].x, pointsResult[i].y, pointsResult[i+1].x, pointsResult[i+1].y);
+        for(int i=0;i<pointsResult.length-1;i++)
+            Line2D.AddLineSigmentOnDisplayBresenham(pointsResult[i][0], pointsResult[i][1], pointsResult[i+1][0], pointsResult[i+1][1]);
     }
 }
