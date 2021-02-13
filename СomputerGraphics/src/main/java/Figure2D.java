@@ -40,9 +40,9 @@ public class Figure2D {
 	}
 	
 	public void AddFigure2DOnDisplay2D() {
-		Line2D.AddLineSigmentOnDisplayBresenham(points[0],points[points.length-1]);
+		Line2D.AddLineSigmentOnDisplayBresenham(points[0][0], points[0][1],points[points.length-1][0], points[points.length-1][1]);
 		for(int i=0;i<points.length-1;i++)
-			Line2D.AddLineSigmentOnDisplayBresenham(points[i],points[i+1]);
+			Line2D.AddLineSigmentOnDisplayBresenham(points[i][0],points[i][1],points[i+1][0],points[i+1][1]);
 	}
 
 	public void ScaleUp(int updown) {

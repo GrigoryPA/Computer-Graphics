@@ -2,16 +2,13 @@
 public class Line2D {
 
 	
-	public static int sign (int x) {
+	public static double sign (double x) {
 		return (x > 0) ? 1 : (x < 0) ? -1 : 0;
 	}
 	
-	public static void AddLineSigmentOnDisplayBresenham(int[] pointStart, int[] pointEnd) {
-		int x, y, dx, dy, incx, incy, pdx, pdy, es, el, err;
-		int xstart=pointStart[0],
-				xend=pointEnd[0],
-				ystart=pointStart[1],
-				yend=pointEnd[1];
+	public static void AddLineSigmentOnDisplayBresenham(double xstart, double ystart, double xend, double yend) {
+		double x, y, dx, dy, incx, incy, pdx, pdy, es, el, err;
+
 
 		dx = xend - xstart;
 		dy = yend - ystart;

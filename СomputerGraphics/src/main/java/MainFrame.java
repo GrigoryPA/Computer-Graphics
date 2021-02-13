@@ -1,6 +1,7 @@
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.math.MathContext;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -19,11 +20,13 @@ public class MainFrame {
 	private JScrollPane scroller; 
 	private Figure2D figureRealTime;
     private Figure2D figureOriginal;
+    private Curve2D curve;
 	private JPanel FilterPanel;
 	private JButton ScaleUp;
     private JButton ScaleDown;
     private JButton RotateRight;
     private JButton RotateLeft;
+    private JButton Bezier;
     private JToolBar toolBar2;
     public double deltaAngel = Math.PI/18;
     private double countRotateAngel=0;
@@ -42,7 +45,8 @@ public class MainFrame {
         ScaleDown= new JButton(new ImageIcon("src/main/resources/icons/ScaleDown.png"));
         RotateRight = new JButton(new ImageIcon("src/main/resources/icons/Draw.png"));
         RotateLeft= new JButton(new ImageIcon("src/main/resources/icons/ScaleUp.png"));
-        
+        Bezier= new JButton(new ImageIcon("src/main/resources/icons/Draw.png"));
+
         AddRow.setToolTipText("Add row");
         DeleteRow.setToolTipText("Delete row");
         Draw.setToolTipText("Draw");
@@ -50,11 +54,13 @@ public class MainFrame {
         ScaleDown.setToolTipText("Scale down");
         RotateRight.setToolTipText("Rotate right");
         RotateLeft.setToolTipText("Rotate left");
+        Bezier.setToolTipText("Draw curve Bezier");
 
         toolBar1 = new JToolBar();
         toolBar1.add(AddRow);
         toolBar1.add(DeleteRow);
         toolBar1.add(Draw);
+        toolBar1.add(Bezier);
         frame.add(toolBar1, BorderLayout.NORTH);
         
         String[] headers = {"X (0<=X<700)", "Y (0<=Y<500)"};
@@ -133,6 +139,17 @@ public class MainFrame {
             	figureOriginal.AddFigure2DOnDisplay2D();
             	display.CreateAndOpenImage();
             	figureRealTime=figureOriginal;
+            }
+        });
+
+        Bezier.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                display = new Display2D();
+                display.AddCoordinateAxes();
+                curve = new Curve2D(Table);
+                curve.ResultPoints();
+                curve.AddCurve2DOnDisplay2D();
+                display.CreateAndOpenImage();
             }
         });
         

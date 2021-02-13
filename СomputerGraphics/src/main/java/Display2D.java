@@ -41,8 +41,8 @@ public class Display2D {
 			}
 	}
 	
-	public static void AddPointOnDisplay(int x, int y, int color) {
-		display[ZeroZero[0]+x][ZeroZero[1]+y]=color;
+	public static void AddPointOnDisplay(double x, double y, int color) {
+		display[ZeroZero[0]+(int)x][ZeroZero[1]+(int)y]=color;
 	}
 	
 	public void AddCoordinateAxes() {
