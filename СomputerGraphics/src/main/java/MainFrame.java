@@ -1,4 +1,4 @@
-import java.awt.BorderLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.math.MathContext;
@@ -34,18 +34,18 @@ public class MainFrame {
     public void MakeAndShow() {
 
 
-		frame=new JFrame("Р РёСЃСѓРµРј 2Р” РѕР±СЉРµРєС‚ Рё СѓРІРµР»РёС‡РёРІР°РµРј РјР°СЃС€С‚Р°Р±");
-        frame.setBounds(100,100, 400, 250);
+		frame=new JFrame("Рисуем 2Д объект и увеличиваем масштаб");
+        frame.setBounds(100,50, 400, 400);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        AddRow=new JButton(new ImageIcon("src/main/resources/icons/add.png"));
-        DeleteRow=new JButton(new ImageIcon("src/main/resources/icons/delete.png"));
-        Draw = new JButton(new ImageIcon("src/main/resources/icons/Draw.png"));
-        ScaleUp= new JButton(new ImageIcon("src/main/resources/icons/ScaleUp.png"));
-        ScaleDown= new JButton(new ImageIcon("src/main/resources/icons/ScaleUp.png"));
-        RotateRight = new JButton(new ImageIcon("src/main/resources/icons/Draw.png"));
-        RotateLeft= new JButton(new ImageIcon("src/main/resources/icons/ScaleUp.png"));
-        Bezier= new JButton(new ImageIcon("src/main/resources/icons/Draw.png"));
+        AddRow=new JButton(new ImageIcon("src/main/resources/icons/Add48x48.png"));
+        DeleteRow=new JButton(new ImageIcon("src/main/resources/icons/Delete48x48.png"));
+        Draw = new JButton(new ImageIcon("src/main/resources/icons/Rectangle48x48.png"));
+        ScaleUp= new JButton(new ImageIcon("src/main/resources/icons/ScaleUp48x48.png"));
+        ScaleDown= new JButton(new ImageIcon("src/main/resources/icons/ScaleDown48x48.png"));
+        RotateRight = new JButton(new ImageIcon("src/main/resources/icons/RotateRight48x48.png"));
+        RotateLeft= new JButton(new ImageIcon("src/main/resources/icons/RotateLeft48x48.png"));
+        Bezier= new JButton(new ImageIcon("src/main/resources/icons/Bezier48x48.png"));
 
         AddRow.setToolTipText("Add row");
         DeleteRow.setToolTipText("Delete row");
@@ -69,6 +69,14 @@ public class MainFrame {
         tableModel=new DefaultTableModel(data, headers);
         Table=new JTable(tableModel);
         Table.setAutoCreateRowSorter(true);
+
+        /* НЕ РАБОТАЕТ
+        Font font = Table.getFont();
+        font = font.deriveFont((float) (font.getSize2D() * 10));
+        Table.setFont(font);
+        */
+
+        Table.setRowHeight(Table.getRowHeight()+10);
         scroller=new JScrollPane(Table);
         frame.add(scroller, BorderLayout.CENTER);
 
@@ -83,23 +91,23 @@ public class MainFrame {
         
         frame.setVisible(true);
         
-		// РЎРѕР·РґР°РЅРёРµ Рё РѕС‚РѕР±СЂР°Р¶РµРЅРёРµ СЌРєСЂР°РЅРЅРѕР№ С„РѕСЂРјС‹
+		// Создание и отображение экранной формы
         RotateLeft.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
                 try {
                     display.Clear();
                     display.AddCoordinateAxes();
-                    figureRealTime = new Figure2D(Table);//РµСЃР»Рё С‡РµР» РІРґСЂСѓРі С‡РµС‚ РїРѕРјРµРЅСЏР» РІ С‚Р°Р±Р»РёС†Рµ
+                    figureRealTime = new Figure2D(Table);//если чел вдруг чет поменял в таблице
                     try {
                         countRotateAngel +=-1*deltaAngel;
                         figureRealTime.Rotate(-1, countRotateAngel);
                         figureRealTime.AddFigure2DOnDisplay2D();
                         display.UpdateImage();
                     } catch (Exception e1) {
-                        JOptionPane.showMessageDialog(null, "Р¤РёРіСѓСЂР° РЅРµ РїРѕРјРµС‰Р°РµС‚СЃСЏ РЅР° РёР·РѕР±СЂР°Р¶РµРЅРёРµ!");
+                        JOptionPane.showMessageDialog(null, "Фигура не помещается на изображение!");
                     }
                 } catch (Exception e1) {
-                    JOptionPane.showMessageDialog(null, "РЎРЅР°С‡Р°Р»Р° РЅР°СЂРёСЃСѓР№С‚Рµ РѕСЂРёРіРёРЅР°Р»!");
+                    JOptionPane.showMessageDialog(null, "Сначала нарисуйте оригинал!");
                 }
             }
         });
@@ -109,17 +117,17 @@ public class MainFrame {
                 try {
                     display.Clear();
                     display.AddCoordinateAxes();
-                    figureRealTime = new Figure2D(Table);//РµСЃР»Рё С‡РµР» РІРґСЂСѓРі С‡РµС‚ РїРѕРјРµРЅСЏР» РІ С‚Р°Р±Р»РёС†Рµ
+                    figureRealTime = new Figure2D(Table);//если чел вдруг чет поменял в таблице
                     try {
                         countRotateAngel +=1*deltaAngel;
                         figureRealTime.Rotate(1, countRotateAngel);
                         figureRealTime.AddFigure2DOnDisplay2D();
                         display.UpdateImage();
                     } catch (Exception e1) {
-                        JOptionPane.showMessageDialog(null, "Р¤РёРіСѓСЂР° РЅРµ РїРѕРјРµС‰Р°РµС‚СЃСЏ РЅР° РєР°СЂС‚РёРЅРєСѓ!");
+                        JOptionPane.showMessageDialog(null, "Фигура не помещается на картинку!");
                     }
                 } catch (Exception e1) {
-                    JOptionPane.showMessageDialog(null, "РЎРЅР°С‡Р°Р»Р° РЅР°СЂРёСЃР№С‚Рµ РѕСЂРёРіРёРЅР°Р»!");
+                    JOptionPane.showMessageDialog(null, "Сначала нарисйте оригинал!");
                 }
             }
         });
@@ -162,7 +170,7 @@ public class MainFrame {
 					figureRealTime.AddFigure2DOnDisplay2D();
 					display.UpdateImage();
 				} catch (Exception e1) {
-					JOptionPane.showMessageDialog(null, "Р¤РёРіСѓСЂР° РЅРµ РїРѕРјРµС‰Р°РµС‚СЃСЏ РЅР° РёР·РѕР±СЂР°Р¶РµРЅРёРµ!");
+					JOptionPane.showMessageDialog(null, "Фигура не помещается на изображение!");
 				}
             }
         });
@@ -176,7 +184,7 @@ public class MainFrame {
                         figureRealTime.AddFigure2DOnDisplay2D();
                         display.UpdateImage();
                 } catch (Exception e1) {
-                    JOptionPane.showMessageDialog(null, "Р¤РёРіСѓСЂР° РЅРµ РїРѕРјРµС‰Р°РµС‚СЃСЏ РЅР° РёР·РѕР±СЂР°Р¶РµРЅРёРµ!");
+                    JOptionPane.showMessageDialog(null, "Фигура не помещается на изображение!");
                 }
             }
         });
@@ -188,13 +196,13 @@ public class MainFrame {
     				tableModel.removeRow(rows[0]);
     			}
     			else
-    				JOptionPane.showMessageDialog(frame, "РћС€РёР±РєР° СѓРґР°Р»РµРЅРёСЏ", "РџСЂРµРґСѓРїСЂРµР¶РґРµРЅРёРµ", 0);
+    				JOptionPane.showMessageDialog(frame, "Ошибка удаления", "Предупреждение", 0);
             }
         });
 	}
 	
 	public static void main(String[] args) {
-		// РЎРѕР·РґР°РЅРёРµ Рё РѕС‚РѕР±СЂР°Р¶РµРЅРёРµ СЌРєСЂР°РЅРЅРѕР№ С„РѕСЂРјС‹
+		// Создание и отображение экранной формы
 		new MainFrame().MakeAndShow();
 	}
 	

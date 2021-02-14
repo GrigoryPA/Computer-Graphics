@@ -32,6 +32,8 @@ public class Curve2D {
                 R[i][0] = (R[i][0] + t * (R[i + 1][0] - R[i][0]));
                 R[i][1] = (R[i][1] + t * (R[i + 1][1] - R[i][1]));
             }
+
+
         int[] res = new int[2];
             res[0]=(int)R[0][0];
             res[1]=(int)R[0][1];
