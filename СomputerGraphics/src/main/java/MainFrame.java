@@ -42,7 +42,7 @@ public class MainFrame {
         DeleteRow=new JButton(new ImageIcon("src/main/resources/icons/delete.png"));
         Draw = new JButton(new ImageIcon("src/main/resources/icons/Draw.png"));
         ScaleUp= new JButton(new ImageIcon("src/main/resources/icons/ScaleUp.png"));
-        ScaleDown= new JButton(new ImageIcon("src/main/resources/icons/ScaleDown.png"));
+        ScaleDown= new JButton(new ImageIcon("src/main/resources/icons/ScaleUp.png"));
         RotateRight = new JButton(new ImageIcon("src/main/resources/icons/Draw.png"));
         RotateLeft= new JButton(new ImageIcon("src/main/resources/icons/ScaleUp.png"));
         Bezier= new JButton(new ImageIcon("src/main/resources/icons/Draw.png"));

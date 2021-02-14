@@ -23,6 +23,7 @@ public class Display2D {
 	private static Color Color0 = new Color(0, 0, 0);//background
 	private static Color Color1 = new Color(255, 255, 255);//axis
 	private static Color Color2 = new Color(50, 255, 50);//for draw
+	private static Color Color3 = new Color(255, 50, 50);//for draw
 	private static File file = new File("src/main/resources/convas.png");
 	
 	public  Display2D() {
@@ -65,6 +66,7 @@ public class Display2D {
 					if(display[x][M-y-1]==0)image.setRGB(x, y, Color0.getRGB());
 					if(display[x][M-y-1]==1)image.setRGB(x, y, Color1.getRGB());
 					if(display[x][M-y-1]==2)image.setRGB(x, y, Color2.getRGB());
+					if(display[x][M-y-1]==3)image.setRGB(x, y, Color3.getRGB());
 			}
 			CreateFrameForImage(image);
 		} catch (IOException e) {

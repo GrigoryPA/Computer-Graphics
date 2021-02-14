@@ -47,16 +47,21 @@ public class Curve2D {
     }
 
     public void AddCurve2DOnDisplay2D() {
-        for(int i=0;i<pointsResult.length-1;i++)
+        for(int i=0;i<pointsResult.length-1;i++)//рисуем курву
             Line2D.AddLineSigmentOnDisplayBresenham(pointsResult[i][0],
                     pointsResult[i][1],
                     pointsResult[i + 1][0],
                     pointsResult[i + 1][1]);
-        for(int i=0;i<points.length-1;i++)
-            Line2D.AddLineSigmentOnDisplayBresenham(points[i][0],
-                    points[i][1],
-                    points[i + 1][0],
-                    points[i + 1][1]);
+        for(int i=0;i<points.length;i++) {//рисуем ключевые точки
+            Display2D.AddPointOnDisplay(points[i][0], points[i][1], 3);
+            Display2D.AddPointOnDisplay(points[i][0], points[i][1]+1, 3);
+            Display2D.AddPointOnDisplay(points[i][0], points[i][1]-1, 3);
+            Display2D.AddPointOnDisplay(points[i][0]+1, points[i][1], 3);
+            Display2D.AddPointOnDisplay(points[i][0]-1, points[i][1], 3);
+
+
+        }
+
 
     }
 }
