@@ -50,8 +50,8 @@ public class MainFrame {
         ScaleDown= new JButton(new ImageIcon("src/main/resources/icons/ScaleDown48x48.png"));
         RotateRight = new JButton(new ImageIcon("src/main/resources/icons/RotateRight48x48.png"));
         RotateLeft= new JButton(new ImageIcon("src/main/resources/icons/RotateLeft48x48.png"));
-        ReflexionX = new JButton(new ImageIcon("src/main/resources/icons/RotateRight48x48.png"));
-        ReflexionY= new JButton(new ImageIcon("src/main/resources/icons/RotateLeft48x48.png"));
+        ReflexionX = new JButton(new ImageIcon("src/main/resources/icons/ReflectionX48x48.png"));
+        ReflexionY= new JButton(new ImageIcon("src/main/resources/icons/ReflectionY48x48.png"));
         Bezier= new JButton(new ImageIcon("src/main/resources/icons/Bezier48x48.png"));
 
         AddRow.setToolTipText("Add row");
@@ -107,53 +107,52 @@ public class MainFrame {
                     display.Clear();
                     display.AddCoordinateAxes();
                     try {
-                        figureRealTime.Reflexion( 1);
+                        figureRealTime.Reflexion( 2);
                         figureRealTime.AddFigure2DOnDisplay2D();
                         display.UpdateImage();
                     } catch (Exception e1) {
-                        JOptionPane.showMessageDialog(null, "������ �� ���������� �� �����������!");
+                        JOptionPane.showMessageDialog(null, "Figure cannot be reflected. Your figure is too big!");
                     }
                 } catch (Exception e1) {
-                    JOptionPane.showMessageDialog(null, "������� ��������� ��������!");
+                    JOptionPane.showMessageDialog(null, "You need to draw figure first!");
                 }
             }
         });
 
         ReflexionY.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
+            try {
+                display.Clear();
+                display.AddCoordinateAxes();
                 try {
-                    display.Clear();
-                    display.AddCoordinateAxes();
-                    try {
-                        figureRealTime.Reflexion( 2);
-                        figureRealTime.AddFigure2DOnDisplay2D();
-                        display.UpdateImage();
-                    } catch (Exception e1) {
-                        JOptionPane.showMessageDialog(null, "������ �� ���������� �� ��������!");
-                    }
+                    figureRealTime.Reflexion( 1);
+                    figureRealTime.AddFigure2DOnDisplay2D();
+                    display.UpdateImage();
                 } catch (Exception e1) {
-                    JOptionPane.showMessageDialog(null, "������� �������� ��������!");
+                    JOptionPane.showMessageDialog(null, "Figure cannot be reflected. Your figure is too big!");
                 }
+            } catch (Exception e1) {
+                JOptionPane.showMessageDialog(null, "You need to draw figure first!");
             }
+        }
         });
 
-		// �������� � ����������� �������� �����
         RotateLeft.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
                 try {
                     display.Clear();
                     display.AddCoordinateAxes();
-                    figureRealTime = new Figure2D(Table);//���� ��� ����� ��� ������� � �������
+                    figureRealTime = new Figure2D(Table);
                     try {
                         countRotateAngel +=-1*deltaAngel;
                         figureRealTime.Rotate( countRotateAngel);
                         figureRealTime.AddFigure2DOnDisplay2D();
                         display.UpdateImage();
                     } catch (Exception e1) {
-                        JOptionPane.showMessageDialog(null, "������ �� ���������� �� �����������!");
+                        JOptionPane.showMessageDialog(null, "Figure cannot be rotated. Your figure is too big!");
                     }
                 } catch (Exception e1) {
-                    JOptionPane.showMessageDialog(null, "������� ��������� ��������!");
+                    JOptionPane.showMessageDialog(null, "You need to draw figure first!");
                 }
             }
         });
@@ -163,17 +162,17 @@ public class MainFrame {
                 try {
                     display.Clear();
                     display.AddCoordinateAxes();
-                    figureRealTime = new Figure2D(Table);//���� ��� ����� ��� ������� � �������
+                    figureRealTime = new Figure2D(Table);
                     try {
                         countRotateAngel +=1*deltaAngel;
                         figureRealTime.Rotate( countRotateAngel);
                         figureRealTime.AddFigure2DOnDisplay2D();
                         display.UpdateImage();
                     } catch (Exception e1) {
-                        JOptionPane.showMessageDialog(null, "������ �� ���������� �� ��������!");
+                        JOptionPane.showMessageDialog(null, "Figure cannot be rotated. Your figure is too big!");
                     }
                 } catch (Exception e1) {
-                    JOptionPane.showMessageDialog(null, "������� �������� ��������!");
+                    JOptionPane.showMessageDialog(null, "You need to draw figure first!");
                 }
             }
         });
@@ -209,28 +208,32 @@ public class MainFrame {
         
         ScaleUp.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
-                display.Clear();
-                display.AddCoordinateAxes();
-            	try {
-					figureRealTime.ScaleUp(1);
-					figureRealTime.AddFigure2DOnDisplay2D();
-					display.UpdateImage();
-				} catch (Exception e1) {
-					JOptionPane.showMessageDialog(null, "������ �� ���������� �� �����������!");
-				}
+                try {
+                    display.Clear();
+                    display.AddCoordinateAxes();
+                    try {
+                        figureRealTime.ScaleUp(1);
+                        figureRealTime.AddFigure2DOnDisplay2D();
+                        display.UpdateImage();
+                    } catch (Exception e1) {
+                        JOptionPane.showMessageDialog(null, "Figure cannot be scaled up. Your figure is too big!");
+                    }
+                } catch (Exception e1) {
+                    JOptionPane.showMessageDialog(null, "You need to draw figure first!");
+                }
             }
         });
 
         ScaleDown.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
-                display.Clear();
-                display.AddCoordinateAxes();
                 try {
-                        figureRealTime.ScaleUp(-1);
-                        figureRealTime.AddFigure2DOnDisplay2D();
-                        display.UpdateImage();
+                    display.Clear();
+                    display.AddCoordinateAxes();
+                            figureRealTime.ScaleUp(-1);
+                            figureRealTime.AddFigure2DOnDisplay2D();
+                            display.UpdateImage();
                 } catch (Exception e1) {
-                    JOptionPane.showMessageDialog(null, "������ �� ���������� �� �����������!");
+                    JOptionPane.showMessageDialog(null, "You need to draw figure first!");
                 }
             }
         });
@@ -242,13 +245,12 @@ public class MainFrame {
     				tableModel.removeRow(rows[0]);
     			}
     			else
-    				JOptionPane.showMessageDialog(frame, "������ ��������", "��������������", 0);
+    				JOptionPane.showMessageDialog(frame, "You must first select the rows.", "Failed to delete rows.", 0);
             }
         });
 	}
 	
 	public static void main(String[] args) {
-		// �������� � ����������� �������� �����
 		new MainFrame().MakeAndShow();
 	}
 	

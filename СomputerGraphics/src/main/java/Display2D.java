@@ -70,7 +70,7 @@ public class Display2D {
 			}
 			CreateFrameForImage(image);
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null, "Не удалось открыть изображение!");
+			JOptionPane.showMessageDialog(null, "Failed to open image !");
 		}
 		
 	}

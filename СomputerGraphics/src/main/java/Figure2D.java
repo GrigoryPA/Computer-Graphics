@@ -13,7 +13,7 @@ public class Figure2D {
 						points[i][1]=Integer.parseInt((String) Table.getValueAt(i, 1));
 			}
 		} catch (NumberFormatException e) {
-			JOptionPane.showMessageDialog(null, "Все значения должны быть целочисленные!\nНе должно быть пустых строк или ячеек!");
+			JOptionPane.showMessageDialog(null, "All values should be integer!\nBlank cells and rows are not allowed!");
 		}
 	}
 	
@@ -41,8 +41,7 @@ public class Figure2D {
 			System.out.println(countScale+"   "+updown);
 		} catch (NumberFormatException e) {
 			JOptionPane.showMessageDialog(null,
-					"Все значени ядолжны быть целочисленные!\n" +
-					"Не должно быть пустых строк или ячеек!");
+					"All values should be integer!\nBlank cells and rows are not allowed");
 		}
 	}
 
