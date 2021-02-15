@@ -72,7 +72,7 @@ public class MainFrame {
         tableModel=new DefaultTableModel(data, headers);
         Table=new JTable(tableModel);
         Font font = new Font("Verdana", Font.PLAIN, 24);
-        Font fontHeaders = new Font("Verdana", Font.BOLD, 14);
+        Font fontHeaders = new Font("Verdana", Font.BOLD, 16);
         JTableHeader tableHeader = Table.getTableHeader();
         tableHeader.setFont(fontHeaders);
         Table.setFont(font);
