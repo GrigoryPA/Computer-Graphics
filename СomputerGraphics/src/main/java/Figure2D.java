@@ -1,31 +1,9 @@
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 
 public class Figure2D {
 	public int[][] points;
 	public double countScale = 1;
-	/*public double[] cossinDelta = {1,
-			0.984808,
-			0.939693,
-			0.866025,
-			0.766044,
-			0.642787,
-			0.5,
-			0.342020,
-			0.173648,
-			0,
-			0.173648,
-			0.342020,
-			0.5,
-			0.642787,
-			0.766044,
-			0.866025,
-			0.939693,
-			0.984808,
-			1};
-	public double sinDelta = 0.173648;//sin(10`)
-	public double cosDelta = 0.984808;//cos(10`)*/
 
 	public Figure2D(JTable Table) {
 		points = new int[Table.getRowCount()][2];
@@ -62,16 +40,32 @@ public class Figure2D {
 			}
 			System.out.println(countScale+"   "+updown);
 		} catch (NumberFormatException e) {
-			JOptionPane.showMessageDialog(null, "Все значени ядолжны быть целочисленные!\nНе должно быть пустых строк или ячеек!");
+			JOptionPane.showMessageDialog(null,
+					"Все значени ядолжны быть целочисленные!\n" +
+					"Не должно быть пустых строк или ячеек!");
 		}
 	}
 
-	public void Rotate(int clock, double countRotateAngel) {
+	public void Rotate( double countRotateAngel) {
 		double[][] b = new double[2][2];
 				b[0][0]= Math.cos(countRotateAngel); b[0][1]=Math.sin(countRotateAngel);
 				b[1][0]=-(Math.sin(countRotateAngel)); b[1][1]=Math.cos(countRotateAngel);
 				points=Multiply(b);
 		}
+
+	public void Reflexion( int axis) {
+		double[][] b = new double[2][2];
+			if(axis==2) {
+				b[0][0] = -1; b[0][1] = 0;
+				b[1][0] = 0; b[1][1] = 1;
+			}
+			else{
+				b[0][0] = 1; b[0][1] = 0;
+				b[1][0] = 0; b[1][1] = -1;
+			}
+
+		points=Multiply(b);
+	}
 	
 	public int[][] Multiply(double[][] b) {
 		int[][] c=new int[points.length][2];

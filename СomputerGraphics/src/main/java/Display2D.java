@@ -92,6 +92,7 @@ public class Display2D {
 	       frame=new JFrame();
 	       frame.setTitle("stained_image");
 	       frame.setSize(image.getWidth(), image.getHeight());
+		   frame.setLocation(500, 50);
 	       frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 	       label=new JLabel();
 	       imageicon=new ImageIcon(image);

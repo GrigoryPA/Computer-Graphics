@@ -28,10 +28,13 @@ public class MainFrame {
     private JButton ScaleDown;
     private JButton RotateRight;
     private JButton RotateLeft;
+    private JButton ReflexionX;
+    private JButton ReflexionY;
     private JButton Bezier;
     private JToolBar toolBar2;
     public double deltaAngel = Math.PI/18;
     private double countRotateAngel=0;
+    private int countRef=0;
 
     public void MakeAndShow() {
 
@@ -47,6 +50,8 @@ public class MainFrame {
         ScaleDown= new JButton(new ImageIcon("src/main/resources/icons/ScaleDown48x48.png"));
         RotateRight = new JButton(new ImageIcon("src/main/resources/icons/RotateRight48x48.png"));
         RotateLeft= new JButton(new ImageIcon("src/main/resources/icons/RotateLeft48x48.png"));
+        ReflexionX = new JButton(new ImageIcon("src/main/resources/icons/RotateRight48x48.png"));
+        ReflexionY= new JButton(new ImageIcon("src/main/resources/icons/RotateLeft48x48.png"));
         Bezier= new JButton(new ImageIcon("src/main/resources/icons/Bezier48x48.png"));
 
         AddRow.setToolTipText("Add row");
@@ -56,6 +61,8 @@ public class MainFrame {
         ScaleDown.setToolTipText("Scale down");
         RotateRight.setToolTipText("Rotate right");
         RotateLeft.setToolTipText("Rotate left");
+        ReflexionX.setToolTipText("Reflexion X");
+        ReflexionY.setToolTipText("Reflexion Y");
         Bezier.setToolTipText("Draw curve Bezier");
 
         toolBar1 = new JToolBar();
@@ -87,11 +94,49 @@ public class MainFrame {
         toolBar2.add(RotateRight);
         toolBar2.add(ScaleUp);
         toolBar2.add(ScaleDown);
+        toolBar2.add(ReflexionX);
+        toolBar2.add(ReflexionY);
         frame.add(toolBar2, BorderLayout.SOUTH);
 
         
         frame.setVisible(true);
-        
+
+        ReflexionX.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    display.Clear();
+                    display.AddCoordinateAxes();
+                    try {
+                        figureRealTime.Reflexion( 1);
+                        figureRealTime.AddFigure2DOnDisplay2D();
+                        display.UpdateImage();
+                    } catch (Exception e1) {
+                        JOptionPane.showMessageDialog(null, "������ �� ���������� �� �����������!");
+                    }
+                } catch (Exception e1) {
+                    JOptionPane.showMessageDialog(null, "������� ��������� ��������!");
+                }
+            }
+        });
+
+        ReflexionY.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    display.Clear();
+                    display.AddCoordinateAxes();
+                    try {
+                        figureRealTime.Reflexion( 2);
+                        figureRealTime.AddFigure2DOnDisplay2D();
+                        display.UpdateImage();
+                    } catch (Exception e1) {
+                        JOptionPane.showMessageDialog(null, "������ �� ���������� �� ��������!");
+                    }
+                } catch (Exception e1) {
+                    JOptionPane.showMessageDialog(null, "������� �������� ��������!");
+                }
+            }
+        });
+
 		// �������� � ����������� �������� �����
         RotateLeft.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
@@ -101,7 +146,7 @@ public class MainFrame {
                     figureRealTime = new Figure2D(Table);//���� ��� ����� ��� ������� � �������
                     try {
                         countRotateAngel +=-1*deltaAngel;
-                        figureRealTime.Rotate(-1, countRotateAngel);
+                        figureRealTime.Rotate( countRotateAngel);
                         figureRealTime.AddFigure2DOnDisplay2D();
                         display.UpdateImage();
                     } catch (Exception e1) {
@@ -121,7 +166,7 @@ public class MainFrame {
                     figureRealTime = new Figure2D(Table);//���� ��� ����� ��� ������� � �������
                     try {
                         countRotateAngel +=1*deltaAngel;
-                        figureRealTime.Rotate(1, countRotateAngel);
+                        figureRealTime.Rotate( countRotateAngel);
                         figureRealTime.AddFigure2DOnDisplay2D();
                         display.UpdateImage();
                     } catch (Exception e1) {
