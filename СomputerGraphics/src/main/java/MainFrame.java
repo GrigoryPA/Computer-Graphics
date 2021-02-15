@@ -1,11 +1,13 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 import java.math.MathContext;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-
+import javax.swing.table.JTableHeader;
 
 
 public class MainFrame {
@@ -34,8 +36,8 @@ public class MainFrame {
     public void MakeAndShow() {
 
 
-		frame=new JFrame("Рисуем 2Д объект и увеличиваем масштаб");
-        frame.setBounds(100,50, 400, 400);
+		frame=new JFrame("Computer Graphics");
+        frame.setBounds(100,50, 400, 450);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         AddRow=new JButton(new ImageIcon("src/main/resources/icons/Add48x48.png"));
@@ -62,20 +64,19 @@ public class MainFrame {
         toolBar1.add(Draw);
         toolBar1.add(Bezier);
         frame.add(toolBar1, BorderLayout.NORTH);
-        
-        String[] headers = {"X (0<=X<700)", "Y (0<=Y<500)"};
+
+
+        String[] headers = {"-350<=X<350", "-250<=Y<250"};
         String [][] data;
         data=new String[1][2];
         tableModel=new DefaultTableModel(data, headers);
         Table=new JTable(tableModel);
-        Table.setAutoCreateRowSorter(true);
-
-        /* НЕ РАБОТАЕТ
-        Font font = Table.getFont();
-        font = font.deriveFont((float) (font.getSize2D() * 10));
+        Font font = new Font("Verdana", Font.PLAIN, 24);
+        Font fontHeaders = new Font("Verdana", Font.BOLD, 14);
+        JTableHeader tableHeader = Table.getTableHeader();
+        tableHeader.setFont(fontHeaders);
         Table.setFont(font);
-        */
-
+        Table.setAutoCreateRowSorter(true);
         Table.setRowHeight(Table.getRowHeight()+10);
         scroller=new JScrollPane(Table);
         frame.add(scroller, BorderLayout.CENTER);
@@ -91,23 +92,23 @@ public class MainFrame {
         
         frame.setVisible(true);
         
-		// Создание и отображение экранной формы
+		// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
         RotateLeft.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
                 try {
                     display.Clear();
                     display.AddCoordinateAxes();
-                    figureRealTime = new Figure2D(Table);//если чел вдруг чет поменял в таблице
+                    figureRealTime = new Figure2D(Table);//пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
                     try {
                         countRotateAngel +=-1*deltaAngel;
                         figureRealTime.Rotate(-1, countRotateAngel);
                         figureRealTime.AddFigure2DOnDisplay2D();
                         display.UpdateImage();
                     } catch (Exception e1) {
-                        JOptionPane.showMessageDialog(null, "Фигура не помещается на изображение!");
+                        JOptionPane.showMessageDialog(null, "пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ!");
                     }
                 } catch (Exception e1) {
-                    JOptionPane.showMessageDialog(null, "Сначала нарисуйте оригинал!");
+                    JOptionPane.showMessageDialog(null, "пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ!");
                 }
             }
         });
@@ -117,17 +118,17 @@ public class MainFrame {
                 try {
                     display.Clear();
                     display.AddCoordinateAxes();
-                    figureRealTime = new Figure2D(Table);//если чел вдруг чет поменял в таблице
+                    figureRealTime = new Figure2D(Table);//пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
                     try {
                         countRotateAngel +=1*deltaAngel;
                         figureRealTime.Rotate(1, countRotateAngel);
                         figureRealTime.AddFigure2DOnDisplay2D();
                         display.UpdateImage();
                     } catch (Exception e1) {
-                        JOptionPane.showMessageDialog(null, "Фигура не помещается на картинку!");
+                        JOptionPane.showMessageDialog(null, "пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ!");
                     }
                 } catch (Exception e1) {
-                    JOptionPane.showMessageDialog(null, "Сначала нарисйте оригинал!");
+                    JOptionPane.showMessageDialog(null, "пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ!");
                 }
             }
         });
@@ -170,7 +171,7 @@ public class MainFrame {
 					figureRealTime.AddFigure2DOnDisplay2D();
 					display.UpdateImage();
 				} catch (Exception e1) {
-					JOptionPane.showMessageDialog(null, "Фигура не помещается на изображение!");
+					JOptionPane.showMessageDialog(null, "пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ!");
 				}
             }
         });
@@ -184,7 +185,7 @@ public class MainFrame {
                         figureRealTime.AddFigure2DOnDisplay2D();
                         display.UpdateImage();
                 } catch (Exception e1) {
-                    JOptionPane.showMessageDialog(null, "Фигура не помещается на изображение!");
+                    JOptionPane.showMessageDialog(null, "пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ!");
                 }
             }
         });
@@ -196,13 +197,13 @@ public class MainFrame {
     				tableModel.removeRow(rows[0]);
     			}
     			else
-    				JOptionPane.showMessageDialog(frame, "Ошибка удаления", "Предупреждение", 0);
+    				JOptionPane.showMessageDialog(frame, "пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ", "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ", 0);
             }
         });
 	}
 	
 	public static void main(String[] args) {
-		// Создание и отображение экранной формы
+		// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
 		new MainFrame().MakeAndShow();
 	}
 	
