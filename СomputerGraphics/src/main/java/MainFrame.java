@@ -30,8 +30,7 @@ public class MainFrame {
     private JButton RotateLeft;
     private JButton ReflexionX;
     private JButton ReflexionY;
-    private JButton Bezier;
-    private JToolBar toolBar2;
+    private JButton Bezier;    private JToolBar toolBar2;
     public double deltaAngel = Math.PI/18;
     private double countRotateAngel=0;
     private int countRef=0;
