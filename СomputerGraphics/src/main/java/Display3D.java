@@ -14,10 +14,10 @@ public class Display3D {
 	private static JLabel label;
 	private static BufferedImage image;
 	private static ImageIcon imageicon;
-	private static Color Color0 = new Color(0, 0, 0);//background
-	private static Color Color1 = new Color(255, 255, 255);//axis
-	private static Color Color2 = new Color(0, 0, 250);//for draw
-	private static Color Color3 = new Color(255, 50, 50);//for draw
+	private static Color Color0 = new Color(250, 250, 200);//background
+	private static Color Color1 = new Color(0, 200, 0);//axis
+	private static Color Color2 = new Color(0, 0, 0);//for draw
+	private static Color Color3 = new Color(200, 0, 0);//for draw
 	private static File file = new File("src/main/resources/convas.png");
 
 	public Display3D() {
@@ -41,14 +41,15 @@ public class Display3D {
 	}
 	
 	public void AddCoordinateAxes() {
-		for(int i=0;i<N;i++) {
-			for(int j=0;j<M;j++) {
-				if(i==ZeroZero[0] && j>=ZeroZero[1]) display[i][j]=1;
-				if(j<ZeroZero[1]){
-					if( i == j+100 || j==N-i-100) display[i][j]=1;
-				}
-			}
-		}
+		Figure3D AxisX = new Figure3D(new double[][]{{0,0,0},{100,0,0}});
+		AxisX.IsometricProjection();
+		AxisX.AddFigureOnDisplay();
+		Figure3D AxisY = new Figure3D(new double[][]{{0,0,0},{0,100,0}});
+		AxisY.IsometricProjection();
+		AxisY.AddFigureOnDisplay();
+		Figure3D AxisZ = new Figure3D(new double[][]{{0,0,0},{0,0,100}});
+		AxisZ.IsometricProjection();
+		AxisZ.AddFigureOnDisplay();
 	}
 	
 	

@@ -27,7 +27,18 @@ public class Figure3D {
 			JOptionPane.showMessageDialog(null, "All values should be integer!\nBlank cells and rows are not allowed!");
 		}
 	}
-	
+
+	public Figure3D(double P[][]) {
+		points = new double[P.length][4];
+		pointsResult = new int[P.length][2];
+			for(int i=0; i<P.length; i++) {
+				points[i][0]=P[i][0];
+				points[i][1]=P[i][1];
+				points[i][2]=P[i][2];
+				points[i][3]=1;
+			}
+	}
+
 	public void AddFigureOnDisplay() {
 		//Line3D.AddLineSigmentOnDisplayBresenham(pointsResult[0][0], pointsResult[0][1],pointsResult[pointsResult.length-1][0], pointsResult[pointsResult.length-1][1]);
 		for(int i=0;i<pointsResult.length-1;i++)
