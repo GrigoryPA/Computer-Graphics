@@ -1,14 +1,17 @@
 import javax.swing.*;
+import java.awt.*;
 import java.util.Arrays;
 
 public class Curve2D {
+    public Color colorCurve;
     public int[][] points;
     public int[][] pointsResult;
     public int M;
     private int COUNT_T= 101;
     private double DELTA_T= 0.01;
 
-    public Curve2D(JTable Table) {
+    public Curve2D(JTable Table, Color color) {
+        colorCurve=color;
         M=Table.getRowCount();
         points = new int[M][2];
         try {
@@ -53,13 +56,13 @@ public class Curve2D {
             Line2D.AddLineSigmentOnDisplayBresenham(pointsResult[i][0],
                     pointsResult[i][1],
                     pointsResult[i + 1][0],
-                    pointsResult[i + 1][1]);
+                    pointsResult[i + 1][1], colorCurve);
         for(int i=0;i<points.length;i++) {//рисуем ключевые точки
-            Display2D.AddPointOnDisplay(points[i][0], points[i][1], 3);
-            Display2D.AddPointOnDisplay(points[i][0], points[i][1]+1, 3);
-            Display2D.AddPointOnDisplay(points[i][0], points[i][1]-1, 3);
-            Display2D.AddPointOnDisplay(points[i][0]+1, points[i][1], 3);
-            Display2D.AddPointOnDisplay(points[i][0]-1, points[i][1], 3);
+            Display2D.AddPointOnDisplay(points[i][0], points[i][1], Color.RED);
+            Display2D.AddPointOnDisplay(points[i][0], points[i][1]+1, Color.RED);
+            Display2D.AddPointOnDisplay(points[i][0], points[i][1]-1, Color.RED);
+            Display2D.AddPointOnDisplay(points[i][0]+1, points[i][1], Color.RED);
+            Display2D.AddPointOnDisplay(points[i][0]-1, points[i][1], Color.RED);
 
 
         }

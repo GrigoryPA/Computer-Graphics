@@ -1,11 +1,14 @@
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import java.awt.*;
 
 public class Figure2D {
+	public Color colorFigure;
 	public int[][] points;
 	public double countScale = 1;
 
-	public Figure2D(JTable Table) {
+	public Figure2D(JTable Table, Color color) {
+		colorFigure=color;
 		points = new int[Table.getRowCount()][2];
 		try {
 			for(int i=0; i<Table.getRowCount(); i++) {
@@ -18,9 +21,9 @@ public class Figure2D {
 	}
 	
 	public void AddFigure2DOnDisplay2D() {
-		Line2D.AddLineSigmentOnDisplayBresenham(points[0][0], points[0][1],points[points.length-1][0], points[points.length-1][1]);
+		Line2D.AddLineSigmentOnDisplayBresenham(points[0][0], points[0][1],points[points.length-1][0], points[points.length-1][1], colorFigure);
 		for(int i=0;i<points.length-1;i++)
-			Line2D.AddLineSigmentOnDisplayBresenham(points[i][0],points[i][1],points[i+1][0],points[i+1][1]);
+			Line2D.AddLineSigmentOnDisplayBresenham(points[i][0],points[i][1],points[i+1][0],points[i+1][1],colorFigure);
 	}
 
 	public void ScaleUp(int updown) {

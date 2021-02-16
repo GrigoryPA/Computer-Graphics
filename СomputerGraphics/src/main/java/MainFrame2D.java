@@ -137,7 +137,7 @@ public class MainFrame2D {
                 try {
                     display.Clear();
                     display.AddCoordinateAxes();
-                    figureRealTime = new Figure2D(Table);
+                    figureRealTime = new Figure2D(Table, Color.GREEN);
                     try {
                         countRotateAngel +=-1*deltaAngel;
                         figureRealTime.Rotate( countRotateAngel);
@@ -157,7 +157,7 @@ public class MainFrame2D {
                 try {
                     display.Clear();
                     display.AddCoordinateAxes();
-                    figureRealTime = new Figure2D(Table);
+                    figureRealTime = new Figure2D(Table, Color.GREEN);
                     try {
                         countRotateAngel +=1*deltaAngel;
                         figureRealTime.Rotate( countRotateAngel);
@@ -183,7 +183,7 @@ public class MainFrame2D {
             public void actionPerformed(ActionEvent e) {
                 display = new Display2D();
                 display.AddCoordinateAxes();
-            	figureOriginal = new Figure2D(Table);
+            	figureOriginal = new Figure2D(Table, Color.GREEN);
             	figureOriginal.AddFigure2DOnDisplay2D();
             	display.CreateAndOpenImage();
             	figureRealTime=figureOriginal;
@@ -194,7 +194,7 @@ public class MainFrame2D {
             public void actionPerformed(ActionEvent e) {
                 display = new Display2D();
                 display.AddCoordinateAxes();
-                curve = new Curve2D(Table);
+                curve = new Curve2D(Table, Color.GREEN);
                 curve.ResultPoints();
                 curve.AddCurve2DOnDisplay2D();
                 display.CreateAndOpenImage();
@@ -206,6 +206,7 @@ public class MainFrame2D {
                 try {
                     display.Clear();
                     display.AddCoordinateAxes();
+                    new Figure2D(Table,Color.CYAN).AddFigure2DOnDisplay2D();
                     try {
                         figureRealTime.ScaleUp(1);
                         figureRealTime.AddFigure2DOnDisplay2D();
@@ -224,9 +225,10 @@ public class MainFrame2D {
                 try {
                     display.Clear();
                     display.AddCoordinateAxes();
-                            figureRealTime.ScaleUp(-1);
-                            figureRealTime.AddFigure2DOnDisplay2D();
-                            display.UpdateImage();
+                    new Figure2D(Table,Color.CYAN).AddFigure2DOnDisplay2D();
+                    figureRealTime.ScaleUp(-1);
+                    figureRealTime.AddFigure2DOnDisplay2D();
+                    display.UpdateImage();
                 } catch (Exception e1) {
                     JOptionPane.showMessageDialog(null, "You need to draw figure first!");
                 }
