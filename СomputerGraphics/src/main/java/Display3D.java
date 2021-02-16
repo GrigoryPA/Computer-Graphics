@@ -16,7 +16,7 @@ public class Display3D {
 	private static ImageIcon imageicon;
 	private static Color Color0 = new Color(0, 0, 0);//background
 	private static Color Color1 = new Color(255, 255, 255);//axis
-	private static Color Color2 = new Color(50, 255, 50);//for draw
+	private static Color Color2 = new Color(0, 0, 250);//for draw
 	private static Color Color3 = new Color(255, 50, 50);//for draw
 	private static File file = new File("src/main/resources/convas.png");
 
@@ -36,7 +36,7 @@ public class Display3D {
 			}
 	}
 	
-	public static void AddPointOnDisplay(double x, double y, double z, int color) {
+	public static void AddPointOnDisplay(double x, double y, int color) {
 		display[ZeroZero[0]+(int)x][ZeroZero[1]+(int)y]=color;
 	}
 	

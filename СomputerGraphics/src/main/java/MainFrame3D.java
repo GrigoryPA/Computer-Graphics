@@ -82,8 +82,9 @@ public class MainFrame3D {
             public void actionPerformed(ActionEvent e) {
                 display = new Display3D();
                 display.AddCoordinateAxes();
-            	//figureOriginal = new Figure3D(Table);
-            	//figureOriginal.AddFigure2DOnDisplay2D();
+            	figureOriginal = new Figure3D(Table);
+                figureOriginal.IsometricProjection();
+            	figureOriginal.AddFigureOnDisplay();
             	display.CreateAndOpenImage();
             }
         });

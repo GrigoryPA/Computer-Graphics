@@ -33,7 +33,7 @@ public class Line3D {
 		x = xstart;
 		y = ystart;
 		err = el/2;
-		Display2D.AddPointOnDisplay(x,y,2);
+		Display3D.AddPointOnDisplay(x,y,2);
 		
 		for (int t = 0; t < el; t++){
 			err -= es;
@@ -46,7 +46,7 @@ public class Line3D {
 				x += pdx;
 				y += pdy;
 			}
-			Display2D.AddPointOnDisplay(x,y,2);
+			Display3D.AddPointOnDisplay(x,y,2);
 		}
 	}
 }
