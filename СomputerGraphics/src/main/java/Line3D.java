@@ -1,3 +1,4 @@
+import java.awt.*;
 
 public class Line3D {
 
@@ -6,7 +7,7 @@ public class Line3D {
 		return (x > 0) ? 1 : (x < 0) ? -1 : 0;
 	}
 	
-	public static void AddLineSigmentOnDisplayBresenham(int xstart, int ystart, int xend, int yend) {
+	public static void AddLineSigmentOnDisplayBresenham(int xstart, int ystart, int xend, int yend, Color color) {
 		int x, y, dx, dy, incx, incy, pdx, pdy, es, el, err;
 
 
@@ -33,7 +34,7 @@ public class Line3D {
 		x = xstart;
 		y = ystart;
 		err = el/2;
-		Display3D.AddPointOnDisplay(x,y,2);
+		Display3D.AddPointOnDisplay(x,y,color);
 		
 		for (int t = 0; t < el; t++){
 			err -= es;
@@ -46,7 +47,7 @@ public class Line3D {
 				x += pdx;
 				y += pdy;
 			}
-			Display3D.AddPointOnDisplay(x,y,2);
+			Display3D.AddPointOnDisplay(x,y,color);
 		}
 	}
 }

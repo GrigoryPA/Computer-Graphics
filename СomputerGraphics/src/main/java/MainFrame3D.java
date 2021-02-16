@@ -82,7 +82,7 @@ public class MainFrame3D {
             public void actionPerformed(ActionEvent e) {
                 display = new Display3D();
                 display.AddCoordinateAxes();
-            	figureOriginal = new Figure3D(Table);
+            	figureOriginal = new Figure3D(Table, new Color(0,0,0));
                 figureOriginal.IsometricProjection();
             	figureOriginal.AddFigureOnDisplay();
             	display.CreateAndOpenImage();
