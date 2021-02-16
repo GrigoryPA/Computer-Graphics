@@ -101,9 +101,10 @@ public class MainFrame2D {
                 try {
                     display.Clear();
                     display.AddCoordinateAxes();
+                    new Figure2D(Table).AddFigure2DOnDisplay2D(Color.CYAN);
                     try {
                         figureRealTime.Reflexion( 2);
-                        figureRealTime.AddFigure2DOnDisplay2D();
+                        figureRealTime.AddFigure2DOnDisplay2D(Color.GREEN);
                         display.UpdateImage();
                     } catch (Exception e1) {
                         JOptionPane.showMessageDialog(null, "Figure cannot be reflected. Your figure is too big!");
@@ -119,9 +120,10 @@ public class MainFrame2D {
             try {
                 display.Clear();
                 display.AddCoordinateAxes();
+                new Figure2D(Table).AddFigure2DOnDisplay2D(Color.CYAN);
                 try {
                     figureRealTime.Reflexion( 1);
-                    figureRealTime.AddFigure2DOnDisplay2D();
+                    figureRealTime.AddFigure2DOnDisplay2D(Color.GREEN);
                     display.UpdateImage();
                 } catch (Exception e1) {
                     JOptionPane.showMessageDialog(null, "Figure cannot be reflected. Your figure is too big!");
@@ -137,11 +139,11 @@ public class MainFrame2D {
                 try {
                     display.Clear();
                     display.AddCoordinateAxes();
-                    figureRealTime = new Figure2D(Table, Color.GREEN);
+                    figureRealTime = new Figure2D(Table);
                     try {
                         countRotateAngel +=-1*deltaAngel;
                         figureRealTime.Rotate( countRotateAngel);
-                        figureRealTime.AddFigure2DOnDisplay2D();
+                        figureRealTime.AddFigure2DOnDisplay2D(Color.GREEN);
                         display.UpdateImage();
                     } catch (Exception e1) {
                         JOptionPane.showMessageDialog(null, "Figure cannot be rotated. Your figure is too big!");
@@ -157,11 +159,11 @@ public class MainFrame2D {
                 try {
                     display.Clear();
                     display.AddCoordinateAxes();
-                    figureRealTime = new Figure2D(Table, Color.GREEN);
+                    figureRealTime = new Figure2D(Table);
                     try {
                         countRotateAngel +=1*deltaAngel;
                         figureRealTime.Rotate( countRotateAngel);
-                        figureRealTime.AddFigure2DOnDisplay2D();
+                        figureRealTime.AddFigure2DOnDisplay2D(Color.GREEN);
                         display.UpdateImage();
                     } catch (Exception e1) {
                         JOptionPane.showMessageDialog(null, "Figure cannot be rotated. Your figure is too big!");
@@ -183,8 +185,8 @@ public class MainFrame2D {
             public void actionPerformed(ActionEvent e) {
                 display = new Display2D();
                 display.AddCoordinateAxes();
-            	figureOriginal = new Figure2D(Table, Color.GREEN);
-            	figureOriginal.AddFigure2DOnDisplay2D();
+            	figureOriginal = new Figure2D(Table);
+            	figureOriginal.AddFigure2DOnDisplay2D(Color.GREEN);
             	display.CreateAndOpenImage();
             	figureRealTime=figureOriginal;
             }
@@ -206,10 +208,10 @@ public class MainFrame2D {
                 try {
                     display.Clear();
                     display.AddCoordinateAxes();
-                    new Figure2D(Table,Color.CYAN).AddFigure2DOnDisplay2D();
+                    new Figure2D(Table).AddFigure2DOnDisplay2D(Color.CYAN);
                     try {
                         figureRealTime.ScaleUp(1);
-                        figureRealTime.AddFigure2DOnDisplay2D();
+                        figureRealTime.AddFigure2DOnDisplay2D(Color.GREEN);
                         display.UpdateImage();
                     } catch (Exception e1) {
                         JOptionPane.showMessageDialog(null, "Figure cannot be scaled up. Your figure is too big!");
@@ -225,9 +227,9 @@ public class MainFrame2D {
                 try {
                     display.Clear();
                     display.AddCoordinateAxes();
-                    new Figure2D(Table,Color.CYAN).AddFigure2DOnDisplay2D();
+                    new Figure2D(Table).AddFigure2DOnDisplay2D(Color.CYAN);
                     figureRealTime.ScaleUp(-1);
-                    figureRealTime.AddFigure2DOnDisplay2D();
+                    figureRealTime.AddFigure2DOnDisplay2D(Color.GREEN);
                     display.UpdateImage();
                 } catch (Exception e1) {
                     JOptionPane.showMessageDialog(null, "You need to draw figure first!");
