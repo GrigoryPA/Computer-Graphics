@@ -1,29 +1,24 @@
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
-import java.math.MathContext;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 
-public class MainFrame {
+public class MainFrame3D {
+    private JFrame frame2D;
 	private Display2D display;
 	private JToolBar toolBar1;
 	private JButton AddRow;
 	private JButton DeleteRow;
 	private JButton Draw;
-	private JFrame frame;
 	private DefaultTableModel tableModel;
 	private JTable Table;
 	private JScrollPane scroller; 
 	private Figure2D figureRealTime;
     private Figure2D figureOriginal;
     private Curve2D curve;
-	private JPanel FilterPanel;
 	private JButton ScaleUp;
     private JButton ScaleDown;
     private JButton RotateRight;
@@ -35,12 +30,12 @@ public class MainFrame {
     private double countRotateAngel=0;
     private int countRef=0;
 
-    public void MakeAndShow() {
+    public void MakeAndShow2D() {
 
 
-		frame=new JFrame("Computer Graphics");
-        frame.setBounds(100,50, 400, 450);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame2D =new JFrame("Computer Graphics");
+        frame2D.setBounds(100,50, 400, 450);
+        frame2D.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         AddRow=new JButton(new ImageIcon("src/main/resources/icons/Add48x48.png"));
         DeleteRow=new JButton(new ImageIcon("src/main/resources/icons/Delete48x48.png"));
@@ -69,23 +64,23 @@ public class MainFrame {
         toolBar1.add(DeleteRow);
         toolBar1.add(Draw);
         toolBar1.add(Bezier);
-        frame.add(toolBar1, BorderLayout.NORTH);
+        frame2D.add(toolBar1, BorderLayout.NORTH);
 
 
-        String[] headers = {"-350<=X<350", "-250<=Y<250"};
+        String[] headers = {"X", "Y", "Z"};
         String [][] data;
-        data=new String[1][2];
+        data=new String[1][3];
         tableModel=new DefaultTableModel(data, headers);
         Table=new JTable(tableModel);
         Font font = new Font("Verdana", Font.PLAIN, 24);
-        Font fontHeaders = new Font("Verdana", Font.BOLD, 16);
+        Font fontHeaders = new Font("Verdana", Font.CENTER_BASELINE, 16);
         JTableHeader tableHeader = Table.getTableHeader();
         tableHeader.setFont(fontHeaders);
         Table.setFont(font);
         Table.setAutoCreateRowSorter(true);
         Table.setRowHeight(Table.getRowHeight()+10);
         scroller=new JScrollPane(Table);
-        frame.add(scroller, BorderLayout.CENTER);
+        frame2D.add(scroller, BorderLayout.CENTER);
 
 
         toolBar2 = new JToolBar();
@@ -95,10 +90,10 @@ public class MainFrame {
         toolBar2.add(ScaleDown);
         toolBar2.add(ReflexionX);
         toolBar2.add(ReflexionY);
-        frame.add(toolBar2, BorderLayout.SOUTH);
+        frame2D.add(toolBar2, BorderLayout.SOUTH);
 
         
-        frame.setVisible(true);
+        frame2D.setVisible(true);
 
         ReflexionX.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
@@ -244,13 +239,14 @@ public class MainFrame {
     				tableModel.removeRow(rows[0]);
     			}
     			else
-    				JOptionPane.showMessageDialog(frame, "You must first select the rows.", "Failed to delete rows.", 0);
+    				JOptionPane.showMessageDialog(frame2D, "You must first select the rows.", "Failed to delete rows.", 0);
             }
         });
 	}
 	
 	public static void main(String[] args) {
-		new MainFrame().MakeAndShow();
+
+		new MainFrame3D().MakeAndShow2D();
 	}
 	
 	
