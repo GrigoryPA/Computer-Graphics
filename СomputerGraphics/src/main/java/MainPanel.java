@@ -12,12 +12,12 @@ public class MainPanel {
 
     public static void main(String[] args) {
         frameChoice =new JFrame();
-        frameChoice.setBounds(100,100, 256, 256);
+        frameChoice.setBounds(100,100, 256, 310);
         frameChoice.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        button2d = new JButton(new ImageIcon("src/main/resources/icons/3d.png"));
-        button3d = new JButton(new ImageIcon("src/main/resources/icons/2d.png"));
+        button2d = new JButton(new ImageIcon("src/main/resources/icons/2d.png"));
+        button3d = new JButton(new ImageIcon("src/main/resources/icons/3d.png"));
         frameChoice.add(button2d,BorderLayout.SOUTH);
-        frameChoice.add(button3d,BorderLayout.CENTER);
+        frameChoice.add(button3d,BorderLayout.NORTH);
         frameChoice.setVisible(true);
 
         button2d.addActionListener(new ActionListener(){

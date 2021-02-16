@@ -36,16 +36,17 @@ public class Display3D {
 			}
 	}
 	
-	public static void AddPointOnDisplay(double x, double y, int color) {
+	public static void AddPointOnDisplay(double x, double y, double z, int color) {
 		display[ZeroZero[0]+(int)x][ZeroZero[1]+(int)y]=color;
 	}
 	
 	public void AddCoordinateAxes() {
 		for(int i=0;i<N;i++) {
 			for(int j=0;j<M;j++) {
-				if(i==ZeroZero[0] || j==ZeroZero[1]) display[i][j]=1;
-				if((i==ZeroZero[0]-1||i==ZeroZero[0]-2) && j%10==0) display[i][j]=1;
-				if((j==ZeroZero[1]-1||j==ZeroZero[1]-2) && i%10==0) display[i][j]=1;
+				if(i==ZeroZero[0] && j>=ZeroZero[1]) display[i][j]=1;
+				if(j<ZeroZero[1]){
+					if( i == j+100 || j==N-i-100) display[i][j]=1;
+				}
 			}
 		}
 	}
