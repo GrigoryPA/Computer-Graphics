@@ -30,11 +30,11 @@ public class MainFrame3D {
     private double countRotateAngel=0;
     private int countRef=0;
 
-    public void MakeAndShow2D() {
+    public void MakeAndShow() {
 
 
-		frame2D =new JFrame("Computer Graphics");
-        frame2D.setBounds(100,50, 400, 450);
+		frame2D =new JFrame("2D");
+        frame2D.setBounds(450,50, 400, 450);
         frame2D.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         AddRow=new JButton(new ImageIcon("src/main/resources/icons/Add48x48.png"));
@@ -242,11 +242,6 @@ public class MainFrame3D {
     				JOptionPane.showMessageDialog(frame2D, "You must first select the rows.", "Failed to delete rows.", 0);
             }
         });
-	}
-	
-	public static void main(String[] args) {
-
-		new MainFrame3D().MakeAndShow2D();
 	}
 	
 	

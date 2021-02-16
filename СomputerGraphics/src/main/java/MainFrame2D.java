@@ -31,11 +31,11 @@ public class MainFrame2D {
     private double countRotateAngel=0;
     private int countRef=0;
 
-    public void MakeAndShow2D() {
+    public void MakeAndShow() {
 
 
-		frame2D =new JFrame("Computer Graphics");
-        frame2D.setBounds(100,50, 400, 450);
+		frame2D =new JFrame("3D");
+        frame2D.setBounds(50,50, 400, 450);
         frame2D.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         AddRow=new JButton(new ImageIcon("src/main/resources/icons/Add48x48.png"));
@@ -68,9 +68,9 @@ public class MainFrame2D {
         frame2D.add(toolBar1, BorderLayout.NORTH);
 
 
-        String[] headers = {"X", "Y", "Z"};
+        String[] headers = {"X", "Y"};
         String [][] data;
-        data=new String[1][3];
+        data=new String[1][2];
         tableModel=new DefaultTableModel(data, headers);
         Table=new JTable(tableModel);
         Font font = new Font("Verdana", Font.PLAIN, 24);
@@ -245,10 +245,7 @@ public class MainFrame2D {
         });
 	}
 	
-	public static void main(String[] args) {
 
-		new MainFrame2D().MakeAndShow2D();
-	}
 	
 	
 }
