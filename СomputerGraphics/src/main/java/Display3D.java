@@ -37,15 +37,15 @@ public class Display3D {
 	}
 	
 	public void AddCoordinateAxes() {
-		Figure3D AxisX = new Figure3D(new double[][]{{0,0,0},{250,0,0}}, new Color(255,0,0));
+		Figure3D AxisX = new Figure3D(new double[][]{{0,0,0},{250,0,0}});
 		AxisX.IsometricProjection();
-		AxisX.AddFigureOnDisplay();
-		Figure3D AxisY = new Figure3D(new double[][]{{0,0,0},{0,250,0}}, new Color(0,255,0));
+		AxisX.AddFigureOnDisplay(Color.red);
+		Figure3D AxisY = new Figure3D(new double[][]{{0,0,0},{0,250,0}});
 		AxisY.IsometricProjection();
-		AxisY.AddFigureOnDisplay();
-		Figure3D AxisZ = new Figure3D(new double[][]{{0,0,0},{0,0,250}}, new Color(0,0,255));
+		AxisY.AddFigureOnDisplay(Color.green);
+		Figure3D AxisZ = new Figure3D(new double[][]{{0,0,0},{0,0,250}});
 		AxisZ.IsometricProjection();
-		AxisZ.AddFigureOnDisplay();
+		AxisZ.AddFigureOnDisplay(Color.blue);
 	}
 	
 	

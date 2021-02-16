@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Figure3D {
-	public Color colorFigure;
+	//public Color colorFigure;
 	public int[][] pointsResult;
 	public double[][] points;
 	public double countScale = 1;
@@ -15,8 +15,7 @@ public class Figure3D {
 											{0, 0, 0, 0},
 											{0, 0, 0, 1}};
 
-	public Figure3D(JTable Table, Color color) {
-		colorFigure=color;
+	public Figure3D(JTable Table) {
 		points = new double[Table.getRowCount()][4];
 		pointsResult = new int[Table.getRowCount()][2];
 		try {
@@ -31,8 +30,7 @@ public class Figure3D {
 		}
 	}
 
-	public Figure3D(double P[][], Color color) {
-		colorFigure=color;
+	public Figure3D(double P[][]) {
 		points = new double[P.length][4];
 		pointsResult = new int[P.length][2];
 			for(int i=0; i<P.length; i++) {
@@ -43,7 +41,7 @@ public class Figure3D {
 			}
 	}
 
-	public void AddFigureOnDisplay() {
+	public void AddFigureOnDisplay(Color colorFigure) {
 		//Line3D.AddLineSigmentOnDisplayBresenham(pointsResult[0][0], pointsResult[0][1],pointsResult[pointsResult.length-1][0], pointsResult[pointsResult.length-1][1]);
 		for(int i=0;i<pointsResult.length-1;i++)
 			Line3D.AddLineSigmentOnDisplayBresenham(pointsResult[i][0],pointsResult[i][1],pointsResult[i+1][0],pointsResult[i+1][1], colorFigure);
