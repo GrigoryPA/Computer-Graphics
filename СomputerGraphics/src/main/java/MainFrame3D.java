@@ -100,6 +100,7 @@ public class MainFrame3D {
                     try {
                         countRotateAngelX -=deltaAngel;
                         figureRealTime.Rotate( countRotateAngelX, countRotateAngelY);
+                        figureRealTime.IsometricProjection();
                         display.AddCoordinateAxesIsometric(0, 0, Color.lightGray, Color.lightGray, Color.lightGray);
                         display.AddCoordinateAxesIsometric(countRotateAngelX, countRotateAngelY, Color.red, Color.green, Color.blue);
                         figureRealTime.AddFigureOnDisplay(Color.BLACK);
@@ -121,6 +122,7 @@ public class MainFrame3D {
                     try {
                         countRotateAngelX +=deltaAngel;
                         figureRealTime.Rotate( countRotateAngelX, countRotateAngelY);
+                        figureRealTime.IsometricProjection();
                         display.AddCoordinateAxesIsometric(0, 0, Color.lightGray, Color.lightGray, Color.lightGray);
                         display.AddCoordinateAxesIsometric(countRotateAngelX, countRotateAngelY, Color.red, Color.green, Color.blue);
                         figureRealTime.AddFigureOnDisplay(Color.BLACK);
@@ -142,6 +144,7 @@ public class MainFrame3D {
                     try {
                         countRotateAngelY -=deltaAngel;
                         figureRealTime.Rotate( countRotateAngelX, countRotateAngelY);
+                        figureRealTime.IsometricProjection();
                         display.AddCoordinateAxesIsometric(0, 0, Color.lightGray, Color.lightGray, Color.lightGray);
                         display.AddCoordinateAxesIsometric(countRotateAngelX, countRotateAngelY, Color.red, Color.green, Color.blue);
                         figureRealTime.AddFigureOnDisplay(Color.BLACK);
@@ -163,6 +166,7 @@ public class MainFrame3D {
                     try {
                         countRotateAngelY +=deltaAngel;
                         figureRealTime.Rotate( countRotateAngelX, countRotateAngelY);
+                        figureRealTime.IsometricProjection();
                         display.AddCoordinateAxesIsometric(0, 0, Color.lightGray, Color.lightGray, Color.lightGray);
                         display.AddCoordinateAxesIsometric(countRotateAngelX, countRotateAngelY, Color.red, Color.green, Color.blue);
                         figureRealTime.AddFigureOnDisplay(Color.black);
