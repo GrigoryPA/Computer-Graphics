@@ -11,19 +11,19 @@ public class Figure2D {
 		//colorFigure=color;
 		points = new int[Table.getRowCount()][2];
 		try {
-			for(int i=0; i<Table.getRowCount(); i++) {
-						points[i][0]=Integer.parseInt((String) Table.getValueAt(i, 0));
-						points[i][1]=Integer.parseInt((String) Table.getValueAt(i, 1));
+			for (int i = 0; i < Table.getRowCount(); i++) {
+				points[i][0] = Integer.parseInt((String) Table.getValueAt(i, 0));
+				points[i][1] = Integer.parseInt((String) Table.getValueAt(i, 1));
 			}
 		} catch (NumberFormatException e) {
 			JOptionPane.showMessageDialog(null, "All values should be integer!\nBlank cells and rows are not allowed!");
 		}
 	}
-	
+
 	public void AddFigure2DOnDisplay2D(Color colorFigure) {
-		Line2D.AddLineSigmentOnDisplayBresenham(points[0][0], points[0][1],points[points.length-1][0], points[points.length-1][1], colorFigure);
-		for(int i=0;i<points.length-1;i++)
-			Line2D.AddLineSigmentOnDisplayBresenham(points[i][0],points[i][1],points[i+1][0],points[i+1][1],colorFigure);
+		Line2D.AddLineSigmentOnDisplayBresenham(points[0][0], points[0][1], points[points.length - 1][0], points[points.length - 1][1], colorFigure);
+		for (int i = 0; i < points.length - 1; i++)
+			Line2D.AddLineSigmentOnDisplayBresenham(points[i][0], points[i][1], points[i + 1][0], points[i + 1][1], colorFigure);
 	}
 
 	public void ScaleUp(int updown) {
@@ -41,7 +41,7 @@ public class Figure2D {
 				b[1][0] = 0;                              b[1][1] = countScale / (countScale - 1);
 				points = Multiply(b);
 			}
-			System.out.println(countScale+"   "+updown);
+			System.out.println(countScale + "   " + updown);
 		} catch (NumberFormatException e) {
 			JOptionPane.showMessageDialog(null,
 					"All values should be integer!\nBlank cells and rows are not allowed");

@@ -101,7 +101,7 @@ public class MainFrame2D {
                 try {
                     display.Clear();
                     display.AddCoordinateAxes();
-                    new Figure2D(Table).AddFigure2DOnDisplay2D(Color.CYAN);
+                    new Figure2D(Table).AddFigure2DOnDisplay2D(Color.GRAY);
                     try {
                         figureRealTime.Reflexion( 2);
                         figureRealTime.AddFigure2DOnDisplay2D(Color.GREEN);
@@ -120,7 +120,7 @@ public class MainFrame2D {
             try {
                 display.Clear();
                 display.AddCoordinateAxes();
-                new Figure2D(Table).AddFigure2DOnDisplay2D(Color.CYAN);
+                new Figure2D(Table).AddFigure2DOnDisplay2D(Color.GRAY);
                 try {
                     figureRealTime.Reflexion( 1);
                     figureRealTime.AddFigure2DOnDisplay2D(Color.GREEN);
@@ -208,7 +208,7 @@ public class MainFrame2D {
                 try {
                     display.Clear();
                     display.AddCoordinateAxes();
-                    new Figure2D(Table).AddFigure2DOnDisplay2D(Color.CYAN);
+                    new Figure2D(Table).AddFigure2DOnDisplay2D(Color.GRAY);
                     try {
                         figureRealTime.ScaleUp(1);
                         figureRealTime.AddFigure2DOnDisplay2D(Color.GREEN);
@@ -227,7 +227,7 @@ public class MainFrame2D {
                 try {
                     display.Clear();
                     display.AddCoordinateAxes();
-                    new Figure2D(Table).AddFigure2DOnDisplay2D(Color.CYAN);
+                    new Figure2D(Table).AddFigure2DOnDisplay2D(Color.GRAY);
                     figureRealTime.ScaleUp(-1);
                     figureRealTime.AddFigure2DOnDisplay2D(Color.GREEN);
                     display.UpdateImage();
