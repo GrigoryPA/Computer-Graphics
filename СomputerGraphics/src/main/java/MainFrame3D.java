@@ -22,13 +22,17 @@ public class MainFrame3D {
     private Curve2D curve;
 	private JButton ScaleUp;
     private JButton ScaleDown;
-    private JButton RotateRight;
-    private JButton RotateLeft;
+    private JButton RotateRightX;
+    private JButton RotateLeftX;
+    private JButton RotateRightY;
+    private JButton RotateLeftY;
     private JButton ReflexionX;
     private JButton ReflexionY;
-    private JButton Bezier;    private JToolBar toolBar2;
+    private JButton Bezier;
+    private JToolBar toolBar2;
     public double deltaAngel = Math.PI/18;
-    private double countRotateAngel=0;
+    private double countRotateAngelX=0;
+    private double countRotateAngelY=0;
     private int countRef=0;
 
     public void MakeAndShow() {
@@ -41,18 +45,23 @@ public class MainFrame3D {
         AddRow=new JButton(new ImageIcon("src/main/resources/icons/Add48x48.png"));
         DeleteRow=new JButton(new ImageIcon("src/main/resources/icons/Delete48x48.png"));
         DrawIsometric = new JButton(new ImageIcon("src/main/resources/icons/Rectangle48x48.png"));
-        ///DrawDimetric = new JButton(new ImageIcon("src/main/resources/icons/Rectangle48x48.png"));
+        RotateRightX = new JButton(new ImageIcon("src/main/resources/icons/RotateRight48x48.png"));
+        RotateLeftX = new JButton(new ImageIcon("src/main/resources/icons/RotateLeft48x48.png"));
+        RotateRightY = new JButton(new ImageIcon("src/main/resources/icons/RotateRight48x48.png"));
+        RotateLeftY = new JButton(new ImageIcon("src/main/resources/icons/RotateLeft48x48.png"));
 
         AddRow.setToolTipText("Add row");
         DeleteRow.setToolTipText("Delete row");
         DrawIsometric.setToolTipText("Draw isometric");
-       // DrawDimetric.setToolTipText("Draw dimetric");
+        RotateRightX.setToolTipText("Rotate right X");
+        RotateLeftX.setToolTipText("Rotate left X");
+        RotateRightY.setToolTipText("Rotate right Y");
+        RotateLeftY.setToolTipText("Rotate left Y");
 
         toolBar1 = new JToolBar();
         toolBar1.add(AddRow);
         toolBar1.add(DeleteRow);
         toolBar1.add(DrawIsometric);
-       // toolBar1.add(DrawDimetric);
         frame2D.add(toolBar1, BorderLayout.NORTH);
 
 
@@ -73,19 +82,107 @@ public class MainFrame3D {
 
 
         toolBar2 = new JToolBar();
+        toolBar2.add(RotateLeftX);
+        toolBar2.add(RotateRightX);
+        toolBar2.add(RotateLeftY);
+        toolBar2.add(RotateRightY);
         frame2D.add(toolBar2, BorderLayout.SOUTH);
 
         
         frame2D.setVisible(true);
 
 
+        RotateLeftX.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    display.Clear();
+                    figureRealTime = new Figure3D(Table);
+                    try {
+                        countRotateAngelX -=deltaAngel;
+                        figureRealTime.Rotate( countRotateAngelX, countRotateAngelY);
+                        display.AddCoordinateAxesIsometric(0, 0, Color.lightGray, Color.lightGray, Color.lightGray);
+                        display.AddCoordinateAxesIsometric(countRotateAngelX, countRotateAngelY, Color.red, Color.green, Color.blue);
+                        figureRealTime.AddFigureOnDisplay(Color.BLACK);
+                        display.UpdateImage();
+                    } catch (Exception e1) {
+                        JOptionPane.showMessageDialog(null, "Figure cannot be rotated. Your figure is too big!");
+                    }
+                } catch (Exception e1) {
+                    JOptionPane.showMessageDialog(null, "You need to draw figure first!");
+                }
+            }
+        });
+
+        RotateRightX.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    display.Clear();
+                    figureRealTime = new Figure3D(Table);
+                    try {
+                        countRotateAngelX +=deltaAngel;
+                        figureRealTime.Rotate( countRotateAngelX, countRotateAngelY);
+                        display.AddCoordinateAxesIsometric(0, 0, Color.lightGray, Color.lightGray, Color.lightGray);
+                        display.AddCoordinateAxesIsometric(countRotateAngelX, countRotateAngelY, Color.red, Color.green, Color.blue);
+                        figureRealTime.AddFigureOnDisplay(Color.BLACK);
+                        display.UpdateImage();
+                    } catch (Exception e1) {
+                        JOptionPane.showMessageDialog(null, "Figure cannot be rotated. Your figure is too big!");
+                    }
+                } catch (Exception e1) {
+                    JOptionPane.showMessageDialog(null, "You need to draw figure first!");
+                }
+            }
+        });
+
+        RotateLeftY.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    display.Clear();
+                    figureRealTime = new Figure3D(Table);
+                    try {
+                        countRotateAngelY -=deltaAngel;
+                        figureRealTime.Rotate( countRotateAngelX, countRotateAngelY);
+                        display.AddCoordinateAxesIsometric(0, 0, Color.lightGray, Color.lightGray, Color.lightGray);
+                        display.AddCoordinateAxesIsometric(countRotateAngelX, countRotateAngelY, Color.red, Color.green, Color.blue);
+                        figureRealTime.AddFigureOnDisplay(Color.BLACK);
+                        display.UpdateImage();
+                    } catch (Exception e1) {
+                        JOptionPane.showMessageDialog(null, "Figure cannot be rotated. Your figure is too big!");
+                    }
+                } catch (Exception e1) {
+                    JOptionPane.showMessageDialog(null, "You need to draw figure first!");
+                }
+            }
+        });
+
+        RotateRightY.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    display.Clear();
+                    figureRealTime = new Figure3D(Table);
+                    try {
+                        countRotateAngelY +=deltaAngel;
+                        figureRealTime.Rotate( countRotateAngelX, countRotateAngelY);
+                        display.AddCoordinateAxesIsometric(0, 0, Color.lightGray, Color.lightGray, Color.lightGray);
+                        display.AddCoordinateAxesIsometric(countRotateAngelX, countRotateAngelY, Color.red, Color.green, Color.blue);
+                        figureRealTime.AddFigureOnDisplay(Color.black);
+                        display.UpdateImage();
+                    } catch (Exception e1) {
+                        JOptionPane.showMessageDialog(null, "Figure cannot be rotated. Your figure is too big!");
+                    }
+                } catch (Exception e1) {
+                    JOptionPane.showMessageDialog(null, "You need to draw figure first!");
+                }
+            }
+        });
 
 
-        
+
+
         DrawIsometric.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
                 display = new Display3D();
-                display.AddCoordinateAxesIsometric();
+                display.AddCoordinateAxesIsometric(0,0, Color.red, Color.green, Color.blue);
             	figureOriginal = new Figure3D(Table);
                 figureOriginal.IsometricProjection();
             	figureOriginal.AddFigureOnDisplay(Color.BLACK);

@@ -96,16 +96,17 @@ public class Figure3D {
 			JOptionPane.showMessageDialog(null,
 					"All values should be integer!\nBlank cells and rows are not allowed");
 		}
+	}*/
+
+	public void Rotate( double rotateX, double rotateY) {
+		double[][] b = {{Math.cos(rotateY), Math.sin(rotateX)*Math.sin(rotateY),  -Math.sin(rotateY)*Math.cos(rotateX),0},
+						{0,                 Math.cos(rotateX),             Math.sin(rotateX), 0},
+						{Math.sin(rotateY),        -Math.sin(rotateX)*Math.cos(rotateY), Math.cos(rotateX)*Math.cos(rotateY),0},
+						{0,                 0,                      0, 1}};
+		points=Multiply(points, b);
 	}
 
-	public void Rotate( double countRotateAngel) {
-		double[][] b = new double[2][2];
-				b[0][0]= Math.cos(countRotateAngel); b[0][1]=Math.sin(countRotateAngel);
-				b[1][0]=-(Math.sin(countRotateAngel)); b[1][1]=Math.cos(countRotateAngel);
-				points=Multiply(points, b);
-		}
-
-	public void Reflexion( int axis) {
+	/*public void Reflexion( int axis) {
 		double[][] b = new double[2][2];
 			if(axis==2) {
 				b[0][0] = -1; b[0][1] = 0;

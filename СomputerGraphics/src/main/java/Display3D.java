@@ -36,29 +36,24 @@ public class Display3D {
 		display[ZeroZero[0]+(int)x][ZeroZero[1]+(int)y]=color;
 	}
 	
-	public void AddCoordinateAxesIsometric() {
+	public void AddCoordinateAxesIsometric(double rotateX, double rotateY, Color colorX, Color colorY, Color colorZ) {
 		Figure3D AxisX = new Figure3D(new double[][]{{0,0,0},{250,0,0}});
-		AxisX.IsometricProjection();
-		AxisX.AddFigureOnDisplay(Color.red);
 		Figure3D AxisY = new Figure3D(new double[][]{{0,0,0},{0,250,0}});
-		AxisY.IsometricProjection();
-		AxisY.AddFigureOnDisplay(Color.green);
 		Figure3D AxisZ = new Figure3D(new double[][]{{0,0,0},{0,0,250}});
+
+		AxisX.Rotate(rotateX, rotateY);
+		AxisY.Rotate(rotateX, rotateY);
+		AxisZ.Rotate(rotateX, rotateY);
+
+		AxisX.IsometricProjection();
+		AxisX.AddFigureOnDisplay(colorX);
+		AxisY.IsometricProjection();
+		AxisY.AddFigureOnDisplay(colorY);
 		AxisZ.IsometricProjection();
-		AxisZ.AddFigureOnDisplay(Color.blue);
+		AxisZ.AddFigureOnDisplay(colorZ);
 	}
 
-	public void AddCoordinateAxesDimetric() {
-		Figure3D AxisX = new Figure3D(new double[][]{{0,0,0},{250,0,0}});
-		AxisX.DimetricProjection();
-		AxisX.AddFigureOnDisplay(Color.red);
-		Figure3D AxisY = new Figure3D(new double[][]{{0,0,0},{0,250,0}});
-		AxisY.DimetricProjection();
-		AxisY.AddFigureOnDisplay(Color.green);
-		Figure3D AxisZ = new Figure3D(new double[][]{{0,0,0},{0,0,250}});
-		AxisZ.DimetricProjection();
-		AxisZ.AddFigureOnDisplay(Color.blue);
-	}
+
 	
 	
 	public void CreateAndOpenImage() {
