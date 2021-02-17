@@ -12,7 +12,8 @@ public class MainFrame3D {
 	private JToolBar toolBar1;
 	private JButton AddRow;
 	private JButton DeleteRow;
-	private JButton Draw;
+	private JButton DrawIsometric;
+    private JButton DrawDimetric;
 	private DefaultTableModel tableModel;
 	private JTable Table;
 	private JScrollPane scroller; 
@@ -39,16 +40,19 @@ public class MainFrame3D {
 
         AddRow=new JButton(new ImageIcon("src/main/resources/icons/Add48x48.png"));
         DeleteRow=new JButton(new ImageIcon("src/main/resources/icons/Delete48x48.png"));
-        Draw = new JButton(new ImageIcon("src/main/resources/icons/Rectangle48x48.png"));
+        DrawIsometric = new JButton(new ImageIcon("src/main/resources/icons/Rectangle48x48.png"));
+        ///DrawDimetric = new JButton(new ImageIcon("src/main/resources/icons/Rectangle48x48.png"));
 
         AddRow.setToolTipText("Add row");
         DeleteRow.setToolTipText("Delete row");
-        Draw.setToolTipText("Draw");
+        DrawIsometric.setToolTipText("Draw isometric");
+       // DrawDimetric.setToolTipText("Draw dimetric");
 
         toolBar1 = new JToolBar();
         toolBar1.add(AddRow);
         toolBar1.add(DeleteRow);
-        toolBar1.add(Draw);
+        toolBar1.add(DrawIsometric);
+       // toolBar1.add(DrawDimetric);
         frame2D.add(toolBar1, BorderLayout.NORTH);
 
 
@@ -78,16 +82,18 @@ public class MainFrame3D {
 
 
         
-        Draw.addActionListener(new ActionListener(){
+        DrawIsometric.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
                 display = new Display3D();
-                display.AddCoordinateAxes();
+                display.AddCoordinateAxesIsometric();
             	figureOriginal = new Figure3D(Table);
                 figureOriginal.IsometricProjection();
             	figureOriginal.AddFigureOnDisplay(Color.BLACK);
             	display.CreateAndOpenImage();
             }
         });
+
+
 
 
         AddRow.addActionListener(new ActionListener(){

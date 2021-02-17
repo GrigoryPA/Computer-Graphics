@@ -36,7 +36,7 @@ public class Display3D {
 		display[ZeroZero[0]+(int)x][ZeroZero[1]+(int)y]=color;
 	}
 	
-	public void AddCoordinateAxes() {
+	public void AddCoordinateAxesIsometric() {
 		Figure3D AxisX = new Figure3D(new double[][]{{0,0,0},{250,0,0}});
 		AxisX.IsometricProjection();
 		AxisX.AddFigureOnDisplay(Color.red);
@@ -45,6 +45,18 @@ public class Display3D {
 		AxisY.AddFigureOnDisplay(Color.green);
 		Figure3D AxisZ = new Figure3D(new double[][]{{0,0,0},{0,0,250}});
 		AxisZ.IsometricProjection();
+		AxisZ.AddFigureOnDisplay(Color.blue);
+	}
+
+	public void AddCoordinateAxesDimetric() {
+		Figure3D AxisX = new Figure3D(new double[][]{{0,0,0},{250,0,0}});
+		AxisX.DimetricProjection();
+		AxisX.AddFigureOnDisplay(Color.red);
+		Figure3D AxisY = new Figure3D(new double[][]{{0,0,0},{0,250,0}});
+		AxisY.DimetricProjection();
+		AxisY.AddFigureOnDisplay(Color.green);
+		Figure3D AxisZ = new Figure3D(new double[][]{{0,0,0},{0,0,250}});
+		AxisZ.DimetricProjection();
 		AxisZ.AddFigureOnDisplay(Color.blue);
 	}
 	

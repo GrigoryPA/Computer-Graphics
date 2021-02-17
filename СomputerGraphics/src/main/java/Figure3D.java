@@ -6,14 +6,22 @@ public class Figure3D {
 	public int[][] pointsResult;
 	public double[][] points;
 	public double countScale = 1;
-	public double[][] Isometric =  {{0.707107, 0.408248, -0.577353, 0},
+	public double[][] Isometric =  {{0.707107, -0.408248, 0.577353, 0},
 									{0, 0.816497, 0.577345, 0},
-									{0.707107, -0.408248, 0.577353, 0},
+									{-0.707107, -0.408248, 0.577353, 0},
 									{0, 0, 0, 1}};
 	public double[][] ProjectionOnXOY =    {{1, 0, 0, 0},
 											{0, 1, 0, 0},
 											{0, 0, 0, 0},
 											{0, 0, 0, 1}};
+	public double[][] RotationY90 =  {{0, 0, 1, 0},
+									{0, 1, 0, 0},
+									{-1, 0, 0, 0},
+									{0, 0, 0, 1}};
+	public double[][] Dimetric =    {{0.925820, 0.133631, -0.353553, 0},
+									{0, 0.935414, 0.353553, 0},
+									{0.377964, -0.327329, 0.866025, 0},
+									{0, 0, 0, 1}};
 
 	public Figure3D(JTable Table) {
 		points = new double[Table.getRowCount()][4];
@@ -48,24 +56,24 @@ public class Figure3D {
 	}
 
 	public void DimetricProjection() {
+		double[][] M = points;
 
+		M = Multiply(M,Dimetric);
+		M = Multiply(M,ProjectionOnXOY);
+		for(int i=0;i<M.length;i++) {
+			pointsResult[i][0] = (int) M[i][0];
+			pointsResult[i][1] = (int) M[i][1];
+		}
 	}
 
 	public void IsometricProjection() {
 		double[][] M = points;
-		for(int i=0;i<M.length;i++){
-			System.out.println(M[i][0]+"; "+M[i][1]+"; "+M[i][2]+"; "+M[i][3]);
-		}System.out.println();
 		M = Multiply(M,Isometric);
-		for(int i=0;i<M.length;i++){
-			System.out.println(M[i][0]+"; "+M[i][1]+"; "+M[i][2]+"; "+M[i][3]);
-		}System.out.println();
 		M = Multiply(M,ProjectionOnXOY);
-		for(int i=0;i<M.length;i++){
-			pointsResult[i][0]=(int)M[i][0];
-			pointsResult[i][1]=(int)M[i][1];
-			System.out.println(M[i][0]+"; "+M[i][1]+"; "+M[i][2]+"; "+M[i][3]);
-		}System.out.println();
+		for(int i=0;i<M.length;i++) {
+			pointsResult[i][0] = (int) M[i][0];
+			pointsResult[i][1] = (int) M[i][1];
+		}
 	}
 	/*
 	public void ScaleUp(int updown) {
