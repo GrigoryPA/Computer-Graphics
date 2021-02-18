@@ -24,14 +24,20 @@ public class Figure3D {
 									{0, 0, 0, 1}};
 
 	public Figure3D(JTable Table) {
-		points = new double[Table.getRowCount()][4];
-		pointsResult = new int[Table.getRowCount()][2];
+		points = new double[Table.getRowCount()*2][4];
+		pointsResult = new int[Table.getRowCount()*2][2];
 		try {
-			for(int i=0; i<Table.getRowCount(); i++) {
-				points[i][0]=Integer.parseInt((String) Table.getValueAt(i, 0));
-				points[i][1]=Integer.parseInt((String) Table.getValueAt(i, 1));
-				points[i][2]=Integer.parseInt((String) Table.getValueAt(i, 2));
-				points[i][3]=1;
+			for(int i=0, j = 0; i<Table.getRowCount();i++) {
+				points[j][0]=Integer.parseInt((String) Table.getValueAt(i, 0));
+				points[j][1]=Integer.parseInt((String) Table.getValueAt(i, 1));
+				points[j][2]=Integer.parseInt((String) Table.getValueAt(i, 2));
+				points[j][3]=1;
+				j++;
+				points[j][0]=Integer.parseInt((String) Table.getValueAt(i, 3));
+				points[j][1]=Integer.parseInt((String) Table.getValueAt(i, 4));
+				points[j][2]=Integer.parseInt((String) Table.getValueAt(i, 5));
+				points[j][3]=1;
+				j++;
 			}
 		} catch (NumberFormatException e) {
 			JOptionPane.showMessageDialog(null, "All values should be integer!\nBlank cells and rows are not allowed!");
@@ -51,8 +57,9 @@ public class Figure3D {
 
 	public void AddFigureOnDisplay(Color colorFigure) {
 		//Line3D.AddLineSigmentOnDisplayBresenham(pointsResult[0][0], pointsResult[0][1],pointsResult[pointsResult.length-1][0], pointsResult[pointsResult.length-1][1]);
-		for(int i=0;i<pointsResult.length-1;i++)
-			Line3D.AddLineSigmentOnDisplayBresenham(pointsResult[i][0],pointsResult[i][1],pointsResult[i+1][0],pointsResult[i+1][1], colorFigure);
+		for(int i=0;i<pointsResult.length-1;i+=2) {
+			Line3D.AddLineSigmentOnDisplayBresenham(pointsResult[i][0], pointsResult[i][1], pointsResult[i + 1][0], pointsResult[i + 1][1], colorFigure);
+		}
 	}
 
 	public void DimetricProjection() {

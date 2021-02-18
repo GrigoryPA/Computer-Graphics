@@ -65,9 +65,9 @@ public class MainFrame3D {
         frame2D.add(toolBar1, BorderLayout.NORTH);
 
 
-        String[] headers = {"X", "Y", "Z"};
+        String[] headers = {"X1", "Y1", "Z1","X2", "Y2", "Z2"};
         String [][] data;
-        data=new String[1][3];
+        data=new String[1][6];
         tableModel=new DefaultTableModel(data, headers);
         Table=new JTable(tableModel);
         Font font = new Font("Verdana", Font.PLAIN, 24);
