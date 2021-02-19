@@ -29,6 +29,7 @@ public class MainFrame3D {
 	private Figure3D figureRealTime;
     private Figure3D figureOriginal;
     private Bezier3D bezierPlaneOriginal;
+    private Bezier3D bezierPlaneRealTime;
     private Curve2D curve;
 	private JButton ScaleUp;
     private JButton ScaleDown;
@@ -45,6 +46,7 @@ public class MainFrame3D {
     private double countRotateAngelY=0;
     private int countRef=0;
     private int BezierRowsAmount = 1;
+    private boolean bOnScreen;//false - фигура, true - поверхность безье
 
     public void MakeAndShow() {
 
@@ -133,88 +135,179 @@ public class MainFrame3D {
 
         RotateLeftX.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
-                try {
-                    display.Clear();
-                    figureRealTime = new Figure3D(Table);
+                if (bOnScreen == false)
+                {
                     try {
-                        countRotateAngelX -=deltaAngel;
-                        figureRealTime.Rotate( countRotateAngelX, countRotateAngelY);
-                        figureRealTime.IsometricProjection();
+                        display.Clear();
+                        figureRealTime = new Figure3D(Table);
+                        try {
+                            countRotateAngelX -= deltaAngel;
+                            figureRealTime.Rotate(countRotateAngelX, countRotateAngelY);
+                            figureRealTime.IsometricProjection();
+                            display.AddCoordinateAxesIsometric(0, 0, Color.lightGray, Color.lightGray, Color.lightGray);
+                            display.AddCoordinateAxesIsometric(countRotateAngelX, countRotateAngelY, Color.red, Color.green, Color.blue);
+                            figureRealTime.AddFigureOnDisplay(Color.BLACK);
+                            display.UpdateImage();
+                        } catch (Exception e1) {
+                            JOptionPane.showMessageDialog(null, "Figure cannot be rotated. Your figure is too big!");
+                        }
+                    } catch (Exception e1) {
+                        JOptionPane.showMessageDialog(null, "You need to draw figure first!");
+                    }
+                }
+                else
+                {
+                    try {
+                    display.Clear();
+                    bezierPlaneRealTime = new Bezier3D(bezierPlaneOriginal);
+                    try {
+                        countRotateAngelX -= deltaAngel;
+                        bezierPlaneRealTime.Rotate(countRotateAngelX, countRotateAngelY);
+                        bezierPlaneRealTime.IsometricProjection();
                         display.AddCoordinateAxesIsometric(0, 0, Color.lightGray, Color.lightGray, Color.lightGray);
                         display.AddCoordinateAxesIsometric(countRotateAngelX, countRotateAngelY, Color.red, Color.green, Color.blue);
-                        figureRealTime.AddFigureOnDisplay(Color.BLACK);
+                        bezierPlaneRealTime.AddFigureOnDisplay(Color.BLACK);
                         display.UpdateImage();
                     } catch (Exception e1) {
                         JOptionPane.showMessageDialog(null, "Figure cannot be rotated. Your figure is too big!");
                     }
                 } catch (Exception e1) {
                     JOptionPane.showMessageDialog(null, "You need to draw figure first!");
+                }
                 }
             }
         });
 
         RotateRightX.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
-                try {
-                    display.Clear();
-                    figureRealTime = new Figure3D(Table);
+                if (bOnScreen == false)
+                {
                     try {
-                        countRotateAngelX +=deltaAngel;
-                        figureRealTime.Rotate( countRotateAngelX, countRotateAngelY);
-                        figureRealTime.IsometricProjection();
-                        display.AddCoordinateAxesIsometric(0, 0, Color.lightGray, Color.lightGray, Color.lightGray);
-                        display.AddCoordinateAxesIsometric(countRotateAngelX, countRotateAngelY, Color.red, Color.green, Color.blue);
-                        figureRealTime.AddFigureOnDisplay(Color.BLACK);
-                        display.UpdateImage();
+                        display.Clear();
+                        figureRealTime = new Figure3D(Table);
+                        try {
+                            countRotateAngelX += deltaAngel;
+                            figureRealTime.Rotate(countRotateAngelX, countRotateAngelY);
+                            figureRealTime.IsometricProjection();
+                            display.AddCoordinateAxesIsometric(0, 0, Color.lightGray, Color.lightGray, Color.lightGray);
+                            display.AddCoordinateAxesIsometric(countRotateAngelX, countRotateAngelY, Color.red, Color.green, Color.blue);
+                            figureRealTime.AddFigureOnDisplay(Color.BLACK);
+                            display.UpdateImage();
+                        } catch (Exception e1) {
+                            JOptionPane.showMessageDialog(null, "Figure cannot be rotated. Your figure is too big!");
+                        }
                     } catch (Exception e1) {
-                        JOptionPane.showMessageDialog(null, "Figure cannot be rotated. Your figure is too big!");
+                        JOptionPane.showMessageDialog(null, "You need to draw figure first!");
                     }
-                } catch (Exception e1) {
-                    JOptionPane.showMessageDialog(null, "You need to draw figure first!");
+                }
+                else
+                {
+                    try {
+                        display.Clear();
+                        bezierPlaneRealTime = new Bezier3D(bezierPlaneOriginal);
+                        try {
+                            countRotateAngelX += deltaAngel;
+                            bezierPlaneRealTime.Rotate(countRotateAngelX, countRotateAngelY);
+                            bezierPlaneRealTime.IsometricProjection();
+                            display.AddCoordinateAxesIsometric(0, 0, Color.lightGray, Color.lightGray, Color.lightGray);
+                            display.AddCoordinateAxesIsometric(countRotateAngelX, countRotateAngelY, Color.red, Color.green, Color.blue);
+                            bezierPlaneRealTime.AddFigureOnDisplay(Color.BLACK);
+                            display.UpdateImage();
+                        } catch (Exception e1) {
+                            JOptionPane.showMessageDialog(null, "Figure cannot be rotated. Your figure is too big!");
+                        }
+                    } catch (Exception e1) {
+                        JOptionPane.showMessageDialog(null, "You need to draw figure first!");
+                    }
                 }
             }
         });
 
         RotateLeftY.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
-                try {
-                    display.Clear();
-                    figureRealTime = new Figure3D(Table);
+                if (bOnScreen == false)
+                {
                     try {
-                        countRotateAngelY -=deltaAngel;
-                        figureRealTime.Rotate( countRotateAngelX, countRotateAngelY);
-                        figureRealTime.IsometricProjection();
-                        display.AddCoordinateAxesIsometric(0, 0, Color.lightGray, Color.lightGray, Color.lightGray);
-                        display.AddCoordinateAxesIsometric(countRotateAngelX, countRotateAngelY, Color.red, Color.green, Color.blue);
-                        figureRealTime.AddFigureOnDisplay(Color.BLACK);
-                        display.UpdateImage();
+                        display.Clear();
+                        figureRealTime = new Figure3D(Table);
+                        try {
+                            countRotateAngelY -= deltaAngel;
+                            figureRealTime.Rotate(countRotateAngelX, countRotateAngelY);
+                            figureRealTime.IsometricProjection();
+                            display.AddCoordinateAxesIsometric(0, 0, Color.lightGray, Color.lightGray, Color.lightGray);
+                            display.AddCoordinateAxesIsometric(countRotateAngelX, countRotateAngelY, Color.red, Color.green, Color.blue);
+                            figureRealTime.AddFigureOnDisplay(Color.BLACK);
+                            display.UpdateImage();
+                        } catch (Exception e1) {
+                            JOptionPane.showMessageDialog(null, "Figure cannot be rotated. Your figure is too big!");
+                        }
                     } catch (Exception e1) {
-                        JOptionPane.showMessageDialog(null, "Figure cannot be rotated. Your figure is too big!");
+                        JOptionPane.showMessageDialog(null, "You need to draw figure first!");
                     }
-                } catch (Exception e1) {
-                    JOptionPane.showMessageDialog(null, "You need to draw figure first!");
+                }
+                else
+                {
+                    try {
+                        display.Clear();
+                        bezierPlaneRealTime = new Bezier3D(bezierPlaneOriginal);
+                        try {
+                            countRotateAngelY -= deltaAngel;
+                            bezierPlaneRealTime.Rotate(countRotateAngelX, countRotateAngelY);
+                            bezierPlaneRealTime.IsometricProjection();
+                            display.AddCoordinateAxesIsometric(0, 0, Color.lightGray, Color.lightGray, Color.lightGray);
+                            display.AddCoordinateAxesIsometric(countRotateAngelX, countRotateAngelY, Color.red, Color.green, Color.blue);
+                            bezierPlaneRealTime.AddFigureOnDisplay(Color.BLACK);
+                            display.UpdateImage();
+                        } catch (Exception e1) {
+                            JOptionPane.showMessageDialog(null, "Figure cannot be rotated. Your figure is too big!");
+                        }
+                    } catch (Exception e1) {
+                        JOptionPane.showMessageDialog(null, "You need to draw figure first!");
+                    }
                 }
             }
         });
 
         RotateRightY.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
-                try {
-                    display.Clear();
-                    figureRealTime = new Figure3D(Table);
+                if (bOnScreen == false) {
                     try {
-                        countRotateAngelY +=deltaAngel;
-                        figureRealTime.Rotate( countRotateAngelX, countRotateAngelY);
-                        figureRealTime.IsometricProjection();
-                        display.AddCoordinateAxesIsometric(0, 0, Color.lightGray, Color.lightGray, Color.lightGray);
-                        display.AddCoordinateAxesIsometric(countRotateAngelX, countRotateAngelY, Color.red, Color.green, Color.blue);
-                        figureRealTime.AddFigureOnDisplay(Color.black);
-                        display.UpdateImage();
+                        display.Clear();
+                        figureRealTime = new Figure3D(Table);
+                        try {
+                            countRotateAngelY += deltaAngel;
+                            figureRealTime.Rotate(countRotateAngelX, countRotateAngelY);
+                            figureRealTime.IsometricProjection();
+                            display.AddCoordinateAxesIsometric(0, 0, Color.lightGray, Color.lightGray, Color.lightGray);
+                            display.AddCoordinateAxesIsometric(countRotateAngelX, countRotateAngelY, Color.red, Color.green, Color.blue);
+                            figureRealTime.AddFigureOnDisplay(Color.black);
+                            display.UpdateImage();
+                        } catch (Exception e1) {
+                            JOptionPane.showMessageDialog(null, "Figure cannot be rotated. Your figure is too big!");
+                        }
                     } catch (Exception e1) {
-                        JOptionPane.showMessageDialog(null, "Figure cannot be rotated. Your figure is too big!");
+                        JOptionPane.showMessageDialog(null, "You need to draw figure first!");
                     }
-                } catch (Exception e1) {
-                    JOptionPane.showMessageDialog(null, "You need to draw figure first!");
+                }
+                else
+                {
+                    try {
+                        display.Clear();
+                        bezierPlaneRealTime = new Bezier3D(bezierPlaneOriginal);
+                        try {
+                            countRotateAngelY += deltaAngel;
+                            bezierPlaneRealTime.Rotate(countRotateAngelX, countRotateAngelY);
+                            bezierPlaneRealTime.IsometricProjection();
+                            display.AddCoordinateAxesIsometric(0, 0, Color.lightGray, Color.lightGray, Color.lightGray);
+                            display.AddCoordinateAxesIsometric(countRotateAngelX, countRotateAngelY, Color.red, Color.green, Color.blue);
+                            bezierPlaneRealTime.AddFigureOnDisplay(Color.BLACK);
+                            display.UpdateImage();
+                        } catch (Exception e1) {
+                            JOptionPane.showMessageDialog(null, "Figure cannot be rotated. Your figure is too big!");
+                        }
+                    } catch (Exception e1) {
+                        JOptionPane.showMessageDialog(null, "You need to draw figure first!");
+                    }
                 }
             }
         });
@@ -230,6 +323,7 @@ public class MainFrame3D {
                 figureOriginal.IsometricProjection();
             	figureOriginal.AddFigureOnDisplay(Color.BLACK);
             	display.CreateAndOpenImage();
+            	bOnScreen = false;
             }
         });
 
@@ -241,6 +335,7 @@ public class MainFrame3D {
                 bezierPlaneOriginal.IsometricProjection();
                 bezierPlaneOriginal.AddFigureOnDisplay(Color.BLACK);
                 display.CreateAndOpenImage();
+                bOnScreen = true;
                 }
         });
 

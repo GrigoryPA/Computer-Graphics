@@ -3,9 +3,7 @@ import java.awt.*;
 import java.util.Vector;
 
 public class    Bezier3D {
-    public Color colorCurve;
     public double[][] points;
-    public int[][] BezierTable;
     public int[][] pointsResult;
     private double DELTA_W = 0.02;//кол-во точек на прямых(гладкость прямых)
     private double DELTA_U = 0.02;//кол-во прямых
@@ -66,6 +64,25 @@ public class    Bezier3D {
         }
     }
 
+    public Bezier3D(Bezier3D original) {
+
+        points = original.points;
+        pointsResult = original.pointsResult;
+
+        DELTA_U = original.DELTA_U ;
+        DELTA_W = original.COUNT_W;
+
+        COUNT_U = original.COUNT_U;
+        COUNT_W = original.COUNT_W;
+
+        MAX_U = original.MAX_U;
+        MAX_W = original.MAX_W;
+
+        N = original.N;
+        M = original.M;
+
+    }
+
     public double FindOneBezierCoordinate(Vector<MyTable> AllTabs,int coordinate,double u, double w)
     {
         double Bij;
@@ -104,6 +121,14 @@ public class    Bezier3D {
             if((i)%COUNT_U!=COUNT_U-1)
             Line3D.AddLineSigmentOnDisplayBresenham(pointsResult[i][0], pointsResult[i][1], pointsResult[i + 1][0], pointsResult[i + 1][1], colorFigure);
         }
+    }
+
+    public void Rotate( double rotateX, double rotateY) {
+        double[][] b = {{Math.cos(rotateY), Math.sin(rotateX)*Math.sin(rotateY),  -Math.sin(rotateY)*Math.cos(rotateX),0},
+                {0,                 Math.cos(rotateX),             Math.sin(rotateX), 0},
+                {Math.sin(rotateY),        -Math.sin(rotateX)*Math.cos(rotateY), Math.cos(rotateX)*Math.cos(rotateY),0},
+                {0,                 0,                      0, 1}};
+        points=Multiply(points, b);
     }
 
     public double[][] Multiply(double[][] A, double[][] B) {
