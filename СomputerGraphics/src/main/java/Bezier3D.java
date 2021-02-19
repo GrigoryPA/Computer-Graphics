@@ -7,8 +7,8 @@ public class    Bezier3D {
     public double[][] points;
     public int[][] BezierTable;
     public int[][] pointsResult;
-    private double DELTA_W = 0.1;
-    private double DELTA_U = 0.1;
+    private double DELTA_W = 0.02;//кол-во точек на прямых(гладкость прямых)
+    private double DELTA_U = 0.02;//кол-во прямых
     private int COUNT_W = (int)(1/DELTA_W) + 1;
     private int COUNT_U = (int)(1/DELTA_U) + 1;
 
@@ -101,7 +101,8 @@ public class    Bezier3D {
     public void AddFigureOnDisplay(Color colorFigure) {
         //Line3D.AddLineSigmentOnDisplayBresenham(pointsResult[0][0], pointsResult[0][1],pointsResult[pointsResult.length-1][0], pointsResult[pointsResult.length-1][1]);
         int i;
-        for(i=0;i<COUNT_U*COUNT_W;i++) {
+        for(i=0;i<COUNT_U*COUNT_W-1;i++) {
+            if((i)%COUNT_U!=COUNT_U-1)
             Line3D.AddLineSigmentOnDisplayBresenham(pointsResult[i][0], pointsResult[i][1], pointsResult[i + 1][0], pointsResult[i + 1][1], colorFigure);
         }
     }
