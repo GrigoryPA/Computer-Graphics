@@ -7,15 +7,16 @@ public class    Bezier3D {
     public double[][] points;
     public int[][] BezierTable;
     public int[][] pointsResult;
-    private double DELTA_W = 0.5;
-    private double DELTA_U = 0.5;
-    private int COUNT_W = 101;
+    private double DELTA_W = 0.1;
+    private double DELTA_U = 0.1;
+    private int COUNT_W = (int)(1/DELTA_W) + 1;
+    private int COUNT_U = (int)(1/DELTA_U) + 1;
 
     private int N;
     private int M;
 
-    private int MAX_U;
-    private int MAX_W;
+    private int MAX_U=1;
+    private int MAX_W=1;
 
     public double[][] Isometric = {{0.707107, -0.408248, 0.577353, 0},
             {0, 0.816497, 0.577345, 0},
@@ -34,62 +35,42 @@ public class    Bezier3D {
             {, , ,}};
 */
     public Bezier3D(Vector<MyTable> AllTabs) {
-        points = new double[2000][4];
-        pointsResult = new int[2000][2];
+        points = new double[COUNT_W * COUNT_U+1][4];
+        pointsResult = new int[COUNT_W * COUNT_U+1][2];
 
         N = AllTabs.size() - 1;
         M = AllTabs.elementAt(1).tableModel.getRowCount();
 
-        MAX_U = N;
-        MAX_W = M;
 
         //indOneBezierCoordinate( ,0.5,0.5)
+        int l = 0;
 
-        for ( int i = 1; i < AllTabs.size();i++)
-        {
-            try {
-            for (int j = 0;i < M;j++)
-            {
-                for (double u = 0; u < MAX_U;u += DELTA_U)
-                {
-                    for (double w = 0; w < MAX_W;w += DELTA_W)
-                    {
-                        points[j][0] = FindOneBezierCoordinate(Integer.parseInt((String) AllTabs.elementAt(i).Table.getValueAt(j, 0)),u,w);
-                        System.out.print(points[j][0]);
-                        System.out.print(" ");
-                        points[j][1] = FindOneBezierCoordinate(Integer.parseInt((String) AllTabs.elementAt(i).Table.getValueAt(j, 1)),u,w);
-                        System.out.print(points[j][1]);
-                        System.out.print(" ");
-                        points[j][2] = FindOneBezierCoordinate(Integer.parseInt((String) AllTabs.elementAt(i).Table.getValueAt(j, 2)),u,w);
-                        System.out.print(points[j][2]);
-                        System.out.print(" ");
-                        System.out.println(" ");
-                        points[j][3] = 1;
-                    }
+        try {
+            for (double u = 0; u <= MAX_U; u += DELTA_U) {
+                for (double w = 0; w <= MAX_W; w += DELTA_W) {
+                    points[l][0] = FindOneBezierCoordinate(AllTabs, 0, u, w);
+                    System.out.print(points[l][0]);
+                    System.out.print(" ");
+                    points[l][1] = FindOneBezierCoordinate(AllTabs, 1, u, w);
+                    System.out.print(points[l][1]);
+                    System.out.print(" ");
+                    points[l][2] = FindOneBezierCoordinate(AllTabs, 2, u, w);
+                    System.out.print(points[l][2]);
+                    System.out.print(" ");
+                    System.out.println();
+                    points[l][3] = 1;
+                    l++;
                 }
             }
-            } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(null, "All values should be integer!\nBlank cells and rows are not allowed!");
-            }
-        }
-        /*
-        M=Table.getRowCount();
-         = new int[M][2];
-        try {
-            for(int i=0; i<M; i++) {
-                points[i][0]=Integer.parseInt((String) Table.getValueAt(i, 0));
-                points[i][1]=Integer.parseInt((String) Table.getValueAt(i, 1));
-            }
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "All values should be integer!\nBlank cells and rows are not allowed");
+            JOptionPane.showMessageDialog(null, "All values should be integer!\nBlank cells and rows are not allowed!");
         }
-
-         */
     }
 
-    public double FindOneBezierCoordinate(double b, double u, double w)
+    public double FindOneBezierCoordinate(Vector<MyTable> AllTabs,int coordinate,double u, double w)
     {
-        double coordinate = 0;
+        double Bij;
+        double result = 0;
         double Jni;
         double Kmj;
         double multi;
@@ -97,13 +78,14 @@ public class    Bezier3D {
         {
             for(int j = 0;j < M;j++)
             {
-                Jni = (getFactorial(N) / (getFactorial(i) * getFactorial(N - i))) * Math.pow(u,i) * Math.pow(1 - u, N - i);
-                Kmj = (getFactorial(M) / (getFactorial(j) * getFactorial(M - j))) * Math.pow(w, j) * Math.pow(1 - w , M - j);
-                multi = b * Jni * Kmj;
-                coordinate += multi;
+                Bij = Integer.parseInt((String) AllTabs.elementAt(i+1).Table.getValueAt(j, coordinate));
+                Jni = (getFactorial(N-1) / (getFactorial(i) * getFactorial(N - 1-i))) * Math.pow(u,i) * Math.pow(1 - u, N-1 - i);
+                Kmj = (getFactorial(M-1) / (getFactorial(j) * getFactorial(M-1 - j))) * Math.pow(w, j) * Math.pow(1 - w , M-1 - j);
+                multi = Bij * Jni * Kmj;
+                result += multi;
             }
         }
-        return coordinate;
+        return result;
     }
 
     public void IsometricProjection() {
@@ -118,7 +100,8 @@ public class    Bezier3D {
 
     public void AddFigureOnDisplay(Color colorFigure) {
         //Line3D.AddLineSigmentOnDisplayBresenham(pointsResult[0][0], pointsResult[0][1],pointsResult[pointsResult.length-1][0], pointsResult[pointsResult.length-1][1]);
-        for(int i=0;i<pointsResult.length-1;i+=2) {
+        int i;
+        for(i=0;i<COUNT_U*COUNT_W;i++) {
             Line3D.AddLineSigmentOnDisplayBresenham(pointsResult[i][0], pointsResult[i][1], pointsResult[i + 1][0], pointsResult[i + 1][1], colorFigure);
         }
     }
