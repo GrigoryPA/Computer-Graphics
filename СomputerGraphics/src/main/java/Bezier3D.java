@@ -9,8 +9,8 @@ public class    Bezier3D {
     public int[][] pointsResult;
     private double DELTA_W = 0.02;//кол-во точек на прямых(гладкость прямых)
     private double DELTA_U = 0.02;//кол-во прямых
-    private int COUNT_W = (int)(1/DELTA_W) + 1;
-    private int COUNT_U = (int)(1/DELTA_U) + 1;
+    private int COUNT_W = (int)(1/DELTA_W);
+    private int COUNT_U = (int)(1/DELTA_U);
 
     private int N;
     private int M;
@@ -42,7 +42,6 @@ public class    Bezier3D {
         M = AllTabs.elementAt(1).tableModel.getRowCount();
 
 
-        //indOneBezierCoordinate( ,0.5,0.5)
         int l = 0;
 
         try {
