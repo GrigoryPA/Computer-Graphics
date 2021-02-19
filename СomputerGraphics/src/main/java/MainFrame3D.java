@@ -4,6 +4,7 @@ import javax.swing.table.JTableHeader;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Vector;
 
 
 public class MainFrame3D {
@@ -14,11 +15,20 @@ public class MainFrame3D {
 	private JButton DeleteRow;
 	private JButton DrawIsometric;
     private JButton DrawDimetric;
+    private JButton AddRowForBezier;
+    private JButton DeleteRowForBezier;
+    private JButton DrawBezierPlane;
+    private JTabbedPane tablePanel;
 	private DefaultTableModel tableModel;
 	private JTable Table;
+	private JLabel MainLabel;
+    private Vector<MyTable>  AllTabs = new Vector<MyTable>();
+    private MyTable OneTab;
+    private Vector TableModels = new Vector();
 	private JScrollPane scroller; 
 	private Figure3D figureRealTime;
     private Figure3D figureOriginal;
+    private Bezier3D bezierPlaneOriginal;
     private Curve2D curve;
 	private JButton ScaleUp;
     private JButton ScaleDown;
@@ -34,6 +44,7 @@ public class MainFrame3D {
     private double countRotateAngelX=0;
     private double countRotateAngelY=0;
     private int countRef=0;
+    private int BezierRowsAmount = 1;
 
     public void MakeAndShow() {
 
@@ -45,14 +56,21 @@ public class MainFrame3D {
         AddRow=new JButton(new ImageIcon("src/main/resources/icons/Add48x48.png"));
         DeleteRow=new JButton(new ImageIcon("src/main/resources/icons/Delete48x48.png"));
         DrawIsometric = new JButton(new ImageIcon("src/main/resources/icons/Rectangle48x48.png"));
+        AddRowForBezier = new JButton(new ImageIcon("src/main/resources/icons/AddRowForBezier48x48.png"));
+        DeleteRowForBezier = new JButton(new ImageIcon("src/main/resources/icons/DeleteRowForBezier48x48.png"));
+        DrawBezierPlane = new JButton(new ImageIcon("src/main/resources/icons/DrawBezierPlane48x48.png"));
         RotateRightX = new JButton(new ImageIcon("src/main/resources/icons/RotateRight48x48.png"));
         RotateLeftX = new JButton(new ImageIcon("src/main/resources/icons/RotateLeft48x48.png"));
         RotateRightY = new JButton(new ImageIcon("src/main/resources/icons/RotateRight48x48.png"));
         RotateLeftY = new JButton(new ImageIcon("src/main/resources/icons/RotateLeft48x48.png"));
 
+
         AddRow.setToolTipText("Add row");
         DeleteRow.setToolTipText("Delete row");
         DrawIsometric.setToolTipText("Draw isometric");
+        AddRowForBezier.setToolTipText("Add row for bezier plane");
+        DeleteRowForBezier.setToolTipText("Delete row for bezier plane");
+        DrawBezierPlane.setToolTipText("Draw bezier plane");
         RotateRightX.setToolTipText("Rotate right X");
         RotateLeftX.setToolTipText("Rotate left X");
         RotateRightY.setToolTipText("Rotate right Y");
@@ -62,24 +80,18 @@ public class MainFrame3D {
         toolBar1.add(AddRow);
         toolBar1.add(DeleteRow);
         toolBar1.add(DrawIsometric);
+        toolBar1.add(AddRowForBezier);
+        toolBar1.add(DeleteRowForBezier);
+        toolBar1.add(DrawBezierPlane);
         frame2D.add(toolBar1, BorderLayout.NORTH);
 
 
         String[] headers = {"X1", "Y1", "Z1","X2", "Y2", "Z2"};
-        String [][] data;
-        data=new String[1][6];
-        tableModel=new DefaultTableModel(data, headers);
-        Table=new JTable(tableModel);
-        Font font = new Font("Verdana", Font.PLAIN, 24);
-        Font fontHeaders = new Font("Verdana", Font.CENTER_BASELINE, 16);
-        JTableHeader tableHeader = Table.getTableHeader();
-        tableHeader.setFont(fontHeaders);
-        Table.setFont(font);
-        Table.setAutoCreateRowSorter(true);
-        Table.setRowHeight(Table.getRowHeight()+10);
-        scroller=new JScrollPane(Table);
-        frame2D.add(scroller, BorderLayout.CENTER);
-
+        OneTab = new MyTable(headers, "Main", 1);
+        AllTabs.add(OneTab);
+        tablePanel = new JTabbedPane();
+        tablePanel.add(OneTab.scroller,"Main", 0);
+        frame2D.add(tablePanel, BorderLayout.CENTER);
 
         toolBar2 = new JToolBar();
         toolBar2.add(RotateLeftX);
@@ -91,6 +103,33 @@ public class MainFrame3D {
         
         frame2D.setVisible(true);
 
+        AddRowForBezier.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String[] headers = {"X", "Y", "Z"};
+                int defaultrowscount;
+                if (BezierRowsAmount == 1) defaultrowscount = 1;
+                else {
+                    defaultrowscount = AllTabs.elementAt(1).tableModel.getRowCount();
+                }
+                String TableName = BezierRowsAmount + " rows";
+                OneTab = new MyTable(headers, TableName, defaultrowscount);
+                AllTabs.add(OneTab);
+                tablePanel.add(OneTab.scroller, OneTab.tableName, BezierRowsAmount);
+                BezierRowsAmount++;
+            }
+        });
+
+        DeleteRowForBezier.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (BezierRowsAmount == 1)
+                {
+                    return;
+                }
+                tablePanel.remove(tablePanel.getComponentAt(BezierRowsAmount - 1));
+                AllTabs.remove(BezierRowsAmount - 1);
+                BezierRowsAmount--;
+            }
+        });
 
         RotateLeftX.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
@@ -187,33 +226,72 @@ public class MainFrame3D {
             public void actionPerformed(ActionEvent e) {
                 display = new Display3D();
                 display.AddCoordinateAxesIsometric(0,0, Color.red, Color.green, Color.blue);
-            	figureOriginal = new Figure3D(Table);
+            	figureOriginal = new Figure3D(AllTabs.elementAt(0).Table);
                 figureOriginal.IsometricProjection();
             	figureOriginal.AddFigureOnDisplay(Color.BLACK);
             	display.CreateAndOpenImage();
             }
         });
 
-
-
+        DrawBezierPlane.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                display = new Display3D();
+                display.AddCoordinateAxesIsometric(0,0,Color.RED, Color.GREEN, Color.BLUE);
+                bezierPlaneOriginal = new Bezier3D(AllTabs);
+                bezierPlaneOriginal.IsometricProjection();
+                bezierPlaneOriginal.AddFigureOnDisplay(Color.BLACK);
+                display.CreateAndOpenImage();
+                }
+        });
 
         AddRow.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
-                tableModel.addRow(new String[] {"","",""});
+
+                int c = getCurTab();
+
+                if (c == 0)
+                {
+                    AllTabs.elementAt(c).tableModel.addRow(new String[] {"","","","","",""});
+                }
+                else {
+                    for (int i = 1;i < AllTabs.size();i++) {
+                        AllTabs.elementAt(i).tableModel.addRow(new String[]{"", "", ""});
+                    }
+                }
             }
         });
 
         DeleteRow.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-            	int[] rows=Table.getSelectedRows();
+                int c = getCurTab();
+            	int[] rows=AllTabs.elementAt(c).Table.getSelectedRows();
+
     			if (rows.length>0) {
-    				tableModel.removeRow(rows[0]);
+
+    			    if (c == 0) {
+                        AllTabs.elementAt(c).tableModel.removeRow(rows[0]);
+                    }
+    			    else
+                    {
+                        for (int i = 1; i < AllTabs.size();i++)
+                        {
+                            AllTabs.elementAt(i).tableModel.removeRow(rows[0]);
+                        }
+                    }
     			}
     			else
     				JOptionPane.showMessageDialog(frame2D, "You must first select the rows.", "Failed to delete rows.", 0);
             }
         });
 	}
-	
+
+    public int getCurTab() {
+        int returnTab = 10;
+        for (int i = 0; i < AllTabs.size(); i++) {
+            if (AllTabs.elementAt(i).Table.isShowing() == true)
+                returnTab = i;
+        }
+        return returnTab;
+    }
 	
 }
