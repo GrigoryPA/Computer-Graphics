@@ -7,13 +7,13 @@ import java.io.IOException;
 
 public class Display3D {
 	protected static Color[][] display;
-	protected static int widthVirtualDisplay=5000;
-	protected static int heightVirtualDisplay=5000;
+	protected static int widthVirtualDisplay=1400;
+	protected static int heightVirtualDisplay=1000;
 	protected static int widthImage=700;
 	protected static int heightImage=500;
 	protected static int widthDelta=(widthVirtualDisplay-widthImage)/2;
 	protected static int heightDelta=(heightVirtualDisplay-heightImage)/2;
-	private static int[] ZeroZero= {2500,2500};
+	private static int[] ZeroZero= {widthVirtualDisplay/2,heightVirtualDisplay/2};
 	private static JFrame frame;
 	private static JLabel label;
 	private static BufferedImage image;

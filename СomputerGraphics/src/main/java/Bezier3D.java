@@ -5,10 +5,11 @@ import java.util.Vector;
 public class    Bezier3D {
     public double[][] points;
     public int[][] pointsResult;
-    private double DELTA_W = 0.02;//кол-во точек на прямых(гладкость прямых)
-    private double DELTA_U = 0.02;//кол-во прямых
-    private int COUNT_W = (int)(1/DELTA_W);
-    private int COUNT_U = (int)(1/DELTA_U);
+    private int COUNT_W = 21;//кол-во точек на прямых(гладкость прямых)
+    private int COUNT_U = 11;//кол-во прямых
+    private double DELTA_W = 0.05;
+    private double DELTA_U = 0.1;
+    private boolean flagSecondDraw = false;
 
     private int N;
     private int M;
@@ -33,18 +34,17 @@ public class    Bezier3D {
             {, , ,}};
 */
     public Bezier3D(Vector<MyTable> AllTabs) {
-        points = new double[COUNT_W * COUNT_U+1][4];
-        pointsResult = new int[COUNT_W * COUNT_U+1][2];
+        int buf=0;
+        points = new double[COUNT_W * COUNT_U*2][4];
+        pointsResult = new int[COUNT_W * COUNT_U*2][2];
         try {
         N = AllTabs.size() - 1;
         M = AllTabs.elementAt(1).tableModel.getRowCount();
+            int l = 0;
+            double w = 0, u = 0;
 
-
-        int l = 0;
-
-
-            for (double u = 0; u <= MAX_U; u += DELTA_U) {
-                for (double w = 0; w <= MAX_W; w += DELTA_W) {
+            for (int j = 0; j < COUNT_U; u+=DELTA_U, j++) {
+                for (int i = 0; i < COUNT_W; w+=DELTA_W, i++, l++) {
                     points[l][0] = FindOneBezierCoordinate(AllTabs, 0, u, w);
                     System.out.print(points[l][0]);
                     System.out.print(" ");
@@ -56,9 +56,32 @@ public class    Bezier3D {
                     System.out.print(" ");
                     System.out.println();
                     points[l][3] = 1;
-                    l++;
                 }
+                w=0;
             }
+            u=0;
+
+            flagSecondDraw = true;
+            buf = N; N = M; M = buf;
+            for (int j = 0; j < COUNT_U; u+=DELTA_U, j++) {
+                for (int i = 0; i < COUNT_W; w+=DELTA_W, i++, l++) {
+                    points[l][0] = FindOneBezierCoordinate(AllTabs, 0, u, w);
+                    System.out.print(points[l][0]);
+                    System.out.print(" ");
+                    points[l][1] = FindOneBezierCoordinate(AllTabs, 1, u, w);
+                    System.out.print(points[l][1]);
+                    System.out.print(" ");
+                    points[l][2] = FindOneBezierCoordinate(AllTabs, 2, u, w);
+                    System.out.print(points[l][2]);
+                    System.out.print(" ");
+                    System.out.println();
+                    points[l][3] = 1;
+                }
+                w=0;
+            }
+            u=0;
+            buf = N; N = M; M = buf;
+            flagSecondDraw = false;
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "All values should be integer!\nBlank cells and rows are not allowed!");
         }
@@ -90,13 +113,14 @@ public class    Bezier3D {
         double Jni;
         double Kmj;
         double multi;
-        for (int i = 0;i < N;i++)
-        {
-            for(int j = 0;j < M;j++)
-            {
-                Bij = Integer.parseInt((String) AllTabs.elementAt(i+1).Table.getValueAt(j, coordinate));
-                Jni = (getFactorial(N-1) / (getFactorial(i) * getFactorial(N - 1-i))) * Math.pow(u,i) * Math.pow(1 - u, N-1 - i);
-                Kmj = (getFactorial(M-1) / (getFactorial(j) * getFactorial(M-1 - j))) * Math.pow(w, j) * Math.pow(1 - w , M-1 - j);
+        for (int i = 0;i < N;i++) {
+            for(int j = 0;j < M;j++) {
+               if(!flagSecondDraw)
+                   Bij = Integer.parseInt((String) AllTabs.elementAt(i+1).Table.getValueAt(j, coordinate));
+               else
+                   Bij = Integer.parseInt((String) AllTabs.elementAt(j+1).Table.getValueAt(i, coordinate));
+                Jni = (getFactorial(N-1) / (getFactorial(i) * getFactorial(N - 1 - i))) * Math.pow(u,i) * Math.pow(1 - u, N-1 - i);
+                Kmj = (getFactorial(M-1) / (getFactorial(j) * getFactorial(M - 1 - j))) * Math.pow(w, j) * Math.pow(1 - w , M-1 - j);
                 multi = Bij * Jni * Kmj;
                 result += multi;
             }
@@ -105,21 +129,25 @@ public class    Bezier3D {
     }
 
     public void IsometricProjection() {
-        double[][] M = points;
-        M = Multiply(M,Isometric);
-        M = Multiply(M,ProjectionOnXOY);
-        for(int i=0;i<M.length;i++) {
-            pointsResult[i][0] = (int) M[i][0];
-            pointsResult[i][1] = (int) M[i][1];
+        double[][] X = points;
+        X = Multiply(X,Isometric);
+        X = Multiply(X,ProjectionOnXOY);
+        for(int i=0;i<X.length;i++) {
+            pointsResult[i][0] = (int) X[i][0];
+            pointsResult[i][1] = (int) X[i][1];
         }
     }
 
     public void AddFigureOnDisplay(Color colorFigure) {
         //Line3D.AddLineSigmentOnDisplayBresenham(pointsResult[0][0], pointsResult[0][1],pointsResult[pointsResult.length-1][0], pointsResult[pointsResult.length-1][1]);
         int i;
-        for(i=0;i<COUNT_U*COUNT_W-1;i++) {
-            if((i)%COUNT_U!=COUNT_U-1)
-            Line3D.AddLineSigmentOnDisplayBresenham(pointsResult[i][0], pointsResult[i][1], pointsResult[i + 1][0], pointsResult[i + 1][1], colorFigure);
+        for(i=0;i<pointsResult.length;i++) {
+            if((i)%COUNT_W!=COUNT_W-1)
+                Line3D.AddLineSigmentOnDisplayBresenham(pointsResult[i][0],
+                                                        pointsResult[i][1],
+                                                        pointsResult[i + 1][0],
+                                                        pointsResult[i + 1][1],
+                                                        colorFigure);
         }
     }
 
