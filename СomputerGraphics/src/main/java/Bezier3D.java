@@ -35,14 +35,14 @@ public class    Bezier3D {
     public Bezier3D(Vector<MyTable> AllTabs) {
         points = new double[COUNT_W * COUNT_U+1][4];
         pointsResult = new int[COUNT_W * COUNT_U+1][2];
-
+        try {
         N = AllTabs.size() - 1;
         M = AllTabs.elementAt(1).tableModel.getRowCount();
 
 
         int l = 0;
 
-        try {
+
             for (double u = 0; u <= MAX_U; u += DELTA_U) {
                 for (double w = 0; w <= MAX_W; w += DELTA_W) {
                     points[l][0] = FindOneBezierCoordinate(AllTabs, 0, u, w);

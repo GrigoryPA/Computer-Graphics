@@ -7,9 +7,13 @@ import java.io.IOException;
 
 public class Display3D {
 	protected static Color[][] display;
-	protected static int N=700;
-	protected static int M=500;
-	private static int[] ZeroZero= {350,250};
+	protected static int widthVirtualDisplay=5000;
+	protected static int heightVirtualDisplay=5000;
+	protected static int widthImage=700;
+	protected static int heightImage=500;
+	protected static int widthDelta=(widthVirtualDisplay-widthImage)/2;
+	protected static int heightDelta=(heightVirtualDisplay-heightImage)/2;
+	private static int[] ZeroZero= {2500,2500};
 	private static JFrame frame;
 	private static JLabel label;
 	private static BufferedImage image;
@@ -17,17 +21,17 @@ public class Display3D {
 	private static File file = new File("src/main/resources/convas.png");
 
 	public Display3D() {
-		display=new Color[N][M];
-		for(int i=0;i<N;i++)
-			for(int j=0;j<M;j++) {
+		display=new Color[widthVirtualDisplay][heightVirtualDisplay];
+		for(int i=0;i<widthVirtualDisplay;i++)
+			for(int j=0;j<heightVirtualDisplay;j++) {
 				display[i][j]=new Color(255,255, 200);
 			}
 		return;
 	}
 
 	public void Clear() {
-		for(int i=0;i<N;i++)
-			for(int j=0;j<M;j++) {
+		for(int i=0;i<widthVirtualDisplay;i++)
+			for(int j=0;j<heightVirtualDisplay;j++) {
 				display[i][j]=new Color(255,255, 200);
 			}
 	}
@@ -62,7 +66,7 @@ public class Display3D {
 
 			for(int x=0;x<image.getWidth();x++) 
 				for(int y=0;y<image.getHeight();y++) {
-					image.setRGB(x, y, display[x][M-y-1].getRGB());
+					image.setRGB(x, y, display[x+widthDelta][heightVirtualDisplay-y-1-heightDelta].getRGB());
 			}
 			CreateFrameForImage(image);
 		} catch (IOException e) {
@@ -74,7 +78,7 @@ public class Display3D {
 	public void UpdateImage() {
 			for(int x=0;x<image.getWidth();x++)
 				for(int y=0;y<image.getHeight();y++) {
-					image.setRGB(x, y, display[x][M-y-1].getRGB());
+					image.setRGB(x, y, display[x+widthDelta][heightVirtualDisplay-y-1-heightDelta].getRGB());
 				}
 				//imageicon.setImage(image);
 				label.updateUI();

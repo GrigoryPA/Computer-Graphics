@@ -175,6 +175,8 @@ public class MainFrame3D {
 
         DrawBezierPlane.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
+                countRotateAngelX=0;
+                countRotateAngelY=0;
                 display = new Display3D();
                 display.AddCoordinateAxesIsometric(0,0,Color.RED, Color.GREEN, Color.BLUE);
                 bezierPlaneOriginal = new Bezier3D(AllTabs);
