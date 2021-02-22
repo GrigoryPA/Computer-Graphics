@@ -181,7 +181,7 @@ public class MainFrame3D {
                 display.AddCoordinateAxesIsometric(0,0,Color.RED, Color.GREEN, Color.BLUE);
                 bezierPlaneOriginal = new Bezier3D(AllTabs);
                 bezierPlaneOriginal.IsometricProjection();
-                bezierPlaneOriginal.AddFigureOnDisplay(Color.BLACK);
+                bezierPlaneOriginal.AddFigureOnDisplay(Color.BLACK, Color.MAGENTA);
                 display.CreateAndOpenImage();
                 bOnScreen = true;
                 }
@@ -251,8 +251,7 @@ public class MainFrame3D {
                         figureRealTime = new Figure3D(Table);
                         figureRealTime.Rotate(countRotateAngelX, countRotateAngelY);
                         figureRealTime.IsometricProjection();
-                        display.AddCoordinateAxesIsometric(0, 0, Color.lightGray, Color.lightGray, Color.lightGray);
-                        display.AddCoordinateAxesIsometric(countRotateAngelX, countRotateAngelY, Color.red, Color.green, Color.blue);
+                        display.AddCoordinateAxesIsometric(0, 0, Color.red, Color.green, Color.blue);
                         figureRealTime.AddFigureOnDisplay(Color.black);
                         display.UpdateImage();
                 }
@@ -262,9 +261,8 @@ public class MainFrame3D {
                         bezierPlaneRealTime = new Bezier3D(bezierPlaneOriginal);
                         bezierPlaneRealTime.Rotate(countRotateAngelX, countRotateAngelY);
                         bezierPlaneRealTime.IsometricProjection();
-                        display.AddCoordinateAxesIsometric(0, 0, Color.lightGray, Color.lightGray, Color.lightGray);
-                        display.AddCoordinateAxesIsometric(countRotateAngelX, countRotateAngelY, Color.red, Color.green, Color.blue);
-                        bezierPlaneRealTime.AddFigureOnDisplay(Color.BLACK);
+                        display.AddCoordinateAxesIsometric(0, 0, Color.red, Color.green, Color.blue);
+                        bezierPlaneRealTime.AddFigureOnDisplay(Color.BLACK, Color.MAGENTA);
                         display.UpdateImage();
                     }
                 }

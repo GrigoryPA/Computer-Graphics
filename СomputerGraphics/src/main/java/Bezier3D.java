@@ -4,6 +4,8 @@ import java.util.Vector;
 
 public class    Bezier3D {
     public double[][] points;
+    public double[][] grid;
+    public int[][] gridResult;
     public int[][] pointsResult;
     private int COUNT_W = 21;//кол-во точек на прямых(гладкость прямых)
     private int COUNT_U = 11;//кол-во прямых
@@ -38,8 +40,18 @@ public class    Bezier3D {
         points = new double[COUNT_W * COUNT_U*2][4];
         pointsResult = new int[COUNT_W * COUNT_U*2][2];
         try {
-        N = AllTabs.size() - 1;
-        M = AllTabs.elementAt(1).tableModel.getRowCount();
+            N = AllTabs.size() - 1;
+            M = AllTabs.elementAt(1).tableModel.getRowCount();
+            grid = new double[N*M][4];
+            gridResult = new int[N*M][2];
+            for (int i = 0;i < N;i++)
+                for(int j = 0;j < M;j++) {
+                    grid[i * M + j][0] = Integer.parseInt((String) AllTabs.elementAt(i + 1).Table.getValueAt(j, 0));
+                    grid[i * M + j][1] = Integer.parseInt((String) AllTabs.elementAt(i + 1).Table.getValueAt(j, 1));
+                    grid[i * M + j][2] = Integer.parseInt((String) AllTabs.elementAt(i + 1).Table.getValueAt(j, 2));
+                    grid[i * M + j][3] = 1;
+                }
+
             int l = 0;
             double w = 0, u = 0;
 
@@ -88,22 +100,12 @@ public class    Bezier3D {
     }
 
     public Bezier3D(Bezier3D original) {
-
         points = original.points;
         pointsResult = original.pointsResult;
-
-        DELTA_U = original.DELTA_U ;
-        DELTA_W = original.COUNT_W;
-
-        COUNT_U = original.COUNT_U;
-        COUNT_W = original.COUNT_W;
-
-        MAX_U = original.MAX_U;
-        MAX_W = original.MAX_W;
-
+        grid = original.grid;
+        gridResult= original.gridResult;
         N = original.N;
         M = original.M;
-
     }
 
     public double FindOneBezierCoordinate(Vector<MyTable> AllTabs,int coordinate,double u, double w)
@@ -115,8 +117,9 @@ public class    Bezier3D {
         double multi;
         for (int i = 0;i < N;i++) {
             for(int j = 0;j < M;j++) {
-               if(!flagSecondDraw)
-                   Bij = Integer.parseInt((String) AllTabs.elementAt(i+1).Table.getValueAt(j, coordinate));
+               if(!flagSecondDraw) {
+                   Bij = Integer.parseInt((String) AllTabs.elementAt(i + 1).Table.getValueAt(j, coordinate));
+               }
                else
                    Bij = Integer.parseInt((String) AllTabs.elementAt(j+1).Table.getValueAt(i, coordinate));
                 Jni = (getFactorial(N-1) / (getFactorial(i) * getFactorial(N - 1 - i))) * Math.pow(u,i) * Math.pow(1 - u, N-1 - i);
@@ -136,12 +139,34 @@ public class    Bezier3D {
             pointsResult[i][0] = (int) X[i][0];
             pointsResult[i][1] = (int) X[i][1];
         }
+
+        double[][] G = grid;
+        G = Multiply(G,Isometric);
+        G = Multiply(G,ProjectionOnXOY);
+        for(int i=0;i<G.length;i++) {
+            gridResult[i][0] = (int) G[i][0];
+            gridResult[i][1] = (int) G[i][1];
+        }
     }
 
-    public void AddFigureOnDisplay(Color colorFigure) {
+    public void AddFigureOnDisplay(Color colorFigure, Color colorGrid) {
         //Line3D.AddLineSigmentOnDisplayBresenham(pointsResult[0][0], pointsResult[0][1],pointsResult[pointsResult.length-1][0], pointsResult[pointsResult.length-1][1]);
-        int i;
-        for(i=0;i<pointsResult.length;i++) {
+        for(int i=0;i<gridResult.length-1;i++){
+            if((i)%M!=M-1)
+                Line3D.AddLineSigmentOnDisplayBresenham(gridResult[i][0],
+                        gridResult[i][1],
+                        gridResult[i + 1][0],
+                        gridResult[i + 1][1],
+                        colorGrid);
+        }
+        for(int i=0;i<gridResult.length-M;i++){
+                Line3D.AddLineSigmentOnDisplayBresenham(gridResult[i][0],
+                        gridResult[i][1],
+                        gridResult[i + M][0],
+                        gridResult[i + M][1],
+                        colorGrid);
+        }
+        for(int i=0;i<pointsResult.length;i++) {
             if((i)%COUNT_W!=COUNT_W-1)
                 Line3D.AddLineSigmentOnDisplayBresenham(pointsResult[i][0],
                                                         pointsResult[i][1],
@@ -157,6 +182,7 @@ public class    Bezier3D {
                 {Math.sin(rotateY),        -Math.sin(rotateX)*Math.cos(rotateY), Math.cos(rotateX)*Math.cos(rotateY),0},
                 {0,                 0,                      0, 1}};
         points=Multiply(points, b);
+        grid=Multiply(grid, b);
     }
 
     public double[][] Multiply(double[][] A, double[][] B) {
