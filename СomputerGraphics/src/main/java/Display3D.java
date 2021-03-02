@@ -13,7 +13,7 @@ public class Display3D {
 	protected static int heightImage=500;
 	protected static int widthDelta=(widthVirtualDisplay-widthImage)/2;
 	protected static int heightDelta=(heightVirtualDisplay-heightImage)/2;
-	private static int[] ZeroZero= {widthVirtualDisplay/2,heightVirtualDisplay/2};
+	public static int[] ZeroZero= {widthVirtualDisplay/2,heightVirtualDisplay/2};
 	private static JFrame frame;
 	private static JLabel label;
 	private static BufferedImage image;
@@ -38,6 +38,10 @@ public class Display3D {
 	
 	public static void AddPointOnDisplay(double x, double y, Color color) {
 		display[ZeroZero[0]+(int)x][ZeroZero[1]+(int)y]=color;
+	}
+
+	public static void AddPointOnDisplayRT(int x, int y, Color color) {
+		display[x+widthDelta][y+heightDelta]=color;
 	}
 	
 	public void AddCoordinateAxesIsometric(double rotateX, double rotateY, Color colorX, Color colorY, Color colorZ) {

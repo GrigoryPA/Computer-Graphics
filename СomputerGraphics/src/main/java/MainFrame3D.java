@@ -40,6 +40,7 @@ public class MainFrame3D {
     private JButton ReflexionX;
     private JButton ReflexionY;
     private JButton Bezier;
+    private JButton RayTracing;
     private JToolBar toolBar2;
     public double deltaAngel = Math.PI/18;
     private double countRotateAngelX=0;
@@ -52,7 +53,7 @@ public class MainFrame3D {
 
 
 		frame2D =new JFrame("2D");
-        frame2D.setBounds(450,50, 400, 450);
+        frame2D.setBounds(450,50, 500, 450);
         frame2D.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         AddRow=new JButton(new ImageIcon("src/main/resources/icons/Add48x48.png"));
@@ -65,6 +66,7 @@ public class MainFrame3D {
         RotateLeftX = new JButton(new ImageIcon("src/main/resources/icons/RotateLeft48x48.png"));
         RotateRightY = new JButton(new ImageIcon("src/main/resources/icons/RotateRight48x48.png"));
         RotateLeftY = new JButton(new ImageIcon("src/main/resources/icons/RotateLeft48x48.png"));
+        RayTracing = new JButton(new ImageIcon("src/main/resources/icons/RotateLeft48x48.png"));
 
 
         AddRow.setToolTipText("Add row");
@@ -77,6 +79,7 @@ public class MainFrame3D {
         RotateLeftX.setToolTipText("Rotate left X");
         RotateRightY.setToolTipText("Rotate right Y");
         RotateLeftY.setToolTipText("Rotate left Y");
+        RayTracing.setToolTipText("Draw with ray tracing");
 
         toolBar1 = new JToolBar();
         toolBar1.add(AddRow);
@@ -85,6 +88,7 @@ public class MainFrame3D {
         toolBar1.add(AddRowForBezier);
         toolBar1.add(DeleteRowForBezier);
         toolBar1.add(DrawBezierPlane);
+        toolBar1.add(RayTracing);
         frame2D.add(toolBar1, BorderLayout.NORTH);
 
 
@@ -185,6 +189,19 @@ public class MainFrame3D {
                 display.CreateAndOpenImage();
                 bOnScreen = true;
                 }
+        });
+
+        RayTracing.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                display = new Display3D();
+                Sphere3D sphere = new Sphere3D(
+                        Integer.parseInt((String) AllTabs.elementAt(0).Table.getValueAt(0, 0)),
+                        Integer.parseInt((String) AllTabs.elementAt(0).Table.getValueAt(0, 1)),
+                        Integer.parseInt((String) AllTabs.elementAt(0).Table.getValueAt(0, 2)),
+                        Integer.parseInt((String) AllTabs.elementAt(0).Table.getValueAt(0, 3)));
+                RayTracing3D.RenderSphere(sphere, display);
+                display.CreateAndOpenImage();
+            }
         });
 
         AddRow.addActionListener(new ActionListener(){
