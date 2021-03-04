@@ -37,7 +37,7 @@ public class RayTracing3D {
                 double[] dir = {x / l, y / l, dirZ / l};
                 Color pixelColor = CalculateSpherePixelColor(dir);
                 if(pixelColor!=null)
-                    display.AddPointOnDisplayRT(i,j,pixelColor);
+                    display.AddPointOnDisplayRT(i,height-j,pixelColor);
             }
         }
     }
