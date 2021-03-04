@@ -14,7 +14,8 @@ public class MainFrameRT {
     private JButton DrawRayTracing;
     private JTabbedPane tablePanel;
     private Vector<MyTable> AllTabs = new Vector<MyTable>();
-    private MyTable OneTab;
+    private MyTable SphereTab;
+    private MyTable LightTab;
     private Vector TableModels = new Vector();
 
     public void MakeAndShow() {
@@ -36,11 +37,15 @@ public class MainFrameRT {
         toolBar1.add(DrawRayTracing);
         frame.add(toolBar1, BorderLayout.NORTH);
 
-        String[] headers = {"X", "Y", "Z", "Radius", "R", "G", "B"};
-        OneTab = new MyTable(headers, "Sphere", 1);
-        AllTabs.add(OneTab);
+        String[] headersS = {"X", "Y", "Z", "Radius", "R", "G", "B"};
+        SphereTab = new MyTable(headersS, "Spheres", 1);
+        AllTabs.add(SphereTab);
+        String[] headersL = {"X", "Y", "Z", "Intensity"};
+        LightTab = new MyTable(headersL, "Lights", 1);
+        AllTabs.add(LightTab);
         tablePanel = new JTabbedPane();
-        tablePanel.add(OneTab.scroller,"Sphere", 0);
+        tablePanel.add(SphereTab.scroller,"Spheres");
+        tablePanel.add(LightTab.scroller,"Lights");
         frame.add(tablePanel, BorderLayout.CENTER);
 
         frame.setVisible(true);
@@ -48,12 +53,12 @@ public class MainFrameRT {
 
         DrawRayTracing.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
-                try {
+                //try {
                     display.Clear();
-                    RayTracing3D.RenderSpheres(AllTabs.elementAt(0).Table, display);
+                    RayTracing3D.RenderSpheres(AllTabs.elementAt(0).Table, AllTabs.elementAt(1).Table, display);
                     display.CreateAndOpenImage();
-                }
-                catch(Exception e1){}
+                //}
+                //catch(Exception e1){}
             }
         });
 

@@ -7,4 +7,7 @@ public class Material3D {
     public Material3D(Color color1){
         color = color1;
     }
+
+    public Material3D(){
+    }
 }
