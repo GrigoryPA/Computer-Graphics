@@ -1,6 +1,5 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,7 +7,7 @@ import java.util.Vector;
 
 
 public class MainFrame3D {
-    private JFrame frame2D;
+    private JFrame frame;
 	private Display3D display;
 	private JToolBar toolBar1;
 	private JButton AddRow;
@@ -40,7 +39,7 @@ public class MainFrame3D {
     private JButton ReflexionX;
     private JButton ReflexionY;
     private JButton Bezier;
-    private JButton RayTracing;
+    private JButton DrawRayTracing;
     private JToolBar toolBar2;
     public double deltaAngel = Math.PI/18;
     private double countRotateAngelX=0;
@@ -52,9 +51,9 @@ public class MainFrame3D {
     public void MakeAndShow() {
 
 
-		frame2D =new JFrame("2D");
-        frame2D.setBounds(450,50, 500, 450);
-        frame2D.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame =new JFrame("2D");
+        frame.setBounds(450,50, 500, 450);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         AddRow=new JButton(new ImageIcon("src/main/resources/icons/Add48x48.png"));
         DeleteRow=new JButton(new ImageIcon("src/main/resources/icons/Delete48x48.png"));
@@ -66,7 +65,7 @@ public class MainFrame3D {
         RotateLeftX = new JButton(new ImageIcon("src/main/resources/icons/RotateLeft48x48.png"));
         RotateRightY = new JButton(new ImageIcon("src/main/resources/icons/RotateRight48x48.png"));
         RotateLeftY = new JButton(new ImageIcon("src/main/resources/icons/RotateLeft48x48.png"));
-        RayTracing = new JButton(new ImageIcon("src/main/resources/icons/RotateLeft48x48.png"));
+        DrawRayTracing = new JButton(new ImageIcon("src/main/resources/icons/RotateLeft48x48.png"));
 
 
         AddRow.setToolTipText("Add row");
@@ -79,7 +78,7 @@ public class MainFrame3D {
         RotateLeftX.setToolTipText("Rotate left X");
         RotateRightY.setToolTipText("Rotate right Y");
         RotateLeftY.setToolTipText("Rotate left Y");
-        RayTracing.setToolTipText("Draw with ray tracing");
+        DrawRayTracing.setToolTipText("Draw with ray tracing");
 
         toolBar1 = new JToolBar();
         toolBar1.add(AddRow);
@@ -88,8 +87,8 @@ public class MainFrame3D {
         toolBar1.add(AddRowForBezier);
         toolBar1.add(DeleteRowForBezier);
         toolBar1.add(DrawBezierPlane);
-        toolBar1.add(RayTracing);
-        frame2D.add(toolBar1, BorderLayout.NORTH);
+        toolBar1.add(DrawRayTracing);
+        frame.add(toolBar1, BorderLayout.NORTH);
 
 
         String[] headers = {"X1", "Y1", "Z1","X2", "Y2", "Z2"};
@@ -97,17 +96,17 @@ public class MainFrame3D {
         AllTabs.add(OneTab);
         tablePanel = new JTabbedPane();
         tablePanel.add(OneTab.scroller,"Main", 0);
-        frame2D.add(tablePanel, BorderLayout.CENTER);
+        frame.add(tablePanel, BorderLayout.CENTER);
 
         toolBar2 = new JToolBar();
         toolBar2.add(RotateLeftX);
         toolBar2.add(RotateRightX);
         toolBar2.add(RotateLeftY);
         toolBar2.add(RotateRightY);
-        frame2D.add(toolBar2, BorderLayout.SOUTH);
+        frame.add(toolBar2, BorderLayout.SOUTH);
 
         
-        frame2D.setVisible(true);
+        frame.setVisible(true);
 
         AddRowForBezier.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -191,18 +190,6 @@ public class MainFrame3D {
                 }
         });
 
-        RayTracing.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e) {
-                display = new Display3D();
-                Sphere3D sphere = new Sphere3D(
-                        Integer.parseInt((String) AllTabs.elementAt(0).Table.getValueAt(0, 0)),
-                        Integer.parseInt((String) AllTabs.elementAt(0).Table.getValueAt(0, 1)),
-                        Integer.parseInt((String) AllTabs.elementAt(0).Table.getValueAt(0, 2)),
-                        Integer.parseInt((String) AllTabs.elementAt(0).Table.getValueAt(0, 3)));
-                RayTracing3D.RenderSphere(sphere, display);
-                display.CreateAndOpenImage();
-            }
-        });
 
         AddRow.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
@@ -240,7 +227,7 @@ public class MainFrame3D {
                     }
     			}
     			else
-    				JOptionPane.showMessageDialog(frame2D, "You must first select the rows.", "Failed to delete rows.", 0);
+    				JOptionPane.showMessageDialog(frame, "You must first select the rows.", "Failed to delete rows.", 0);
             }
         });
 	}

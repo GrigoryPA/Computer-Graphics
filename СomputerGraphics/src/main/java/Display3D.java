@@ -6,19 +6,19 @@ import java.io.File;
 import java.io.IOException;
 
 public class Display3D {
-	protected static Color[][] display;
-	protected static int widthVirtualDisplay=1400;
-	protected static int heightVirtualDisplay=1000;
-	protected static int widthImage=700;
-	protected static int heightImage=500;
-	protected static int widthDelta=(widthVirtualDisplay-widthImage)/2;
-	protected static int heightDelta=(heightVirtualDisplay-heightImage)/2;
+	public static Color[][] display;
+	public static int widthVirtualDisplay=1400;
+	public static int heightVirtualDisplay=1000;
+	public static int widthImage=700;
+	public static int heightImage=500;
+	public static int widthDelta=(widthVirtualDisplay-widthImage)/2;
+	public static int heightDelta=(heightVirtualDisplay-heightImage)/2;
 	public static int[] ZeroZero= {widthVirtualDisplay/2,heightVirtualDisplay/2};
-	private static JFrame frame;
-	private static JLabel label;
-	private static BufferedImage image;
-	private static ImageIcon imageicon;
-	private static File file = new File("src/main/resources/convas.png");
+	public static JFrame frame;
+	public static JLabel label;
+	public static BufferedImage image;
+	public static ImageIcon imageicon;
+	public static File file = new File("src/main/resources/convas.png");
 
 	public Display3D() {
 		display=new Color[widthVirtualDisplay][heightVirtualDisplay];
@@ -29,7 +29,7 @@ public class Display3D {
 		return;
 	}
 
-	public void Clear() {
+	public static void Clear() {
 		for(int i=0;i<widthVirtualDisplay;i++)
 			for(int j=0;j<heightVirtualDisplay;j++) {
 				display[i][j]=new Color(255,255, 200);

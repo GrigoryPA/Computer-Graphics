@@ -7,17 +7,17 @@ public class    Bezier3D {
     public double[][] grid;
     public int[][] gridResult;
     public int[][] pointsResult;
-    private int COUNT_W = 21;//кол-во точек на прямых(гладкость прямых)
-    private int COUNT_U = 11;//кол-во прямых
-    private double DELTA_W = 0.05;
-    private double DELTA_U = 0.1;
-    private boolean flagSecondDraw = false;
+    public int COUNT_W = 21;//кол-во точек на прямых(гладкость прямых)
+    public int COUNT_U = 11;//кол-во прямых
+    public double DELTA_W = 0.05;
+    public double DELTA_U = 0.1;
+    public boolean flagSecondDraw = false;
 
-    private int N;
-    private int M;
+    public int N;
+    public int M;
 
-    private int MAX_U=1;
-    private int MAX_W=1;
+    public int MAX_U=1;
+    public int MAX_W=1;
 
     public double[][] Isometric = {{0.707107, -0.408248, 0.577353, 0},
             {0, 0.816497, 0.577345, 0},
@@ -193,7 +193,7 @@ public class    Bezier3D {
         return c;
     }
 
-    public static int getFactorial(int f) {
+    public  int getFactorial(int f) {
         if (f <= 1) {
             return 1;
         }
