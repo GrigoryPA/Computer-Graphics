@@ -45,7 +45,9 @@ public class RayTracing3D {
 
     public static Color CalculateSpherePixelColor(double[] dir){
         if (SceneIntersect(orig, dir)) {
-            double diffuse_light_intensity = 0;
+            double diffuse_light_intensity = 0,
+                    specular_light_intensity = 0;
+
 
             for (int i=0; i<AllLights.size(); i++) {
                 double LDirx = AllLights.elementAt(i).position[0] - hit[0];
@@ -54,12 +56,15 @@ public class RayTracing3D {
                 double LDirl = Math.sqrt(LDirx * LDirx + LDiry * LDiry + LDirz * LDirz);
                 double[] LDir = new double[]{LDirx / LDirl, LDiry / LDirl, LDirz / LDirl};
                 double LDirN = LDir[0]*N[0] + LDir[1]*N[1] + LDir[2]*N[2];
-
                 diffuse_light_intensity += AllLights.elementAt(i).intensity  * Math.max(0, LDirN);
+
+                double[] ref = reflect(LDir, N);
+                double ref_dir = ref[0]*dir[0] + ref[1]*dir[1] +  ref[2]*dir[2];
+                specular_light_intensity += Math.pow(Math.max(0, ref_dir), material.specularExponent)*AllLights.elementAt(i).intensity;
             }
-            Color resultColor = new Color((int)(Math.min(255,material.color.getRed() * diffuse_light_intensity)),
-                    (int)(Math.min(255,material.color.getGreen() * diffuse_light_intensity)),
-                    (int)(Math.min(255,material.color.getBlue() * diffuse_light_intensity)));
+            Color resultColor = new Color((int)(Math.min(255,material.color.getRed() * diffuse_light_intensity * material.albedo[0] + specular_light_intensity * material.albedo[1])),
+                    (int)(Math.min(255,material.color.getGreen() * diffuse_light_intensity * material.albedo[0] + specular_light_intensity * material.albedo[1])),
+                    (int)(Math.min(255,material.color.getBlue() * diffuse_light_intensity * material.albedo[0] + specular_light_intensity * material.albedo[1])));
             return resultColor;// sphere color//resultColor
         }
         return null;
@@ -84,4 +89,12 @@ public class RayTracing3D {
         }
         return spheres_dist != Double.MAX_VALUE;
     }
+
+    public static double[] reflect(double[] i, double[] n) {
+        double I_N=i[0]*n[0] + i[1]*n[1] + i[2]*n[2];
+        return new double[]{i[0] - n[0]*2*(I_N),
+                i[1] - n[1]*2*(I_N),
+                i[2] - n[2]*2*(I_N)};
+    }
+
 }

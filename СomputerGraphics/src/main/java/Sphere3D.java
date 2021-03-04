@@ -9,7 +9,7 @@ public class Sphere3D {
     public Sphere3D(int x, int y, int z, int d, int R, int G, int B){
         center = new int[]{x,y,z};
         radius = d;
-        material = new Material3D(new Color(R,G,B));
+        material = new Material3D(new Color(R,G,B), new double[]{1,0}, 1);
     }
 
     public Sphere3D(JTable table, int row){
@@ -21,7 +21,9 @@ public class Sphere3D {
 
         material = new Material3D(new Color(Integer.parseInt((String) table.getValueAt(row, 4)),
                 Integer.parseInt((String) table.getValueAt(row, 5)),
-                Integer.parseInt((String) table.getValueAt(row, 6))));
+                Integer.parseInt((String) table.getValueAt(row, 6))),
+                new double[]{0.6,0.3},
+                Integer.parseInt((String) table.getValueAt(row, 7)));
     }
 
     //определеяем перечекает ли луч выходящий из orig в направлении dir нашу сферу
