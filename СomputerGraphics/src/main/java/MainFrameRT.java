@@ -37,7 +37,7 @@ public class MainFrameRT {
         toolBar1.add(DrawRayTracing);
         frame.add(toolBar1, BorderLayout.NORTH);
 
-        String[] headersS = {"X", "Y", "Z", "Radius", "R", "G", "B", "Specular"};
+        String[] headersS = {"X", "Y", "Z", "Radius", "Material"};
         SphereTab = new MyTable(headersS, "Spheres", 1);
         AllTabs.add(SphereTab);
         String[] headersL = {"X", "Y", "Z", "Intensity"};

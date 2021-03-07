@@ -19,19 +19,14 @@ public class Sphere3D {
 
         radius = Integer.parseInt((String) table.getValueAt(row, 3));
 
-        material = new Material3D(new Color(Integer.parseInt((String) table.getValueAt(row, 4)),
-                Integer.parseInt((String) table.getValueAt(row, 5)),
-                Integer.parseInt((String) table.getValueAt(row, 6))),
-                new double[]{0.6,0.3},
-                Integer.parseInt((String) table.getValueAt(row, 7)));
+        material = new Material3D(Integer.parseInt((String) table.getValueAt(row, 4)));
     }
-
     //определе€ем перечекает ли луч выход€щий из orig в направлении dir нашу сферу
     //решаем квадратное уравнние пересечени€ луча и сферы
     //если дескриминант больше нул€, то есть два пересечени€, если нулю - одно пересечение
-    public double IsIntersect(int[] orig, double[] dir){
+    public double IsIntersect(double[] orig, double[] dir){
         double t0;
-        int[] L = new int[]{center[0]-orig[0], center[1]-orig[1], center[2]-orig[2]};//заменмть на разность векторов
+        double[] L = new double[]{center[0]-orig[0], center[1]-orig[1], center[2]-orig[2]};//заменмть на разность векторов
         double tca = L[0]*dir[0] + L[1]*dir[1] + L[2]*dir[2];//заменить на скал€рное умноженеи векторов
         double d2 = L[0]*L[0] + L[1]*L[1] + L[2]*L[2] - tca*tca;//скал€рное умножение векторов
         if (d2 > radius*radius) return -1;
