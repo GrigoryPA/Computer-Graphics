@@ -20,7 +20,7 @@ public class MainFrameRT {
 
     public void MakeAndShow() {
         frame = new JFrame("2D");
-        frame.setBounds(450, 50, 500, 450);
+        frame.setBounds(50, 50, 450, 450);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         AddRow = new JButton(new ImageIcon("src/main/resources/icons/Add48x48.png"));
@@ -44,21 +44,24 @@ public class MainFrameRT {
         SphereTab.tableModel.setValueAt("16",0,2);
         SphereTab.tableModel.setValueAt("2",0,3);
         SphereTab.tableModel.setValueAt("1",0,4);
+
         SphereTab.tableModel.setValueAt("-1",1,0);
         SphereTab.tableModel.setValueAt("-2",1,1);
         SphereTab.tableModel.setValueAt("12",1,2);
         SphereTab.tableModel.setValueAt("2",1,3);
-        SphereTab.tableModel.setValueAt("2",1,4);
+        SphereTab.tableModel.setValueAt("3",1,4);
+
         SphereTab.tableModel.setValueAt("2",2,0);
         SphereTab.tableModel.setValueAt("-1",2,1);
         SphereTab.tableModel.setValueAt("18",2,2);
         SphereTab.tableModel.setValueAt("3",2,3);
         SphereTab.tableModel.setValueAt("2",2,4);
+
         SphereTab.tableModel.setValueAt("7",3,0);
         SphereTab.tableModel.setValueAt("5",3,1);
         SphereTab.tableModel.setValueAt("18",3,2);
         SphereTab.tableModel.setValueAt("4",3,3);
-        SphereTab.tableModel.setValueAt("1",3,4);
+        SphereTab.tableModel.setValueAt("3",3,4);
         AllTabs.add(SphereTab);
         String[] headersL = {"X", "Y", "Z", "Intensity"};
         LightTab = new MyTable(headersL, "Lights", 3);

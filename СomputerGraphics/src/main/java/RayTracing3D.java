@@ -10,7 +10,7 @@ public class RayTracing3D {
     public static Vector<Light3D> AllLights;
     public static Sphere3D OneSphere;
     public static Light3D OneLight;
-    private static int maxDepth=2;
+    private static int maxDepth=4;
 
     static void RenderSpheres(JTable TableSpheres, JTable TableLights, Display3D display) {
         int width =  Display3D.widthImage;
@@ -52,17 +52,17 @@ public class RayTracing3D {
     public static Vector3d CalculateSpherePixelColor(Vector3d orig, Vector3d dir, int depth){
         SceneIntersect scene = new SceneIntersect(orig,dir,AllSpheres);
 
-        if (/*depth<=maxDepth &&*/ scene.isIntersect) {
-            /*Vector3d reflect_dir_norm = reflect(dir, scene.N).normalize();
-            Vector3d N_1 = scene.N.getVectorScaled(0.001);
-            Vector3d reflect_orig = reflect_dir_norm.getScalar(scene.N) < 0 ?
-                    scene.hit.getSubtraction(N_1) :
-                    scene.hit.getAddition(N_1);
+        if (depth<=maxDepth && scene.isIntersect) {
+            Vector3d reflect_dir = reflect(dir, scene.N);
+            /*Vector3d N_1 = scene.N.getVectorScaled(0.001);*/
+            Vector3d reflect_orig = reflect_dir.getScalar(scene.N) < 0 ?
+                    scene.hit.getSubtraction(scene.N.getVectorScaled(0.001)) :
+                    scene.hit.getAddition(scene.N.getVectorScaled(0.001));
             Vector3d reflect_color = CalculateSpherePixelColor(
                     reflect_orig,
-                    reflect_dir_norm,
+                    reflect_dir,
                     depth+1);
-            */
+
             double diffuse_light_intensity = 0,
                     specular_light_intensity = 0;
 
@@ -94,10 +94,10 @@ public class RayTracing3D {
 
             Vector3d result_0 = scene.material.color.getVectorScaled(diffuse_light_intensity * scene.material.albedo[0]);
             Vector3d result_1 = (new Vector3d(1.,1.,1.)).getVectorScaled(specular_light_intensity * scene.material.albedo[1]);
-            //Vector3d result_2 = reflect_color.getVectorScaled(scene.material.albedo[2]);
-            return  result_0.getAddition(result_1/*.getAddition(result_2)*/);// sphere color//resultColor
+            Vector3d result_2 = reflect_color.getVectorScaled(scene.material.albedo[2]);
+            return  result_0.getAddition(result_1.getAddition(result_2));// sphere color//resultColor
         }
-        return new Vector3d(0.1,1,0.1);
+        return new Vector3d(0.1,0.5,0.1);
     }
 
 
