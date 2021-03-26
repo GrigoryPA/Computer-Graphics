@@ -54,13 +54,20 @@ public class RayTracing3D {
 
         if (depth<=maxDepth && scene.isIntersect) {
             Vector3d reflect_dir = reflect(dir, scene.N);
-            /*Vector3d N_1 = scene.N.getVectorScaled(0.001);*/
+            Vector3d refract_dir = refract(dir, scene.N, scene.material.refractive,1).normalize();
             Vector3d reflect_orig = reflect_dir.getScalar(scene.N) < 0 ?
+                    scene.hit.getSubtraction(scene.N.getVectorScaled(0.001)) :
+                    scene.hit.getAddition(scene.N.getVectorScaled(0.001));
+            Vector3d refract_orig = refract_dir.getScalar(scene.N) < 0 ?
                     scene.hit.getSubtraction(scene.N.getVectorScaled(0.001)) :
                     scene.hit.getAddition(scene.N.getVectorScaled(0.001));
             Vector3d reflect_color = CalculateSpherePixelColor(
                     reflect_orig,
                     reflect_dir,
+                    depth+1);
+            Vector3d refract_color = CalculateSpherePixelColor(
+                    refract_orig,
+                    refract_dir,
                     depth+1);
 
             double diffuse_light_intensity = 0,
@@ -95,7 +102,8 @@ public class RayTracing3D {
             Vector3d result_0 = scene.material.color.getVectorScaled(diffuse_light_intensity * scene.material.albedo[0]);
             Vector3d result_1 = (new Vector3d(1.,1.,1.)).getVectorScaled(specular_light_intensity * scene.material.albedo[1]);
             Vector3d result_2 = reflect_color.getVectorScaled(scene.material.albedo[2]);
-            return  result_0.getAddition(result_1.getAddition(result_2));// sphere color//resultColor
+            Vector3d result_3 = refract_color.getVectorScaled(scene.material.albedo[3]);
+            return  result_0.getAddition(result_1.getAddition(result_2.getAddition(result_3)));// sphere color//resultColor
         }
         return new Vector3d(0.1,0.5,0.1);
     }
@@ -104,6 +112,17 @@ public class RayTracing3D {
     public static Vector3d reflect(Vector3d i, Vector3d n) {
         double I_N=i.getScalar(n);
         return i.getSubtraction(n.getVectorScaled(2.f*I_N));
+    }
+
+    public static Vector3d refract(Vector3d i, Vector3d n, double etaT, double etaI) {
+        double cosi = -Math.max(-1, Math.min(1,i.getScalar(n)));
+        if(cosi<0)
+            return refract(i, n.getVectorScaled(-1), etaI, etaT);
+        double eta = etaI/etaT;
+        double k = 1 - eta*eta*(1 - cosi*cosi);
+        return k<0 ?
+                new Vector3d(1,0,0) :
+                (i.getVectorScaled(eta)).getSubtraction(n.getVectorScaled(eta*cosi - Math.sqrt(k)));
     }
 
 }

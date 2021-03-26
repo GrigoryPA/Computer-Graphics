@@ -19,7 +19,7 @@ public class MainFrameRT {
     private Vector TableModels = new Vector();
 
     public void MakeAndShow() {
-        frame = new JFrame("2D");
+        frame = new JFrame("RayTracing");
         frame.setBounds(50, 50, 450, 450);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -49,7 +49,7 @@ public class MainFrameRT {
         SphereTab.tableModel.setValueAt("-2",1,1);
         SphereTab.tableModel.setValueAt("12",1,2);
         SphereTab.tableModel.setValueAt("2",1,3);
-        SphereTab.tableModel.setValueAt("3",1,4);
+        SphereTab.tableModel.setValueAt("4",1,4);
 
         SphereTab.tableModel.setValueAt("2",2,0);
         SphereTab.tableModel.setValueAt("-1",2,1);
