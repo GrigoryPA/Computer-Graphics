@@ -68,20 +68,22 @@ public class RayTracing3D {
 
             for (int i=0; i<AllLights.size(); i++) {
                 Vector3d light_dir = (AllLights.elementAt(i).position.getSubtraction(scene.hit)).normalize();
-                /*double light_dist = light_dir.getModule();
+                double light_dist = (AllLights.elementAt(i).position.getSubtraction(scene.hit)).getModule();
 
-                Vector3d shadow_orig = (light_dir.getScalar(scene.N) < 0) ? scene.hit.getSubtraction(N_1) :  scene.hit.getAddition(N_1); // checking if the point lies in the shadow of the lights[i]
+                Vector3d shadow_orig = (light_dir.getScalar(scene.N) < 0) ?
+                        scene.hit.getSubtraction(scene.N.getVectorScaled(0.001)) :
+                        scene.hit.getAddition(scene.N.getVectorScaled(0.001)); // checking if the point lies in the shadow of the lights[i]
 
                 SceneIntersect shadow = new SceneIntersect(
                         shadow_orig,
                         light_dir,
                         AllSpheres);
                 if (shadow.isIntersect){
-                    double shadow_l = shadow.hit.getSubtraction(shadow_orig).getModule();
+                    double shadow_l = (shadow.hit.getSubtraction(shadow_orig)).getModule();
                     if(shadow_l<light_dist)
                         continue;
                 }
-                */
+
                 diffuse_light_intensity += AllLights.elementAt(i).intensity * Math.max(0, light_dir.getScalar(scene.N));
                 specular_light_intensity += Math.pow(
                         Math.max(0, reflect(light_dir,scene.N).getScalar(dir)),
