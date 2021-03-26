@@ -43,7 +43,7 @@ public class Material3D {
                 color = new Vector3d(0.6,0.7,0.8);
                 albedo = new double[]{0,0.5,0.1,0.8};
                 specularExponent=125;
-                refractive = 1;
+                refractive = 1.5;
                 break;
         }
     }

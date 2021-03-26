@@ -54,7 +54,7 @@ public class RayTracing3D {
 
         if (depth<=maxDepth && scene.isIntersect) {
             Vector3d reflect_dir = reflect(dir, scene.N);
-            Vector3d refract_dir = refract(dir, scene.N, scene.material.refractive,1).normalize();
+            Vector3d refract_dir = refract(dir, scene.N, scene.material.refractive).normalize();
             Vector3d reflect_orig = reflect_dir.getScalar(scene.N) < 0 ?
                     scene.hit.getSubtraction(scene.N.getVectorScaled(0.001)) :
                     scene.hit.getAddition(scene.N.getVectorScaled(0.001));
@@ -114,15 +114,21 @@ public class RayTracing3D {
         return i.getSubtraction(n.getVectorScaled(2.f*I_N));
     }
 
-    public static Vector3d refract(Vector3d i, Vector3d n, double etaT, double etaI) {
+    public static Vector3d refract(Vector3d i, Vector3d n, double etaT) {
+        double etaI = 1, buf;
         double cosi = -Math.max(-1, Math.min(1,i.getScalar(n)));
-        if(cosi<0)
-            return refract(i, n.getVectorScaled(-1), etaI, etaT);
+        Vector3d n_new = n;
+        if(cosi<0){
+            cosi = -cosi;
+            buf=etaT; etaT=etaI; etaI=buf;
+            n_new = n.getVectorScaled(-1);
+        }
+
         double eta = etaI/etaT;
         double k = 1 - eta*eta*(1 - cosi*cosi);
         return k<0 ?
-                new Vector3d(1,0,0) :
-                (i.getVectorScaled(eta)).getSubtraction(n.getVectorScaled(eta*cosi - Math.sqrt(k)));
+                new Vector3d(0,0,0) :
+                (i.getVectorScaled(eta)).getAddition(n_new.getVectorScaled(eta*cosi - Math.sqrt(k)));
     }
 
 }
