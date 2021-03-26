@@ -3,18 +3,14 @@ import java.awt.*;
 import java.util.Vector;
 
 public class RayTracing3D {
-    public static double[] camera = new double[]{0,0,0};
+    public static Vector3d camera = new Vector3d(0,0,0);
     public static int dirZ = 1;
     public static double fov = Math.PI/2;
     public static Vector<Sphere3D> AllSpheres;
     public static Vector<Light3D> AllLights;
     public static Sphere3D OneSphere;
     public static Light3D OneLight;
-    private static double[] hit, N;
-    private static Material3D material;
-    private static double[] shadow_pt, shadow_N;
-    private static Material3D shadowMaterial;
-    private static int maxDepth=1;
+    private static int maxDepth=2;
 
     static void RenderSpheres(JTable TableSpheres, JTable TableLights, Display3D display) {
         int width =  Display3D.widthImage;
@@ -36,9 +32,16 @@ public class RayTracing3D {
             for (int i = 0; i<width; i++) {//по х
                 double x = (2 * (i + 0.5) / width - 1) * Math.tan(fov / 2) * width / height;
                 double y = -(2 * (j + 0.5) / height - 1) * Math.tan(fov / 2);
-                double l = Math.sqrt(x * x + y * y + dirZ * dirZ);
-                double[] dir = {x / l, y / l, dirZ / l};
-                Color pixelColor = CalculateSpherePixelColor(camera, dir, 0);
+                Vector3d dir = (new Vector3d(x , y , dirZ )).normalize();
+
+                Vector3d color_kef = CalculateSpherePixelColor(camera, dir, 0);
+
+                double max_color_kef = Math.max(color_kef.x, Math.max(color_kef.y, color_kef.z));
+                if(max_color_kef>1)
+                    color_kef = color_kef.getVectorScaled(1./max_color_kef);
+                Color pixelColor = new Color((int)(255*Math.max(0, Math.min(1,color_kef.x))),
+                        (int)(255*Math.max(0, Math.min(1,color_kef.y))),
+                        (int)(255*Math.max(0, Math.min(1,color_kef.z))));
                 if(pixelColor!=null)
                     display.AddPointOnDisplayRT(i,height-j,pixelColor);
             }
@@ -46,98 +49,59 @@ public class RayTracing3D {
     }
 
 
-    public static Color CalculateSpherePixelColor(double[] orig, double[] dir, int depth){
-        if (depth<=maxDepth && SceneIntersect(orig, dir)) {
+    public static Vector3d CalculateSpherePixelColor(Vector3d orig, Vector3d dir, int depth){
+        SceneIntersect scene = new SceneIntersect(orig,dir,AllSpheres);
+
+        if (/*depth<=maxDepth &&*/ scene.isIntersect) {
+            /*Vector3d reflect_dir_norm = reflect(dir, scene.N).normalize();
+            Vector3d N_1 = scene.N.getVectorScaled(0.001);
+            Vector3d reflect_orig = reflect_dir_norm.getScalar(scene.N) < 0 ?
+                    scene.hit.getSubtraction(N_1) :
+                    scene.hit.getAddition(N_1);
+            Vector3d reflect_color = CalculateSpherePixelColor(
+                    reflect_orig,
+                    reflect_dir_norm,
+                    depth+1);
+            */
             double diffuse_light_intensity = 0,
                     specular_light_intensity = 0;
 
-            double[] reflect_dir = reflect(dir, N);
-            double reflect_dir_l = Math.sqrt(reflect_dir[0] * reflect_dir[0] + reflect_dir[1] * reflect_dir[1] + reflect_dir[2] * reflect_dir[2]);
-            double[] reflect_dir_norm = new double[]{reflect_dir[0]/reflect_dir_l, reflect_dir[1]/reflect_dir_l, reflect_dir[2]/reflect_dir_l};
-            double[] N_1 = {N[0]*0.001, N[1]*0.001, N[2]*0.001};
-            double[] Hit_N_1 = {hit[0] - N_1[0], hit[1] - N_1[1], hit[2] - N_1[2]};
-            double[] Hit_N_2 = {hit[0] + N_1[0], hit[1] + N_1[1], hit[2] + N_1[2]};
-            double reflect_dir_N = reflect_dir_norm[0]*N[0] + reflect_dir_norm[1]*N[1] + reflect_dir_norm[2]*N[2];
-            double[] reflect_orig = reflect_dir_N < 0 ? Hit_N_1 : Hit_N_2;
-
             for (int i=0; i<AllLights.size(); i++) {
-                double LDirx = AllLights.elementAt(i).position[0] - hit[0];
-                double LDiry = AllLights.elementAt(i).position[1] - hit[1];
-                double LDirz = AllLights.elementAt(i).position[2] - hit[2];
-                double LDirl = Math.sqrt(LDirx * LDirx + LDiry * LDiry + LDirz * LDirz);
-                double[] LDir = new double[]{LDirx / LDirl, LDiry / LDirl, LDirz / LDirl};
-                double LDirN = LDir[0]*N[0] + LDir[1]*N[1] + LDir[2]*N[2];
+                Vector3d light_dir = (AllLights.elementAt(i).position.getSubtraction(scene.hit)).normalize();
+                /*double light_dist = light_dir.getModule();
 
-                double[] ref = reflect(LDir, N);
-                double ref_dir = ref[0]*dir[0] + ref[1]*dir[1] +  ref[2]*dir[2];
+                Vector3d shadow_orig = (light_dir.getScalar(scene.N) < 0) ? scene.hit.getSubtraction(N_1) :  scene.hit.getAddition(N_1); // checking if the point lies in the shadow of the lights[i]
 
-                double LDist = LDirl;
-                double[] shadow_orig = (LDirN < 0) ? Hit_N_1 : Hit_N_2; // checking if the point lies in the shadow of the lights[i]
-                if (ShadowSceneIntersect(shadow_orig, LDir)){
-                    double[] shadow_pt_orig = {shadow_pt[0] - shadow_orig[0], shadow_pt[1] - shadow_orig[1], shadow_pt[2] - shadow_orig[2]};
-                    double shadow_l = Math.sqrt(shadow_pt_orig[0] * shadow_pt_orig[0] + shadow_pt_orig[1] * shadow_pt_orig[1] + shadow_pt_orig[2] * shadow_pt_orig[2]);
-                    if(shadow_l<LDist)
+                SceneIntersect shadow = new SceneIntersect(
+                        shadow_orig,
+                        light_dir,
+                        AllSpheres);
+                if (shadow.isIntersect){
+                    double shadow_l = shadow.hit.getSubtraction(shadow_orig).getModule();
+                    if(shadow_l<light_dist)
                         continue;
                 }
+                */
+                diffuse_light_intensity += AllLights.elementAt(i).intensity * Math.max(0, light_dir.getScalar(scene.N));
+                specular_light_intensity += Math.pow(
+                        Math.max(0, reflect(light_dir,scene.N).getScalar(dir)),
+                        scene.material.specularExponent)
+                        *AllLights.elementAt(i).intensity;
 
-                diffuse_light_intensity += AllLights.elementAt(i).intensity  * Math.max(0, LDirN);
-                specular_light_intensity += Math.pow(Math.max(0, ref_dir), material.specularExponent)*AllLights.elementAt(i).intensity;
             }
 
-            Color reflect_color = CalculateSpherePixelColor(reflect_orig, reflect_dir_norm, depth+1);
-            reflect_color = reflect_color==null ? Color.BLACK : reflect_color;
-            Color resultColor = new Color((int)(Math.min(255,material.color.getRed() * diffuse_light_intensity * material.albedo[0] + specular_light_intensity * material.albedo[1] + reflect_color.getRed()*material.albedo[2])),
-                    (int)(Math.min(255,material.color.getGreen() * diffuse_light_intensity * material.albedo[0] + specular_light_intensity * material.albedo[1] + reflect_color.getGreen()*material.albedo[2])),
-                    (int)(Math.min(255,material.color.getBlue() * diffuse_light_intensity * material.albedo[0] + specular_light_intensity * material.albedo[1] + reflect_color.getBlue()*material.albedo[2])));
-            return resultColor;// sphere color//resultColor
+            Vector3d result_0 = scene.material.color.getVectorScaled(diffuse_light_intensity * scene.material.albedo[0]);
+            Vector3d result_1 = (new Vector3d(1.,1.,1.)).getVectorScaled(specular_light_intensity * scene.material.albedo[1]);
+            //Vector3d result_2 = reflect_color.getVectorScaled(scene.material.albedo[2]);
+            return  result_0.getAddition(result_1/*.getAddition(result_2)*/);// sphere color//resultColor
         }
-        return null;
+        return new Vector3d(0.1,1,0.1);
     }
 
 
-    public static boolean SceneIntersect(double[] orig, double[] dir) {
-        double spheres_dist = Double.MAX_VALUE;
-
-        for (int i = 0; i < AllSpheres.size(); i++) {
-            double dist_i = AllSpheres.elementAt(i).IsIntersect(orig, dir);
-            if (dist_i!=-1 && dist_i < spheres_dist) {
-                spheres_dist = dist_i;
-                hit = new double[]{orig[0] + dir[0] * dist_i, orig[1] + dir[1] * dist_i, orig[2] + dir[2] * dist_i};
-                double Nx = hit[0] - AllSpheres.elementAt(i).center[0];
-                double Ny = hit[1] - AllSpheres.elementAt(i).center[1];
-                double Nz = hit[2] - AllSpheres.elementAt(i).center[2];
-                double Nl = Math.sqrt(Nx * Nx + Ny * Ny + Nz * Nz);
-                N = new double[]{Nx / Nl, Ny / Nl, Nz / Nl};
-                material = AllSpheres.elementAt(i).material;
-            }
-        }
-        return spheres_dist != Double.MAX_VALUE;
-    }
-
-    public static boolean ShadowSceneIntersect(double[] orig, double[] dir) {
-        double spheres_dist = Double.MAX_VALUE;
-
-        for (int i = 0; i < AllSpheres.size(); i++) {
-            double dist_i = AllSpheres.elementAt(i).IsIntersect(orig, dir);
-            if (dist_i!=-1 && dist_i < spheres_dist) {
-                spheres_dist = dist_i;
-                shadow_pt = new double[]{ orig[0] + dir[0] * dist_i, orig[1] + dir[1] * dist_i, orig[2] + dir[2] * dist_i};
-                double Nx = shadow_pt[0] - AllSpheres.elementAt(i).center[0];
-                double Ny = shadow_pt[1] - AllSpheres.elementAt(i).center[1];
-                double Nz = shadow_pt[2] - AllSpheres.elementAt(i).center[2];
-                double Nl = Math.sqrt(Nx * Nx + Ny * Ny + Nz * Nz);
-                shadow_N = new double[]{Nx / Nl, Ny / Nl, Nz / Nl};
-                shadowMaterial = AllSpheres.elementAt(i).material;
-            }
-        }
-        return spheres_dist != Double.MAX_VALUE;
-    }
-
-    public static double[] reflect(double[] i, double[] n) {
-        double I_N=i[0]*n[0] + i[1]*n[1] + i[2]*n[2];
-        return new double[]{i[0] - n[0]*2*(I_N),
-                i[1] - n[1]*2*(I_N),
-                i[2] - n[2]*2*(I_N)};
+    public static Vector3d reflect(Vector3d i, Vector3d n) {
+        double I_N=i.getScalar(n);
+        return i.getSubtraction(n.getVectorScaled(2.f*I_N));
     }
 
 }
