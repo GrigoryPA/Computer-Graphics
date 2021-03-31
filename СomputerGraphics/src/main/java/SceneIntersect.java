@@ -3,7 +3,7 @@ import java.util.Vector;
 public class SceneIntersect {
     public Vector3d hit;
     public Vector3d N;
-    public Material3D material = new Material3D(1);
+    public Material3D material;
     public boolean isIntersect=false;
     private Vector3d nY = new Vector3d(0,1,0);
     private  Vector3d nX = new Vector3d(1,0,0);
@@ -23,11 +23,11 @@ public class SceneIntersect {
             }
         }
 
-
+        /*
         double checkerboard_dist = Double.MAX_VALUE;
         double d = -(orig.getScalar(nY) + 5) / dir.getScalar(nY);
         Vector3d pt = orig.getAddition((dir.getVectorScaled(d)));
-        if(Math.abs(pt.x)<10 && pt.z>10 && pt.z<30
+        if(Math.abs(pt.x)<10 && pt.z>pt.x+20 && pt.z<30
                 && d>0 && d<spheres_dist){
             spheres_dist = d;
             hit = pt;
@@ -35,16 +35,16 @@ public class SceneIntersect {
             material = new Material3D(2);
         }
 
-        d = -(orig.getScalar(nX) + 10) / dir.getScalar(nX);
+        d = -(orig.getScalar(nX) + 5) / dir.getScalar(nX);
         pt = orig.getAddition((dir.getVectorScaled(d)));
         if(Math.abs(pt.y)<10 && pt.z>10 && pt.z<30
                 && d>0 && d<spheres_dist){
             spheres_dist = d;
             hit = pt;
             N = nX;
-            material = new Material3D(2);
+            material = new Material3D(1);
         }
-
+        */
 
 
 
@@ -70,7 +70,7 @@ public class SceneIntersect {
         double d = tnear;
             //double d = -(orig.y+5)/dir.y;//плоскость шахматной доски задана как y=-4
             Vector3d pt = orig.getAddition((dir.getVectorScaled(d)));
-            if(d>0  && Triangle.IsInTriangle(pt, p0,p1,p2) &&
+            if(d>0  &&
                     d<spheres_dist){
                 checkerboard_dist = d;
                 hit = pt;
@@ -79,22 +79,20 @@ public class SceneIntersect {
                         ? new Material3D(3) :  new Material3D(2);
             }*/
         //}
-        /*
-        double triangle_dist = Double.MAX_VALUE;
-        Vector3d p0 = new Vector3d(-20,-5,10);
+
+        //double triangle_dist = Double.MAX_VALUE;
+        Vector3d p0 = new Vector3d(10,-5,10);
         Vector3d p1 = new Vector3d(0,-5,10);
         Vector3d p2 = new Vector3d(-10,-5,30);
         double dist_tr1 = Triangle.IsIntersect1(p0, p1, p2, orig, dir);
-        if (dist_tr1!=0 && dist_tr1 < spheres_dist) {
-            triangle_dist = dist_tr1;
+        if (dist_tr1>0 && dist_tr1 < spheres_dist) {
+            spheres_dist = dist_tr1;
             hit = orig.getAddition(dir.getVectorScaled(dist_tr1));
-            Vector3d edge1 = p1.getSubtraction(p0);
-            Vector3d edge2 = p2.getSubtraction(p0);
             N = new Vector3d(0,1,0);
             //N = (new Vector3d(edge1.y * edge2.z, edge1.z * edge2.x, edge1.x * edge2.y)).normalize();
-            material = new Material3D(2);
+            material = new Material3D(Material3D.MaterialType.MIRROR);
         }
-
+        /*
         double triangle_dist2 = Double.MAX_VALUE;
         Vector3d p3 = new Vector3d(0,-5,10);
         Vector3d p4 = new Vector3d(20,-5,10);
@@ -112,7 +110,7 @@ public class SceneIntersect {
         */
 
 
-        isIntersect = Math.min(spheres_dist, checkerboard_dist) < 1000;
+        isIntersect = spheres_dist < 1000;
         //isIntersect = spheres_dist < 1000;
     }
 }

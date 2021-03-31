@@ -3,42 +3,25 @@ public class Triangle {
     public static double IsIntersect1(Vector3d vert0, Vector3d vert1, Vector3d vert2, Vector3d orig, Vector3d dir){
         Vector3d edge1 = vert1.getSubtraction(vert0);
         Vector3d edge2 = vert2.getSubtraction(vert0);
-        Vector3d pvec = dir.cross(edge2);
-        double det = edge1.getScalar(pvec);
-        if(det<1e-8 && det>-1e-8) return 0;
+        Vector3d P = dir.cross(edge2);
+        Vector3d T = orig.getSubtraction(vert0);
+        Vector3d Q = T.cross(edge1);
+        double det = edge1.getScalar(P);
+        if(det<1e-8 && det>-1e-8) return -1;
 
-        Vector3d tvec = orig.getSubtraction(vert0);
-        double u = tvec.getScalar(pvec)*1/det;
-        if(u<0 || u>1) return 0;
+        double u = T.getScalar(P)*1/det;
+        if(u<0 || u>1) return -1;
 
-        Vector3d qvec = tvec.cross(edge1);
-        double v = dir.getScalar(qvec)*1/det;
-        if(v<0 || u+v>1) return 0;
+        double v = dir.getScalar(Q)*1/det;
+        if(v<0 || u+v>1) return -1;
 
-        return edge2.getScalar(qvec)*1/det;
+        double t = 1-u-v;
+        if(v<0 || u+v+t>1) return -1;
+
+        double dist = edge2.getScalar(Q)*1/det;
+        return dist;
     }
 
-    public static double IsIntersect2(Vector3d vert0, Vector3d vert1, Vector3d vert2, Vector3d orig, Vector3d dir){
-        Vector3d edge1 = vert1.getSubtraction(vert0);
-        Vector3d edge2 = vert2.getSubtraction(vert0);
-        Vector3d pvec = dir.cross(edge2);
-        double det = edge1.getScalar(pvec);
-        if(det<1e-3 && det>-1e-3) return 0;
-
-        Vector3d tvec = orig.getSubtraction(vert0);
-        double u = tvec.getScalar(pvec);
-        if(u<0 || u>det) return 0;
-
-        Vector3d qvec = tvec.cross(edge1);
-        double v = dir.getScalar(qvec);
-        if(v<0 || u+v>det) return 0;
-
-        double tnear = edge2.getScalar(qvec)*(1./det);
-        if(tnear>1e-3 || tnear<-1e-3)
-            return tnear;
-        else
-            return 0;
-    }
 
     public static boolean IsInTriangle (Vector3d P,Vector3d p0, Vector3d p1, Vector3d p2){
         double S = AreaTriangle(p0, p1, p2);
