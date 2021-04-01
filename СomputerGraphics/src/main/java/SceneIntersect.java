@@ -25,7 +25,7 @@ public class SceneIntersect {
 
         for (int i = 0; i < AllTriangleModels.size(); i++) {
             double dist_i = AllTriangleModels.elementAt(i).IsIntersect(orig, dir);
-            if (dist_i!=-1 && dist_i < spheres_dist) {
+            if (dist_i>0 && dist_i < spheres_dist) {
                 spheres_dist = dist_i;
                 hit = orig.getAddition(dir.getVectorScaled(dist_i));
                 N = AllTriangleModels.elementAt(i).oneTriangle.normal;
@@ -46,18 +46,19 @@ public class SceneIntersect {
         }
 
          */
-        /*
-        Vector3d p0 = new Vector3d(10,-5,10);
-        Vector3d p1 = new Vector3d(0,-5,10);
-        Vector3d p2 = new Vector3d(-10,-5,30);
-        double dist_tr1 = Triangle.IsIntersect(orig, dir);
+
+        Vector3d p0 = new Vector3d(0,-5,10);
+        Vector3d p1 = new Vector3d(10,-5,10);
+        Vector3d p2 = new Vector3d(5,-5,30);
+        Triangle tri = new Triangle(p0, p1, p2);
+        double dist_tr1 = tri.IsIntersect(orig, dir);
         if (dist_tr1>0 && dist_tr1 < spheres_dist) {
             spheres_dist = dist_tr1;
             hit = orig.getAddition(dir.getVectorScaled(dist_tr1));
             N = new Vector3d(0,1,0);
             //N = (new Vector3d(edge1.y * edge2.z, edge1.z * edge2.x, edge1.x * edge2.y)).normalize();
             material = new Material3D(MaterialType.MIRROR);
-        }*/
+        }
 
 
         isIntersect = spheres_dist < 1000;

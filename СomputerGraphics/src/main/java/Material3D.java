@@ -1,7 +1,7 @@
 import java.awt.*;
 
 
-public class Material3D {
+public class Material3D{
     public Vector3d color;
     public double[] albedo = new double[]{1,0,0,0};
     //первое - способность материала передавать свой цвет
