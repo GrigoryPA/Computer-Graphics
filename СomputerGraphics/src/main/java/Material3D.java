@@ -12,14 +12,6 @@ public class Material3D {
     //степень отражения света
     public double refractive;
 
-    public enum MaterialType
-    {
-        STEEL,
-        REDWOOD,
-        MIRROR,
-        GLASS
-    }
-
 
     public Material3D(Color color1, double[] alb, double specular){
         color = new Vector3d(color1.getRed(),

@@ -8,8 +8,10 @@ public class RayTracing3D {
     public static double fov = Math.PI/2;
     public static Vector<Sphere3D> AllSpheres;
     public static Vector<Light3D> AllLights;
+    public static Vector<TriangleModel> AllTriangleModels;
     public static Sphere3D OneSphere;
     public static Light3D OneLight;
+    public static TriangleModel OneTriangleModels;
     private static int maxDepth=4;
 
     static void RenderSpheres(JTable TableSpheres, JTable TableLights, Display3D display) {
@@ -17,6 +19,7 @@ public class RayTracing3D {
         int height = Display3D.heightImage;
         AllSpheres = new Vector<Sphere3D>();
         AllLights = new Vector<Light3D>();
+        AllTriangleModels = new Vector<TriangleModel>();
 
         for(int i=0; i<TableSpheres.getRowCount(); i++) {
             OneSphere = new Sphere3D(TableSpheres, i);
@@ -27,6 +30,12 @@ public class RayTracing3D {
             OneLight = new Light3D(TableLights, i);
             AllLights.add(OneLight);
         }
+
+        //OneTriangleModels = new TriangleModel("model.txt", MaterialType.STEEL);
+        OneTriangleModels = new TriangleModel(MaterialType.STEEL);
+        AllTriangleModels.add(OneTriangleModels);
+
+
 
         for (int j = 0; j<height; j++) {//по y
             for (int i = 0; i<width; i++) {//по х
@@ -50,7 +59,7 @@ public class RayTracing3D {
 
 
     public static Vector3d CalculateSpherePixelColor(Vector3d orig, Vector3d dir, int depth){
-        SceneIntersect scene = new SceneIntersect(orig,dir,AllSpheres);
+        SceneIntersect scene = new SceneIntersect(orig,dir,AllSpheres,AllTriangleModels);
 
         if (depth<=maxDepth && scene.isIntersect) {
             Vector3d reflect_dir = reflect(dir, scene.N);
@@ -84,7 +93,8 @@ public class RayTracing3D {
                 SceneIntersect shadow = new SceneIntersect(
                         shadow_orig,
                         light_dir,
-                        AllSpheres);
+                        AllSpheres,
+                        AllTriangleModels);
                 if (shadow.isIntersect){
                     double shadow_l = (shadow.hit.getSubtraction(shadow_orig)).getModule();
                     if(shadow_l<light_dist)
