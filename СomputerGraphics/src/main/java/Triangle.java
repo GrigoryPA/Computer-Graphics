@@ -15,6 +15,16 @@ public class Triangle {
         normal = edge1.getVector(edge2).normalize();
     }
 
+    public void ScaleTriangle(int koef)
+    {
+        p0=p0.getVectorScaled(koef);
+        p1=p1.getVectorScaled(koef);
+        p2=p2.getVectorScaled(koef);
+        edge1 = p1.getSubtraction(p0);
+        edge2 = p2.getSubtraction(p0);
+        normal = edge1.getVector(edge2).normalize();
+    }
+
     public  double IsIntersect(Vector3d orig, Vector3d dir){
         Vector3d P = dir.cross(edge2);
         Vector3d T = orig.getSubtraction(p0);

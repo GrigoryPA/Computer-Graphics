@@ -32,10 +32,9 @@ public class RayTracing3D {
         }
 
         //OneTriangleModels = new TriangleModel("model.txt", MaterialType.STEEL);
-        OneTriangleModel = new TriangleModel(MaterialType.STEEL);
+        //OneTriangleModel = new TriangleModel(MaterialType.STEEL);
+        OneTriangleModel = new TriangleModel( "src/main/resources/3d/duck.obj",MaterialType.REDWOOD);
         AllTriangleModels.add(OneTriangleModel);
-
-
 
         for (int j = 0; j<height; j++) {//по y
             for (int i = 0; i<width; i++) {//по х

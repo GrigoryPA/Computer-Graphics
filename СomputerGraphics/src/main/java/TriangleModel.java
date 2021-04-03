@@ -1,23 +1,64 @@
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Vector;
+import java.util.Scanner;
 
 public class TriangleModel {
     public Vector<Triangle> triangles;
     public Material3D material;
     public double minDist_i;
     public Triangle oneTriangle;
+    private Vector3d[] v;
+    private int[][] f;
+    private int vcount = 0;
+    private int fcount = 0;
 
-
-    public TriangleModel(String fileName, MaterialType _materialType) {
+    public TriangleModel(String fileName, MaterialType _materialType){
         material = new Material3D(_materialType);
-        try (FileReader file = new FileReader(fileName)) {
-            int buf;
-
-        }
-        catch (IOException e) {
+        File file = new File(fileName);
+        Scanner scanner = null;
+        v = new Vector3d[256];
+        f = new int[510][3];
+        try {
+            scanner = new Scanner(file);
+            while(scanner.hasNextLine())
+            {
+                String line = scanner.nextLine();
+                String[] numbers = line.split(" ");
+                System.out.println(Arrays.toString(numbers));
+                if ( numbers[0].equals("v"))
+                {
+                    v[vcount++] = new Vector3d(Float.parseFloat(String.valueOf(numbers[1])),
+                            Float.parseFloat(String.valueOf(numbers[2])),
+                            Float.parseFloat(String.valueOf(numbers[3])));
+                }
+                else if (numbers[0].equals("f"))
+                {
+                    f[fcount][0] = Integer.parseInt(String.valueOf(numbers[1]));
+                    f[fcount][1] = Integer.parseInt(String.valueOf(numbers[2]));
+                    f[fcount++][2] = Integer.parseInt(String.valueOf(numbers[3]));
+                }
+            }
+            scanner.close();
+            triangles = new Vector<Triangle>();
+            for (int i = 0;i < fcount;i++)
+            {
+                Triangle t = new Triangle(v[f[i][0]-1], v[f[i][1]-1], v[f[i][2]-1]);
+                triangles.add(t);
+            }
+            ScaleModel(1);
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void ScaleModel(int koef)
+    {
+        for (Triangle triangle:triangles) {
+            triangle.ScaleTriangle(koef);
         }
     }
 

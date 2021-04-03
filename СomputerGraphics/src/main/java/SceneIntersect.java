@@ -60,7 +60,6 @@ public class SceneIntersect {
             material = new Material3D(MaterialType.MIRROR);
         }
 
-
         isIntersect = spheres_dist < 1000;
     }
 }
