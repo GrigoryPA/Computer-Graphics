@@ -49,7 +49,7 @@ public class TriangleModel {
                 Triangle t = new Triangle(v[f[i][0]-1], v[f[i][1]-1], v[f[i][2]-1]);
                 triangles.add(t);
             }
-            ScaleModel(1);
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -57,17 +57,23 @@ public class TriangleModel {
 
     public void ScaleModel(int koef)
     {
-        for (Triangle triangle:triangles) {
-            triangle.ScaleTriangle(koef);
+        for (int i = 0; i < triangles.size();i++) {
+            triangles.elementAt(i).ScaleTriangle(   koef);
         }
     }
 
-    public TriangleModel(MaterialType _materialType) {
+    public void MoveModel(double x, double y, double z)
+    {
+        Vector3d MoveVector = new Vector3d(x,y,z);
+        for (int i = 0; i < triangles.size();i++) {
+            triangles.elementAt(i).MoveTriangle(MoveVector);
+        }
+    }
+
+    public TriangleModel(Vector3d v1, Vector3d v2, Vector3d v3,MaterialType _materialType) {
         material = new Material3D(_materialType);
         triangles = new Vector<Triangle>();
-        Triangle t = new Triangle(new Vector3d(-10,-5,10),
-                new Vector3d(-5,-5,30),
-                new Vector3d(0,-5,10));
+        Triangle t = new Triangle(v1, v2, v3);
         triangles.add(t);
     }
 

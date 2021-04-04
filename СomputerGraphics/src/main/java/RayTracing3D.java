@@ -12,6 +12,7 @@ public class RayTracing3D {
     public static Sphere3D OneSphere;
     public static Light3D OneLight;
     public static TriangleModel OneTriangleModel;
+    public static Vector3d BackgroundColor = new Vector3d(0.3,0.5,0.4);
     private static int maxDepth=4;
 
     static void RenderSpheres(JTable TableSpheres, JTable TableLights, Display3D display) {
@@ -34,7 +35,16 @@ public class RayTracing3D {
         //OneTriangleModels = new TriangleModel("model.txt", MaterialType.STEEL);
         //OneTriangleModel = new TriangleModel(MaterialType.STEEL);
         OneTriangleModel = new TriangleModel( "src/main/resources/3d/duck.obj",MaterialType.REDWOOD);
+        //ScaleModel(1);
+        OneTriangleModel.MoveModel(0,0, 20);
         AllTriangleModels.add(OneTriangleModel);
+        OneTriangleModel = new TriangleModel(new Vector3d(-50,-30,50),
+                new Vector3d(0,50,50),
+                new Vector3d(50,-30,50),
+                MaterialType.REDWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+
+
 
         for (int j = 0; j<height; j++) {//по y
             for (int i = 0; i<width; i++) {//по х
@@ -114,7 +124,7 @@ public class RayTracing3D {
             Vector3d result_3 = refract_color.getVectorScaled(scene.material.albedo[3]);
             return  result_0.getAddition(result_1.getAddition(result_2.getAddition(result_3)));// sphere color//resultColor
         }
-        return new Vector3d(0.1,0.1,0.1);
+        return BackgroundColor;
     }
 
 
