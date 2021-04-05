@@ -34,9 +34,10 @@ public class RayTracing3D {
 
         //OneTriangleModels = new TriangleModel("model.txt", MaterialType.STEEL);
         //OneTriangleModel = new TriangleModel(MaterialType.STEEL);
-        OneTriangleModel = new TriangleModel( "src/main/resources/3d/duck.obj",MaterialType.REDWOOD);
+        OneTriangleModel = new TriangleModel( "src/main/resources/3d/duck.obj",
+                MaterialType.STEEL);
         //ScaleModel(1);
-        OneTriangleModel.MoveModel(0,0, 20);
+        OneTriangleModel.MoveModel(-5,3, 15);
         AllTriangleModels.add(OneTriangleModel);
         OneTriangleModel = new TriangleModel(new Vector3d(-50,-30,50),
                 new Vector3d(0,50,50),
