@@ -14,10 +14,14 @@ public class RayTracing3D {
     public static TriangleModel OneTriangleModel;
     public static Vector3d BackgroundColor = new Vector3d(0.3,0.5,0.4);
     private static int maxDepth=4;
+    public int width;
+    public int height;
+    public Display3D Display;
 
-    static void RenderSpheres(JTable TableSpheres, JTable TableLights, Display3D display) {
-        int width =  Display3D.widthImage;
-        int height = Display3D.heightImage;
+    public RayTracing3D(JTable TableSpheres, JTable TableLights, Display3D _display){
+        Display = _display;
+        width =  Display.widthImage;
+        height = Display.heightImage;
         AllSpheres = new Vector<Sphere3D>();
         AllLights = new Vector<Light3D>();
         AllTriangleModels = new Vector<TriangleModel>();
@@ -44,31 +48,39 @@ public class RayTracing3D {
                 new Vector3d(50,-30,50),
                 MaterialType.REDWOOD);
         AllTriangleModels.add(OneTriangleModel);
+    }
 
-
-
+    public void RenderScene(Display3D display) {
+        //MyThread[] allThreads = new MyThread[height*width];
         for (int j = 0; j<height; j++) {//по y
             for (int i = 0; i<width; i++) {//по х
-                double x = (2 * (i + 0.5) / width - 1) * Math.tan(fov / 2) * width / height;
-                double y = -(2 * (j + 0.5) / height - 1) * Math.tan(fov / 2);
-                Vector3d dir = (new Vector3d(x , y , dirZ )).normalize();
-
-                Vector3d color_kef = CalculateSpherePixelColor(camera, dir, 0);
-
-                double max_color_kef = Math.max(color_kef.x, Math.max(color_kef.y, color_kef.z));
-                if(max_color_kef>1)
-                    color_kef = color_kef.getVectorScaled(1./max_color_kef);
-                Color pixelColor = new Color((int)(255*Math.max(0, Math.min(1,color_kef.x))),
-                        (int)(255*Math.max(0, Math.min(1,color_kef.y))),
-                        (int)(255*Math.max(0, Math.min(1,color_kef.z))));
-                if(pixelColor!=null)
-                    display.AddPointOnDisplayRT(i,height-j,pixelColor);
+                RenderOnePixel(i,j);
+                /*allThreads[j*width+i] = new MyThread(this, i, j);
+                while(MyThread.semaforik==0);
+                allThreads[j*width+i].start();*/
             }
         }
     }
 
+    public void RenderOnePixel( int i, int j){
+        double x = (2 * (i + 0.5) / width - 1) * Math.tan(fov / 2) * width / height;
+        double y = -(2 * (j + 0.5) / height - 1) * Math.tan(fov / 2);
+        Vector3d dir = (new Vector3d(x , y , dirZ )).normalize();
 
-    public static Vector3d CalculateSpherePixelColor(Vector3d orig, Vector3d dir, int depth){
+        Vector3d color_kef = CalculateSpherePixelColor(camera, dir, 0);
+
+        double max_color_kef = Math.max(color_kef.x, Math.max(color_kef.y, color_kef.z));
+        if(max_color_kef>1)
+            color_kef = color_kef.getVectorScaled(1./max_color_kef);
+        Color pixelColor = new Color((int)(255*Math.max(0, Math.min(1,color_kef.x))),
+                (int)(255*Math.max(0, Math.min(1,color_kef.y))),
+                (int)(255*Math.max(0, Math.min(1,color_kef.z))));
+        if(pixelColor!=null)
+            Display.AddPointOnDisplayRT(i,height-j,pixelColor);
+    }
+
+
+    public  Vector3d CalculateSpherePixelColor(Vector3d orig, Vector3d dir, int depth){
         SceneIntersect scene = new SceneIntersect(orig,dir,AllSpheres,AllTriangleModels);
 
         if (depth<=maxDepth && scene.isIntersect) {
@@ -129,12 +141,12 @@ public class RayTracing3D {
     }
 
 
-    public static Vector3d reflect(Vector3d i, Vector3d n) {
+    public  Vector3d reflect(Vector3d i, Vector3d n) {
         double I_N=i.getScalar(n);
         return i.getSubtraction(n.getVectorScaled(2.f*I_N));
     }
 
-    public static Vector3d refract(Vector3d i, Vector3d n, double etaT) {
+    public  Vector3d refract(Vector3d i, Vector3d n, double etaT) {
         double etaI = 1, buf;
         double cosi = -Math.max(-1, Math.min(1,i.getScalar(n)));
         Vector3d n_new = n;

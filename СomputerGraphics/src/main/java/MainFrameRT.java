@@ -90,7 +90,8 @@ public class MainFrameRT {
             public void actionPerformed(ActionEvent e) {
                 //try {
                     display.Clear();
-                    RayTracing3D.RenderSpheres(AllTabs.elementAt(0).Table, AllTabs.elementAt(1).Table, display);
+                    RayTracing3D RT = new RayTracing3D(AllTabs.elementAt(0).Table, AllTabs.elementAt(1).Table, display);
+                            RT.RenderScene(display);
                     display.CreateAndOpenImage();
                 //}
                 //catch(Exception e1){}

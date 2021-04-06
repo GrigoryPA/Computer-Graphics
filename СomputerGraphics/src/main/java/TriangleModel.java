@@ -28,7 +28,7 @@ public class TriangleModel {
             {
                 String line = scanner.nextLine();
                 String[] numbers = line.split(" ");
-                System.out.println(Arrays.toString(numbers));
+                //System.out.println(Arrays.toString(numbers));
                 if ( numbers[0].equals("v"))
                 {
                     v[vcount++] = new Vector3d(Float.parseFloat(String.valueOf(numbers[1])),
