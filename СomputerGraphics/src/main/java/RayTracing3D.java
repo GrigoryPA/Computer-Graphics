@@ -3,20 +3,21 @@ import java.awt.*;
 import java.util.Vector;
 
 public class RayTracing3D {
-    public static Vector3d camera = new Vector3d(0,0,0);
-    public static int dirZ = 1;
-    public static double fov = Math.PI/2;
-    public static Vector<Sphere3D> AllSpheres;
-    public static Vector<Light3D> AllLights;
-    public static Vector<TriangleModel> AllTriangleModels;
-    public static Sphere3D OneSphere;
-    public static Light3D OneLight;
-    public static TriangleModel OneTriangleModel;
-    public static Vector3d BackgroundColor = new Vector3d(0.3,0.5,0.4);
-    private static int maxDepth=4;
+    private Vector3d camera = new Vector3d(0,0,0);
+    private int dirZ = 1;
+    private double fov = Math.PI/2;
+    public  Vector<Sphere3D> AllSpheres;
+    public  Vector<Light3D> AllLights;
+    public  Vector<TriangleModel> AllTriangleModels;
+    public  Sphere3D OneSphere;
+    public  Light3D OneLight;
+    public  TriangleModel OneTriangleModel;
+    private  Vector3d BackgroundColor = new Vector3d(0.3,0.5,0.4);
+    private  int maxDepth=4;
     public int width;
     public int height;
     public Display3D Display;
+    private int threadsAmount = 8;
 
     public RayTracing3D(JTable TableSpheres, JTable TableLights, Display3D _display){
         Display = _display;
@@ -51,16 +52,60 @@ public class RayTracing3D {
     }
 
     public void RenderScene(Display3D display) {
-        //MyThread[] allThreads = new MyThread[height*width];
-        for (int j = 0; j<height; j++) {//по y
-            for (int i = 0; i<width; i++) {//по х
-                RenderOnePixel(i,j);
-                /*allThreads[j*width+i] = new MyThread(this, i, j);
-                while(MyThread.semaforik==0);
-                allThreads[j*width+i].start();*/
+
+        /*
+        MyThread r1 = new MyThread(this, 0,width/threadsAmount-1);
+        MyThread r2 = new MyThread(this, width/threadsAmount,width/threadsAmount*2-1);
+        MyThread r3 = new MyThread(this, width/threadsAmount*2,width/threadsAmount*3-1);
+        MyThread r4 = new MyThread(this, width/threadsAmount*3,width/threadsAmount*4-1);
+        MyThread r5 = new MyThread(this, width/threadsAmount*4,width/threadsAmount*5-1);
+        MyThread r6 = new MyThread(this, width/threadsAmount*5,width/threadsAmount*6-1);
+        MyThread r7 = new MyThread(this, width/threadsAmount*6,width/threadsAmount*7-1);
+        MyThread r8 = new MyThread(this, width/threadsAmount*7,width-1);
+
+        Thread t1 = new Thread(r1);
+        Thread t2 = new Thread(r2);
+        Thread t3 = new Thread(r3);
+        Thread t4 = new Thread(r4);
+        Thread t5 = new Thread(r5);
+        Thread t6 = new Thread(r6);
+        Thread t7 = new Thread(r7);
+        Thread t8 = new Thread(r8);
+
+        t1.start();
+        t2.start();
+        t3.start();
+        t4.start();
+        t5.start();
+        t6.start();
+        t7.start();
+        t8.start();
+
+        try {
+            t1.join();
+            t2.join();
+            t3.join();
+            t4.join();
+            t5.join();
+            t6.join();
+            t7.join();
+            t8.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        */
+        /*
+        for (int j = 0; j < height; ++j) {//по y
+            for (int i = 0; i < width; ++i) {//по х
+                RenderOnePixel(i, j);
             }
         }
+        */
+
     }
+
+
+
 
     public void RenderOnePixel( int i, int j){
         double x = (2 * (i + 0.5) / width - 1) * Math.tan(fov / 2) * width / height;

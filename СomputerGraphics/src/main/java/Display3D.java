@@ -7,9 +7,9 @@ import java.io.IOException;
 
 public class Display3D {
 	public static Color[][] display;
-	public static int widthVirtualDisplay=1400;
+	public static int widthVirtualDisplay=1600;
 	public static int heightVirtualDisplay=1000;
-	public static int widthImage=700;
+	public static int widthImage=800;
 	public static int heightImage=500;
 	public static int widthDelta=(widthVirtualDisplay-widthImage)/2;
 	public static int heightDelta=(heightVirtualDisplay-heightImage)/2;
