@@ -37,71 +37,24 @@ public class RayTracing3D {
             AllLights.add(OneLight);
         }
 
-        //OneTriangleModels = new TriangleModel("model.txt", MaterialType.STEEL);
-        //OneTriangleModel = new TriangleModel(MaterialType.STEEL);
-        OneTriangleModel = new TriangleModel( "src/main/resources/3d/duck.obj",
-                MaterialType.STEEL);
-        //ScaleModel(1);
-        OneTriangleModel.MoveModel(-5,3, 15);
-        AllTriangleModels.add(OneTriangleModel);
-        OneTriangleModel = new TriangleModel(new Vector3d(-50,-30,50),
-                new Vector3d(0,50,50),
-                new Vector3d(50,-30,50),
+        //OneTriangleModel = new TriangleModel( "src/main/resources/3d/duck.obj",
+        //        MaterialType.STEEL);
+        //OneTriangleModel.MoveModel(-5,3, 15);
+        //AllTriangleModels.add(OneTriangleModel);
+        OneTriangleModel = new TriangleModel(
+                new Vector3d(-50,-30,50),
+                60,
+                100,
                 MaterialType.REDWOOD);
         AllTriangleModels.add(OneTriangleModel);
     }
 
     public void RenderScene(Display3D display) {
-
-        /*
-        MyThread r1 = new MyThread(this, 0,width/threadsAmount-1);
-        MyThread r2 = new MyThread(this, width/threadsAmount,width/threadsAmount*2-1);
-        MyThread r3 = new MyThread(this, width/threadsAmount*2,width/threadsAmount*3-1);
-        MyThread r4 = new MyThread(this, width/threadsAmount*3,width/threadsAmount*4-1);
-        MyThread r5 = new MyThread(this, width/threadsAmount*4,width/threadsAmount*5-1);
-        MyThread r6 = new MyThread(this, width/threadsAmount*5,width/threadsAmount*6-1);
-        MyThread r7 = new MyThread(this, width/threadsAmount*6,width/threadsAmount*7-1);
-        MyThread r8 = new MyThread(this, width/threadsAmount*7,width-1);
-
-        Thread t1 = new Thread(r1);
-        Thread t2 = new Thread(r2);
-        Thread t3 = new Thread(r3);
-        Thread t4 = new Thread(r4);
-        Thread t5 = new Thread(r5);
-        Thread t6 = new Thread(r6);
-        Thread t7 = new Thread(r7);
-        Thread t8 = new Thread(r8);
-
-        t1.start();
-        t2.start();
-        t3.start();
-        t4.start();
-        t5.start();
-        t6.start();
-        t7.start();
-        t8.start();
-
-        try {
-            t1.join();
-            t2.join();
-            t3.join();
-            t4.join();
-            t5.join();
-            t6.join();
-            t7.join();
-            t8.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        */
-        /*
         for (int j = 0; j < height; ++j) {//по y
             for (int i = 0; i < width; ++i) {//по х
                 RenderOnePixel(i, j);
             }
         }
-        */
-
     }
 
 

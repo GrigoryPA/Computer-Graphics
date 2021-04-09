@@ -3,6 +3,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Vector;
 import java.util.Scanner;
 
@@ -75,6 +76,21 @@ public class TriangleModel {
         triangles = new Vector<Triangle>();
         Triangle t = new Triangle(v1, v2, v3);
         triangles.add(t);
+    }
+
+    //Задавать по часовой стрелке
+    public TriangleModel(Vector3d v1, Vector3d v2, Vector3d v3, Vector3d v4, MaterialType _materialType) {
+        material = new Material3D(_materialType);
+        triangles = new Vector<Triangle>();
+        triangles.add(new Triangle(v1, v2, v3));
+        triangles.add(new Triangle(v3, v4, v1));
+    }
+
+    public TriangleModel(Vector3d v1, double height, double width, MaterialType _materialType) {
+        material = new Material3D(_materialType);
+        triangles = new Vector<Triangle>();
+        triangles.add(new Triangle(v1, v1.getMoveY(height), v1.getMoveX(width).getMoveY(height)));
+        triangles.add(new Triangle(v1.getMoveX(width).getMoveY(height), v1.getMoveX(width), v1));
     }
 
     public double IsIntersect(Vector3d orig, Vector3d dir){

@@ -48,4 +48,14 @@ public class Vector3d {
         return "{" + x + "; " + y + "; " + z + "}";
     }
 
+    public Vector3d getMoveX(double m) {
+        return new Vector3d(x + m, y , z );
+    }
+    public Vector3d getMoveY(double m) {
+        return new Vector3d(x, y + m, z );
+    }
+    public Vector3d getMoveZ(double m) {
+        return new Vector3d(x, y , z + m );
+    }
+
 }
