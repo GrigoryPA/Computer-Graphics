@@ -38,8 +38,8 @@ public class MainFrame2D {
         frame2D.setBounds(50,50, 400, 450);
         frame2D.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        AddRow=new JButton(new ImageIcon("src/main/resources/icons/Add48x48.png"));
-        DeleteRow=new JButton(new ImageIcon("src/main/resources/icons/Delete48x48.png"));
+        AddRow = new JButton(new ImageIcon("src/main/resources/icons/Add48x48.png"));
+        DeleteRow = new JButton(new ImageIcon("src/main/resources/icons/Delete48x48.png"));
         Draw = new JButton(new ImageIcon("src/main/resources/icons/Rectangle48x48.png"));
         ScaleUp= new JButton(new ImageIcon("src/main/resources/icons/ScaleUp48x48.png"));
         ScaleDown= new JButton(new ImageIcon("src/main/resources/icons/ScaleDown48x48.png"));
