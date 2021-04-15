@@ -1,3 +1,5 @@
+package Lab4;
+
 import java.awt.geom.Point2D;
 
 public class CohenSutherland2D {
