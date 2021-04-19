@@ -1,5 +1,4 @@
-package Lab4;
-
+import java.awt.*;
 import java.awt.geom.Point2D;
 
 public class CohenSutherland2D {
@@ -18,12 +17,12 @@ public class CohenSutherland2D {
         public int code()   { return code; }
     }
 
-    private Point2D.Double points[];
+    private Point points[];
 
-    int CohenSutherland(Rectangle rectangle, Point2D.Double a, Point2D.Double b) {
+    int CohenSutherland(Rectangle rectangle, Point a, Point b) {
         int code_a, code_b; /* коды концов отрезка */
         int code; // код новой точки
-        Point2D.Double c; /* одна из точек */
+        Point c; /* одна из точек */
 
         code_a = getCode(rectangle, a);
         code_b = getCode(rectangle, b);
@@ -46,19 +45,19 @@ public class CohenSutherland2D {
 		/* если c левее r, то передвигаем c на прямую x = r->x_min
 		   если c правее r, то передвигаем c на прямую x = r->x_max */
             if ((code & Position.LEFT.code()) != 0) {
-                c.y += (a.y - b.y) * (rectangle.x_min - c.x) / (a.x - b.x);
-                c.x = rectangle.x_min;
+                c.y += (a.y - b.y) * (rectangle.BottomLeft.x - c.x) / (a.x - b.x);
+                c.x = rectangle.BottomLeft.x;
             } else if ((code & Position.RIGHT.code()) != 0) {
-                c.y += (a.y - b.y) * (rectangle.x_max - c.x) / (a.x - b.x);
-                c.x = rectangle.x_max;
+                c.y += (a.y - b.y) * (rectangle.TopRight.x - c.x) / (a.x - b.x);
+                c.x = rectangle.TopRight.x;
             }/* если c ниже r, то передвигаем c на прямую y = r->y_min
 		    если c выше r, то передвигаем c на прямую y = r->y_max */
             else if ((code & Position.BOT.code()) != 0) {
-                c.x += (a.x - b.x) * (rectangle.y_min - c.y) / (a.y - b.y);
-                c.y = rectangle.y_min;
+                c.x += (a.x - b.x) * (rectangle.BottomLeft.y - c.y) / (a.y - b.y);
+                c.y = rectangle.BottomLeft.y;
             } else if ((code & Position.TOP.code()) != 0) {
-                c.x += (a.x - b.x) * (rectangle.y_max - c.y) / (a.y - b.y);
-                c.y = rectangle.y_max;
+                c.x += (a.x - b.x) * (rectangle.TopRight.y - c.y) / (a.y - b.y);
+                c.y = rectangle.TopRight.y;
             }
 
             /* обновляем код */
@@ -75,20 +74,25 @@ public class CohenSutherland2D {
         return 0;
     }
 
-    int getCode (Rectangle rectangle, Point2D.Double point) {
+    int getCode (Rectangle rectangle, Point point) {
         int position = 0;
-        if (point.x < rectangle.x_min)
+        if (point.x < rectangle.BottomLeft.x)
             position += Position.LEFT.code();
-        if (point.x < rectangle.x_max)
+        if (point.x < rectangle.TopRight.x)
             position += Position.RIGHT.code();
-        if (point.y < rectangle.y_min)
+        if (point.y < rectangle.BottomLeft.y)
             position += Position.BOT.code();
-        if (point.y < rectangle.y_max)
+        if (point.y < rectangle.TopRight.y)
             position += Position.TOP.code();
         return position;
     }
 }
 
 class Rectangle {
-    protected double x_min, y_min, x_max, y_max;
+    protected Point BottomLeft, TopRight;
+
+    Rectangle() {
+        BottomLeft = new Point();
+        TopRight = new Point();
+    }
 }

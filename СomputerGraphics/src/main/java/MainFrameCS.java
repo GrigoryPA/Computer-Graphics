@@ -1,5 +1,3 @@
-package Lab4;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
@@ -7,7 +5,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class MainFrameCS {
+public class MainFrameCS extends MainFrame2D {
     private JFrame frame2D;
     private DisplayCS displayCS;
     private FigureCS figureRealTime;
@@ -39,7 +37,7 @@ public class MainFrameCS {
         Font font = new Font("Verdana", Font.PLAIN, 24);
         Font fontHeaders = new Font("Verdana", Font.CENTER_BASELINE, 16);
 
-        String[] rectangleHeaders = {"X min", "Y min", "X max", "Y max"};
+        String[] rectangleHeaders = {"Bot Left X", "Bot Left Y", "Top Right X", "Top Right Y"};
         String[][] rectangleData;
         rectangleData = new String[1][4];
         DefaultTableModel rectangleTableModel = new DefaultTableModel(rectangleData, rectangleHeaders);
@@ -61,12 +59,14 @@ public class MainFrameCS {
         segmentTable.setAutoCreateRowSorter(true);
         segmentTable.setRowHeight(segmentTable.getRowHeight() + 10);
 
+
         JScrollPane rectangleScroller = new JScrollPane(rectangleTable);
         JScrollPane segmentScroller = new JScrollPane(segmentTable);
-        JPanel tables = new JPanel(new BorderLayout());
-        //tables.add(rectangleScroller, tables.NORTH);
-        tables.add(segmentScroller);
-        frame2D.add(tables, BorderLayout.CENTER);
+        JPanel panel = new JPanel(new GridLayout(2,1));
+        panel.add(rectangleScroller);
+        panel.add(segmentScroller);
+        //tables.add(segmentScroller);
+        frame2D.add(panel, BorderLayout.CENTER);
 
         frame2D.setVisible(true);
 
@@ -90,7 +90,7 @@ public class MainFrameCS {
             public void actionPerformed(ActionEvent e) {
                 displayCS = new DisplayCS();
                 displayCS.AddCoordinateAxes();
-                figureOriginal = new FigureCS(segmentTable);
+                figureOriginal = new FigureCS(segmentTable, rectangleTable);
                 figureOriginal.AddFigure2DOnDisplayCS(Color.GREEN);
                 displayCS.CreateAndOpenImage();
                 figureRealTime = figureOriginal;

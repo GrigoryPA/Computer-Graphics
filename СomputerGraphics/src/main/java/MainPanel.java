@@ -1,5 +1,3 @@
-import Lab4.MainFrameCS;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
