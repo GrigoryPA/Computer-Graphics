@@ -2,16 +2,21 @@ import javax.swing.*;
 import java.awt.*;
 
 public class FigureCS {
-    public Point[] SegmentPoints;
+    public Segment[] segments;
     public Rectangle rectangle;
     public FigureCS(JTable SegmentTable, JTable RectangleTable) {
         //colorFigure=color;
         try {
-            SegmentPoints = new Point[SegmentTable.getRowCount()];
+            segments = new Segment[SegmentTable.getRowCount()];
             for (int i = 0; i < SegmentTable.getRowCount(); i++) {
-                SegmentPoints[i] = new Point();
-                SegmentPoints[i].x = Integer.parseInt((String) SegmentTable.getValueAt(i, 0));
-                SegmentPoints[i].y = Integer.parseInt((String) SegmentTable.getValueAt(i, 1));
+                Point point1 = new Point();
+                point1.x = Integer.parseInt((String) SegmentTable.getValueAt(i, 0));
+                point1.y = Integer.parseInt((String) SegmentTable.getValueAt(i, 1));
+                Point point2 = new Point();
+                point2.x = Integer.parseInt((String) SegmentTable.getValueAt(i, 2));
+                point2.y = Integer.parseInt((String) SegmentTable.getValueAt(i, 3));
+                segments[i] = new Segment(point1, point2);
+                segments[i].i = i;
             }
             rectangle = new Rectangle();
             rectangle.BottomLeft.x = Integer.parseInt((String) RectangleTable.getValueAt(0, 0));
@@ -24,10 +29,26 @@ public class FigureCS {
     }
 
     public void AddFigure2DOnDisplayCS(Color colorFigure) {
-        Line2D.AddLineSigmentOnDisplayBresenham(SegmentPoints[0], SegmentPoints[SegmentPoints.length - 1], colorFigure);
-        for (int i = 0; i < SegmentPoints.length - 1; i++)
-            Line2D.AddLineSigmentOnDisplayBresenham(SegmentPoints[i], SegmentPoints[i + 1], colorFigure);
+        Line2D.clear();
+        Color fillColor = new Color(250, 250,250);
+        Line2D.AddRectangleOnDisplayBresenham(rectangle, colorFigure, fillColor);
+        for (int i = 0; i < segments.length; i++)
+            Line2D.AddLineSigmentOnDisplayBresenham(segments[i], colorFigure);
+     }
 
-        Line2D.AddRectangleOnDisplayBresenham(rectangle, colorFigure);
+    public void DrawCohenSutherland(Color colorFigure, Color colorAlternative) {
+        Line2D.clear();
+        Color fillColor = new Color(250, 250,250);
+        Line2D.AddRectangleOnDisplayBresenham(rectangle, colorFigure, fillColor);
+        CohenSutherland2D cohenSutherland2D = new CohenSutherland2D();
+        for (int i = 0; i < segments.length; i++) {
+            boolean outside;
+            if (cohenSutherland2D.CohenSutherland(rectangle, segments[i]))
+                Line2D.AddLineSigmentOnDisplayBresenham(segments[i], colorFigure);
+            else {
+                //while (cohenSutherland2D.CohenSutherland(rectangle, segments[i])) { }
+                Line2D.AddLineSigmentOnDisplayBresenham(segments[i], colorAlternative);
+            }
+        }
     }
 }

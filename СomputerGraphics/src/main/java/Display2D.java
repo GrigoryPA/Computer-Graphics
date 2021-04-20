@@ -7,6 +7,7 @@ import java.io.IOException;
 
 public class Display2D {
     protected static Color[][] display;
+    protected static Color back = Color.BLACK;
     protected static int N = 700;
     protected static int M = 500;
     private static int[] ZeroZero = {350, 250};
@@ -25,10 +26,20 @@ public class Display2D {
         return;
     }
 
-    public void Clear() {
+    public Display2D(Color color) {
+        back = color;
+        display = new Color[N][M];
         for (int i = 0; i < N; i++)
             for (int j = 0; j < M; j++) {
-                display[i][j] = new Color(0, 0, 0);
+                display[i][j] = back;
+            }
+        return;
+    }
+
+    public static void Clear() {
+        for (int i = 0; i < N; i++)
+            for (int j = 0; j < M; j++) {
+                display[i][j] = back;
             }
     }
 

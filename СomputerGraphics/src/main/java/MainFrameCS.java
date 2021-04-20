@@ -23,15 +23,21 @@ public class MainFrameCS extends MainFrame2D {
         JButton addRow = new JButton(new ImageIcon("src/main/resources/icons/Add48x48.png"));
         JButton deleteRow = new JButton(new ImageIcon("src/main/resources/icons/Delete48x48.png"));
         JButton draw = new JButton(new ImageIcon("src/main/resources/icons/Rectangle48x48.png"));
+        JButton random = new JButton(new ImageIcon("src/main/resources/icons/Bezier48x48.png"));
+        JButton check = new JButton(new ImageIcon("src/main/resources/icons/DrawBezierPlane48x48.png"));
 
         addRow.setToolTipText("Add row");
         deleteRow.setToolTipText("Delete row");
         draw.setToolTipText("Draw");
+        random.setToolTipText("Create random segments");
+        check.setToolTipText("Run Cohen-Sutherland algorithm");
 
         JToolBar toolBar1 = new JToolBar();
         toolBar1.add(addRow);
         toolBar1.add(deleteRow);
+        toolBar1.add(random);
         toolBar1.add(draw);
+        toolBar1.add(check);
         frame2D.add(toolBar1, BorderLayout.NORTH);
 
         Font font = new Font("Verdana", Font.PLAIN, 24);
@@ -48,9 +54,9 @@ public class MainFrameCS extends MainFrame2D {
         rectangleTable.setAutoCreateRowSorter(true);
         rectangleTable.setRowHeight(rectangleTable.getRowHeight() + 10);
 
-        String[] segmentHeaders = {"X", "Y"};
+        String[] segmentHeaders = {"P1 X", "P1 Y", "P2 X", "P2 Y"};
         String[][] segmentData;
-        segmentData = new String[1][2];
+        segmentData = new String[1][4];
         DefaultTableModel segmentTableModel = new DefaultTableModel(segmentData, segmentHeaders);
         JTable segmentTable = new JTable(segmentTableModel);
         JTableHeader segmentTableHeader = segmentTable.getTableHeader();
@@ -65,14 +71,13 @@ public class MainFrameCS extends MainFrame2D {
         JPanel panel = new JPanel(new GridLayout(2,1));
         panel.add(rectangleScroller);
         panel.add(segmentScroller);
-        //tables.add(segmentScroller);
         frame2D.add(panel, BorderLayout.CENTER);
 
         frame2D.setVisible(true);
 
         addRow.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                segmentTableModel.addRow(new String[]{"", ""});
+                segmentTableModel.addRow(new String[]{"", "", "", ""});
             }
         });
 
@@ -88,13 +93,63 @@ public class MainFrameCS extends MainFrame2D {
 
         draw.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                displayCS = new DisplayCS();
-                displayCS.AddCoordinateAxes();
+                displayCS = new DisplayCS(new Color(217, 217, 217));
+                //displayCS.AddCoordinateAxes();
                 figureOriginal = new FigureCS(segmentTable, rectangleTable);
-                figureOriginal.AddFigure2DOnDisplayCS(Color.GREEN);
+                figureOriginal.AddFigure2DOnDisplayCS(Color.black);
                 displayCS.CreateAndOpenImage();
                 figureRealTime = figureOriginal;
             }
         });
+
+       check.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                displayCS = new DisplayCS();
+                //displayCS.AddCoordinateAxes();
+                figureOriginal = new FigureCS(segmentTable, rectangleTable);
+                figureOriginal.DrawCohenSutherland(Color.black, Color.blue);
+                displayCS.CreateAndOpenImage();
+                //displayCS.UpdateImage();
+                figureRealTime = figureOriginal;
+            }
+        });
+
+        random.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                /* Для тестов
+                rectangleTableModel.removeRow(0);
+                rectangleTableModel.addRow(new String[]{"-200", "-150", "200", "150"});
+
+                int a = segmentTableModel.getRowCount();
+                for (int i = 0; i < a; i++) {
+                    segmentTableModel.removeRow(0);
+                    int b = segmentTableModel.getRowCount();
+                }
+                segmentTableModel.addRow(new String[]{"-40", "-15", "220", "220"});
+                //rectangleTableModel.addRow(new String[]{"-200", "-150", "200", "150"});
+                */
+                rectangleTableModel.removeRow(0);
+                rectangleTableModel.addRow(new String[]{"-200", "-150", "200", "150"});
+
+                int a = segmentTableModel.getRowCount();
+                for (int i = 0; i < a; i++) {
+                    segmentTableModel.removeRow(0);
+                    int b = segmentTableModel.getRowCount();
+                }
+                for (int i = 0; i < 10; i++) {
+                    String[] temp = new String[4];
+                    for (int j = 0; j < temp.length; j += 2) {
+                        temp[j] = getRandomNumber(-350, 350).toString();
+                        temp[j+1] = getRandomNumber(-250, 250).toString();
+                    }
+                    segmentTableModel.addRow(temp);
+                }
+            }
+        });
+    }
+
+    public Integer getRandomNumber(int min, int max) {
+        return (int) ((Math.random() * (max - min)) + min);
     }
 }
+
