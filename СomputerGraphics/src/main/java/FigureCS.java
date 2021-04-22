@@ -42,12 +42,12 @@ public class FigureCS {
         Line2D.AddRectangleOnDisplayBresenham(rectangle, colorFigure, fillColor);
         CohenSutherland2D cohenSutherland2D = new CohenSutherland2D();
         for (int i = 0; i < segments.length; i++) {
-            boolean outside;
             if (cohenSutherland2D.CohenSutherland(rectangle, segments[i]))
                 Line2D.AddLineSigmentOnDisplayBresenham(segments[i], colorFigure);
             else {
-                //while (cohenSutherland2D.CohenSutherland(rectangle, segments[i])) { }
-                Line2D.AddLineSigmentOnDisplayBresenham(segments[i], colorAlternative);
+                Line2D.AddLineSigmentOnDisplayBresenham(segments[i].point1, segments[i]._point1, colorAlternative);
+                Line2D.AddLineSigmentOnDisplayBresenham(segments[i]._point1, segments[i]._point2, Color.RED);
+                Line2D.AddLineSigmentOnDisplayBresenham(segments[i].point2, segments[i]._point2, colorAlternative);
             }
         }
     }

@@ -3,11 +3,11 @@ import java.awt.geom.Point2D;
 
 public class CohenSutherland2D {
 
-    private enum Position {
-        LEFT (1),
-        RIGHT (2),
-        BOT (4),
-        TOP (8);
+    private enum Position { // коды положений точки относительно прямоугольной области
+        LEFT (1),  // 0001
+        RIGHT (2), // 0010
+        BOT (4),   // 0100
+        TOP (8);   // 1000
 
         private final int code;
         Position(int code) {
@@ -17,23 +17,19 @@ public class CohenSutherland2D {
         public int code()   { return code; }
     }
 
-    private Point points[];
-
     boolean CohenSutherland(Rectangle rectangle, Point a, Point b) {
-        int code_a, code_b; /* коды концов отрезка */
-        int code; // код новой точки
-        Point c; /* одна из точек */
+        int code_a, code_b;
+        int code; // коды концов отрезка
+        Point c; // вспомогательная точка
 
         code_a = getCode(rectangle, a);
         code_b = getCode(rectangle, b);
-
-        /* пока одна из точек отрезка вне прямоугольника */
+        // пока одна из точек отрезка вне прямоугольника
         while ((code_a | code_b) != 0) {
-            /* если обе точки с одной стороны прямоугольника, то отрезок не пересекает прямоугольник */
+            // если обе точки с одной стороны прямоугольника, то отрезок не пересекает прямоугольник
             if ((code_a & code_b) != 0)
                 return true;
-
-            /* выбираем точку c с ненулевым кодом */
+            // выбираем точку вне прямоугольника
             if (code_a != 0) {
                 code = code_a;
                 c = a;
@@ -41,17 +37,14 @@ public class CohenSutherland2D {
                 code = code_b;
                 c = b;
             }
-
-		/* если c левее r, то передвигаем c на прямую x = r->x_min
-		   если c правее r, то передвигаем c на прямую x = r->x_max */
+            // если выбранная находится с какой-либо стороны прямоугольника, то передвигаем её на соответствующее ребро
             if ((code & Position.LEFT.code()) != 0) {
                 c.y += (a.y - b.y) * (rectangle.BottomLeft.x - c.x) / (a.x - b.x);
                 c.x = rectangle.BottomLeft.x;
             } else if ((code & Position.RIGHT.code()) != 0) {
                 c.y += (a.y - b.y) * (rectangle.TopRight.x - c.x) / (a.x - b.x);
                 c.x = rectangle.TopRight.x;
-            }/* если c ниже r, то передвигаем c на прямую y = r->y_min
-		    если c выше r, то передвигаем c на прямую y = r->y_max */
+            }
             else if ((code & Position.BOT.code()) != 0) {
                 c.x += (a.x - b.x) * (rectangle.BottomLeft.y - c.y) / (a.y - b.y);
                 c.y = rectangle.BottomLeft.y;
@@ -59,8 +52,7 @@ public class CohenSutherland2D {
                 c.x += (a.x - b.x) * (rectangle.TopRight.y - c.y) / (a.y - b.y);
                 c.y = rectangle.TopRight.y;
             }
-
-            /* обновляем код */
+            // обновление кода передвинутой точки
             if (code == code_a) {
                 a = c;
                 code_a = getCode(rectangle, a);
@@ -69,70 +61,17 @@ public class CohenSutherland2D {
                 code_b = getCode(rectangle, b);
             }
         }
-
-        /* оба кода равны 0, следовательно обе точки в прямоугольнике */
+        // обе точки находятся в прямоугольнике
         return false;
     }
 
     boolean CohenSutherland(Rectangle rectangle, Segment s) {
         Point a = s._point1;
         Point b = s._point2;
-        int code_a, code_b; /* коды концов отрезка */
-        int code; // код новой точки
-        Point c; /* одна из точек */
-
-        code_a = getCode(rectangle, a);
-        code_b = getCode(rectangle, b);
-
-        /* пока одна из точек отрезка вне прямоугольника */
-        while ((code_a | code_b) != 0) {
-            /* если обе точки с одной стороны прямоугольника, то отрезок не пересекает прямоугольник */
-            if ((code_a & code_b) != 0)
-                return true;
-
-            /* выбираем точку c с ненулевым кодом */
-            if (code_a != 0) {
-                code = code_a;
-                c = a;
-            } else {
-                code = code_b;
-                c = b;
-            }
-
-		/* если c левее r, то передвигаем c на прямую x = r->x_min
-		   если c правее r, то передвигаем c на прямую x = r->x_max */
-            if ((code & Position.LEFT.code()) != 0) {
-                c.y += (a.y - b.y) * (rectangle.BottomLeft.x - c.x) / (a.x - b.x);
-                c.x = rectangle.BottomLeft.x;
-            } else if ((code & Position.RIGHT.code()) != 0) {
-                c.y += (a.y - b.y) * (rectangle.TopRight.x - c.x) / (a.x - b.x);
-                c.x = rectangle.TopRight.x;
-            }/* если c ниже r, то передвигаем c на прямую y = r->y_min
-		    если c выше r, то передвигаем c на прямую y = r->y_max */
-            else if ((code & Position.BOT.code()) != 0) {
-                c.x += (a.x - b.x) * (rectangle.BottomLeft.y - c.y) / (a.y - b.y);
-                c.y = rectangle.BottomLeft.y;
-            } else if ((code & Position.TOP.code()) != 0) {
-                c.x += (a.x - b.x) * (rectangle.TopRight.y - c.y) / (a.y - b.y);
-                c.y = rectangle.TopRight.y;
-            }
-
-            /* обновляем код */
-            if (code == code_a) {
-                a = c;
-                code_a = getCode(rectangle, a);
-            } else {
-                b = c;
-                code_b = getCode(rectangle, b);
-            }
-        }
-        s._point1 = a;
-        s._point2 = b;
-        /* оба кода равны 0, следовательно обе точки в прямоугольнике */
-        return false;
+        return CohenSutherland(rectangle, a, b);
     }
 
-    int getCode (Rectangle rectangle, Point point) {
+    int getCode (Rectangle rectangle, Point point) { // получение кода конца отрезка
         int position = 0;
         if (point.x < rectangle.BottomLeft.x)
             position += Position.LEFT.code();
@@ -146,7 +85,7 @@ public class CohenSutherland2D {
     }
 }
 
-class Rectangle {
+class Rectangle { // прямоугольная область окна
     protected Point BottomLeft, TopRight;
 
     Rectangle() {
@@ -160,9 +99,9 @@ class Rectangle {
     }
 }
 
-class Segment {
-    protected Point point1, point2;
-    protected Point _point1, _point2;
+class Segment { // отрезок
+    protected Point point1, point2; // концы отрезка
+    protected Point _point1, _point2; // копия концов отрезка, использующаяся в алгоритме
     int i;
 
     Segment() {

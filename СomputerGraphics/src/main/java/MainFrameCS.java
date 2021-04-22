@@ -43,7 +43,7 @@ public class MainFrameCS extends MainFrame2D {
         Font font = new Font("Verdana", Font.PLAIN, 24);
         Font fontHeaders = new Font("Verdana", Font.CENTER_BASELINE, 16);
 
-        String[] rectangleHeaders = {"Bot Left X", "Bot Left Y", "Top Right X", "Top Right Y"};
+        String[] rectangleHeaders = {"X1", "Y1", "X2", "Y2"};
         String[][] rectangleData;
         rectangleData = new String[1][4];
         DefaultTableModel rectangleTableModel = new DefaultTableModel(rectangleData, rectangleHeaders);
@@ -54,7 +54,7 @@ public class MainFrameCS extends MainFrame2D {
         rectangleTable.setAutoCreateRowSorter(true);
         rectangleTable.setRowHeight(rectangleTable.getRowHeight() + 10);
 
-        String[] segmentHeaders = {"P1 X", "P1 Y", "P2 X", "P2 Y"};
+        String[] segmentHeaders = {"X1", "Y1", "X2", "Y2"};
         String[][] segmentData;
         segmentData = new String[1][4];
         DefaultTableModel segmentTableModel = new DefaultTableModel(segmentData, segmentHeaders);
