@@ -9,18 +9,24 @@ public class MainPanel {
     private static JFrame frameChoice;
     private static JButton button3d;
     private static JButton button2d;
+    private static JButton buttonCS;
 
     public static void main(String[] args) {
-        frameChoice =new JFrame();
-        frameChoice.setBounds(100,100, 256, 310);
+        frameChoice = new JFrame();
+        frameChoice.setBounds(100, 100, 256, 310);
         frameChoice.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         button2d = new JButton(new ImageIcon("src/main/resources/icons/2d.png"));
         button3d = new JButton(new ImageIcon("src/main/resources/icons/3d.png"));
-        frameChoice.add(button2d,BorderLayout.SOUTH);
-        frameChoice.add(button3d,BorderLayout.NORTH);
+        buttonCS = new JButton("Cohen-Sutherland");
+
+        JPanel panel = new JPanel(new GridLayout(3, 1));
+        panel.add(button2d);
+        panel.add(button3d);
+        panel.add(buttonCS);
+        frameChoice.add(panel);
         frameChoice.setVisible(true);
 
-        button2d.addActionListener(new ActionListener(){
+        button2d.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 frameChoice.setVisible(false);
                 frame2d = new MainFrame2D();
@@ -28,11 +34,19 @@ public class MainPanel {
             }
         });
 
-        button3d.addActionListener(new ActionListener(){
+        button3d.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 frameChoice.setVisible(false);
                 frame3d = new MainFrame3D();
                 frame3d.MakeAndShow();
+            }
+        });
+
+        buttonCS.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                frameChoice.setVisible(false);
+                MainFrameCS frameCS = new MainFrameCS();
+                frameCS.MakeAndShow();
             }
         });
     }
