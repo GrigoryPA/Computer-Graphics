@@ -37,16 +37,16 @@ public class RayTracing3D {
             AllLights.add(OneLight);
         }
 
-        //OneTriangleModel = new TriangleModel( "src/main/resources/3d/duck.obj",
-        //        MaterialType.STEEL);
-        //OneTriangleModel.MoveModel(-5,3, 15);
-        //AllTriangleModels.add(OneTriangleModel);
-        OneTriangleModel = new TriangleModel(
+        OneTriangleModel = new TriangleModel( "src/main/resources/3d/duck.obj",
+                MaterialType.STEEL);
+        OneTriangleModel.MoveModel(-5,3, 15);
+        AllTriangleModels.add(OneTriangleModel);
+        /*OneTriangleModel = new TriangleModel(
                 new Vector3d(-50,-30,50),
                 60,
                 100,
                 MaterialType.REDWOOD);
-        AllTriangleModels.add(OneTriangleModel);
+        AllTriangleModels.add(OneTriangleModel);*/
     }
 
     public void RenderScene(Display3D display) {
