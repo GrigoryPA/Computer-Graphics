@@ -1,8 +1,6 @@
 import java.awt.*;
 
 public class Line3D {
-
-	
 	public static int sign (int x) {
 		return (x > 0) ? 1 : (x < 0) ? -1 : 0;
 	}
