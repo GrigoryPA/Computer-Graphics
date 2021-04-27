@@ -46,7 +46,7 @@ public class MainFrame3D {
     private double countRotateAngelY=0;
     private int countRef=0;
     private int BezierRowsAmount = 1;
-    private boolean bOnScreen;//false - фигура, true - поверхность безье
+    private boolean bOnScreen;//false - пїЅпїЅпїЅпїЅпїЅпїЅ, true - пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
 
     public void MakeAndShow() {
 
@@ -116,7 +116,7 @@ public class MainFrame3D {
                 else {
                     defaultrowscount = AllTabs.elementAt(1).tableModel.getRowCount();
                 }
-                String TableName = BezierRowsAmount + " rows";
+                String TableName = BezierRowsAmount + " row";
                 OneTab = new MyTable(headers, TableName, defaultrowscount);
                 AllTabs.add(OneTab);
                 tablePanel.add(OneTab.scroller, OneTab.tableName, BezierRowsAmount);
@@ -140,25 +140,25 @@ public class MainFrame3D {
 
         RotateLeftX.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
-                RotateObject(0,0);//первый аргумент 0 - Xось, 1 - Yось. Второй аргумент 0 - влево, 1 - вправо
+                RotateObject(0,0);//пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ 0 - XпїЅпїЅпїЅ, 1 - YпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ 0 - пїЅпїЅпїЅпїЅпїЅ, 1 - пїЅпїЅпїЅпїЅпїЅпїЅ
             }
         });
 
         RotateRightX.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
-                RotateObject(0, 1);//первый аргумент 0 - Xось, 1 - Yось. Второй аргумент 0 - влево, 1 - вправо
+                RotateObject(0, 1);//пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ 0 - XпїЅпїЅпїЅ, 1 - YпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ 0 - пїЅпїЅпїЅпїЅпїЅ, 1 - пїЅпїЅпїЅпїЅпїЅпїЅ
             }
         });
 
         RotateLeftY.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
-                RotateObject(1,0);//первый аргумент 0 - Xось, 1 - Yось. Второй аргумент 0 - влево, 1 - вправо
+                RotateObject(1,0);//пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ 0 - XпїЅпїЅпїЅ, 1 - YпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ 0 - пїЅпїЅпїЅпїЅпїЅ, 1 - пїЅпїЅпїЅпїЅпїЅпїЅ
                 }
         });
 
         RotateRightY.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
-                RotateObject(1,1);//первый аргумент 0 - Xось, 1 - Yось. Второй аргумент 0 - влево, 1 - вправо
+                RotateObject(1,1);//пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ 0 - XпїЅпїЅпїЅ, 1 - YпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ 0 - пїЅпїЅпїЅпїЅпїЅ, 1 - пїЅпїЅпїЅпїЅпїЅпїЅ
             }
         });
 
@@ -236,7 +236,7 @@ public class MainFrame3D {
 
         try {
             try {
-                if (coordinate == 0) {//вычисляем какой угол и куда крутим
+                if (coordinate == 0) {//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
                     if (direction == 0) {
                         countRotateAngelX -= deltaAngel;
                     } else {
@@ -249,7 +249,7 @@ public class MainFrame3D {
                         countRotateAngelY += deltaAngel;
                     }
                 }
-                //крутим фигуру или поверхность
+                //пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
                 if (bOnScreen == false) {
                         display.Clear();
                         figureRealTime = new Figure3D(Table);

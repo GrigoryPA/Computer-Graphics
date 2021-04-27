@@ -7,10 +7,10 @@ import java.io.IOException;
 
 public class Display3D {
 	public static Color[][] display;
-	public static int widthVirtualDisplay=1600;
-	public static int heightVirtualDisplay=1000;
-	public static int widthImage=800;
-	public static int heightImage=500;
+	public static int widthVirtualDisplay=2880;
+	public static int heightVirtualDisplay=1624;
+	public static int widthImage=1440;
+	public static int heightImage=812;
 	public static int widthDelta=(widthVirtualDisplay-widthImage)/2;
 	public static int heightDelta=(heightVirtualDisplay-heightImage)/2;
 	public static int[] ZeroZero= {widthVirtualDisplay/2,heightVirtualDisplay/2};
@@ -18,7 +18,7 @@ public class Display3D {
 	public static JLabel label;
 	public static BufferedImage image;
 	public static ImageIcon imageicon;
-	public static File file = new File("src/main/resources/convas.png");
+	public static File file = new File("src/main/resources/canvasfullhd.jpg");
 
 	public Display3D() {
 		display=new Color[widthVirtualDisplay][heightVirtualDisplay];

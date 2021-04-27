@@ -25,12 +25,18 @@ public class Material3D{
         switch (m){
             case STEEL://steel
                 color = new Vector3d(0.4,0.4,0.3);
-                albedo = new double[]{0.6,0.3,0.1,0};
-                specularExponent=50;
+                albedo = new double[]{0.6,0.3,0.05,0};
+                specularExponent=10;
                 refractive = 1;
                 break;
             case REDWOOD://red
                 color = new Vector3d(0.3,0.1,0.1);
+                albedo = new double[]{0.9,0.1,0,0};
+                specularExponent=10;
+                refractive = 1;
+                break;
+            case WOOD://red
+                color = new Vector3d(0.8,0.6,0.4);
                 albedo = new double[]{0.9,0.1,0,0};
                 specularExponent=10;
                 refractive = 1;
@@ -55,7 +61,7 @@ public class Material3D{
             case 1://steel
                 color = new Vector3d(0.4,0.4,0.3);
                 albedo = new double[]{0.6,0.3,0.1,0};
-                specularExponent=50;
+                specularExponent=10;
                 refractive = 1;
                 break;
             case 2://red

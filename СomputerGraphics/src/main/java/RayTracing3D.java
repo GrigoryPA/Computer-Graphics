@@ -3,7 +3,7 @@ import java.awt.*;
 import java.util.Vector;
 
 public class RayTracing3D {
-    private Vector3d camera = new Vector3d(0,0,0);
+    private Vector3d camera = new Vector3d(0,40,0);
     private int dirZ = 1;
     private double fov = Math.PI/2;
     public  Vector<Sphere3D> AllSpheres;
@@ -13,6 +13,7 @@ public class RayTracing3D {
     public  Light3D OneLight;
     public  TriangleModel OneTriangleModel;
     private  Vector3d BackgroundColor = new Vector3d(0.3,0.5,0.4);
+    //private  Vector3d BackgroundColor = new Vector3d(-1,-1,-1);
     private  int maxDepth=4;
     public int width;
     public int height;
@@ -38,15 +39,118 @@ public class RayTracing3D {
         }
 
         OneTriangleModel = new TriangleModel( "src/main/resources/3d/duck.obj",
-                MaterialType.STEEL);
-        OneTriangleModel.MoveModel(-5,3, 15);
-        AllTriangleModels.add(OneTriangleModel);
-        /*OneTriangleModel = new TriangleModel(
-                new Vector3d(-50,-30,50),
-                60,
-                100,
                 MaterialType.REDWOOD);
-        AllTriangleModels.add(OneTriangleModel);*/
+        double x = -5.10949;
+        double y = 4.13437;
+        double z = 9.007105;
+        OneTriangleModel.MoveModel(0+x, 20+y,75+z);
+        AllTriangleModels.add(OneTriangleModel);
+        //пол
+        OneTriangleModel = new TriangleModel(new Vector3d(0, -20, -35),
+                new Vector3d(-105, -20, 70),
+                new Vector3d(0,-20,175),
+                new Vector3d(105, -20, 70),
+                MaterialType.STEEL);
+        AllTriangleModels.add(OneTriangleModel);
+
+        //потолок
+        OneTriangleModel = new TriangleModel(new Vector3d(0, 80, -35),
+                new Vector3d(105, 80,70),
+                new Vector3d(0,80,175),
+                new Vector3d(-105,80 ,70),
+                MaterialType.STEEL);
+        AllTriangleModels.add(OneTriangleModel);
+
+        //лева€ ближн€€ стена
+        OneTriangleModel = new TriangleModel(new Vector3d(0,-20,-35),
+                new Vector3d(0,80,-35),
+                new Vector3d(-105,80,70),
+                new Vector3d(-105,-20,70),
+                MaterialType.STEEL);
+        AllTriangleModels.add(OneTriangleModel);
+
+        //права€ ближн€€ стена
+        OneTriangleModel = new TriangleModel(new Vector3d(0,-20,-35),
+                new Vector3d(105, -20 , 70),
+                new Vector3d(105, 80, 70),
+                new Vector3d(0, 80, -35),
+                MaterialType.STEEL);
+        AllTriangleModels.add(OneTriangleModel);
+
+        //права€ дальн€€ стена
+        OneTriangleModel = new TriangleModel(new Vector3d(0,-20,175),
+                new Vector3d(0,80,175),
+                new Vector3d(105,80,70),
+                new Vector3d(105, -20, 70),
+                MaterialType.STEEL);
+        AllTriangleModels.add(OneTriangleModel);
+        //лева€ дальн€€ стена(1)
+        OneTriangleModel = new TriangleModel(new Vector3d(0,-20,175),
+                new Vector3d(-105,-20,70),
+                new Vector3d(-105, 20, 70),
+                new Vector3d(0, 20, 175),
+                MaterialType.STEEL);
+        AllTriangleModels.add(OneTriangleModel);
+        //лева€ дальн€€ стена(2)
+        OneTriangleModel = new TriangleModel(new Vector3d(0,40,175),
+                new Vector3d(-105,40,70),
+                new Vector3d(-105, 80, 70),
+                new Vector3d(0, 80, 175),
+                MaterialType.STEEL);
+        AllTriangleModels.add(OneTriangleModel);
+
+        //передн€€ часть тумбы
+        OneTriangleModel = new TriangleModel(new Vector3d(-15, -20 ,60),
+                new Vector3d(-15, 20,60),
+                new Vector3d(15, 20, 60),
+                new Vector3d(15, -20,60),
+                MaterialType.WOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //права€ часть тумбы
+        OneTriangleModel = new TriangleModel(new Vector3d(15,-20,60),
+                new Vector3d(15,20, 60),
+                new Vector3d(15,20,90),
+                new Vector3d(15, -20, 90),
+                MaterialType.WOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //задн€€ часть тумбы
+        OneTriangleModel = new TriangleModel(new Vector3d(-15, -20, 90),
+                new Vector3d(15, -20,90),
+                new Vector3d(15,20,90),
+                new Vector3d(-15,20,90),
+                MaterialType.WOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //лева€ часть тумбы
+        OneTriangleModel = new TriangleModel(new Vector3d(-15, -20 ,90),
+                new Vector3d(-15,20,90),
+                new Vector3d(-15,20,60),
+                new Vector3d(-15, -20, 60),
+                MaterialType.WOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //крышка тумбы
+        OneTriangleModel = new TriangleModel(new Vector3d(-15,20,60),
+                new Vector3d(-15,20,90),
+                new Vector3d(15,20,90),
+                new Vector3d(15, 20,60),
+                MaterialType.WOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        /*
+        //1е зеркало
+        OneTriangleModel = new TriangleModel(new Vector3d(10.25, 40, 75), new Vector3d(10.25, 60 ,75), new Vector3d(12, 60, 67.25), MaterialType.MIRROR);
+        AllTriangleModels.add(OneTriangleModel);
+        //2е зеркало
+        OneTriangleModel = new TriangleModel(new Vector3d(4, 40, 80), new Vector3d(4, 60, 80), new Vector3d(10.25, 60, 75), MaterialType.MIRROR);
+        AllTriangleModels.add(OneTriangleModel);
+        //3е зеркало
+        OneTriangleModel = new TriangleModel(new Vector3d(4,40,80), new Vector3d(-4, 40, 80), new Vector3d(-4 , 60, 80), MaterialType.MIRROR);
+        AllTriangleModels.add(OneTriangleModel);
+        //4 зеркало
+        OneTriangleModel = new TriangleModel(new Vector3d(-4, 60,80), new Vector3d(-4,60,80), new Vector3d(-10.25, 60,75), MaterialType.MIRROR);
+        AllTriangleModels.add(OneTriangleModel);
+        //5е зеркало
+        OneTriangleModel = new TriangleModel(new Vector3d(-10.25, 40, 75), new Vector3d(-10.25, 60,75), new Vector3d(-12,60,67.25), MaterialType.MIRROR);
+        AllTriangleModels.add(OneTriangleModel);
+        */
     }
 
     public void RenderScene(Display3D display) {
