@@ -12,8 +12,7 @@ public class RayTracing3D {
     public  Sphere3D OneSphere;
     public  Light3D OneLight;
     public  TriangleModel OneTriangleModel;
-    private  Vector3d BackgroundColor = new Vector3d(0.3,0.5,0.4);
-    //private  Vector3d BackgroundColor = new Vector3d(-1,-1,-1);
+   // private  Vector3d BackgroundColor = new Vector3d(0.3,0.5,0.4);
     private  int maxDepth=4;
     public int width;
     public int height;
@@ -22,8 +21,8 @@ public class RayTracing3D {
 
     public RayTracing3D(JTable TableSpheres, JTable TableLights, Display3D _display){
         Display = _display;
-        width =  Display.widthImage;
-        height = Display.heightImage;
+        width =  Display.widthVirtualDisplay;
+        height = Display.heightVirtualDisplay;
         AllSpheres = new Vector<Sphere3D>();
         AllLights = new Vector<Light3D>();
         AllTriangleModels = new Vector<TriangleModel>();
@@ -38,13 +37,13 @@ public class RayTracing3D {
             AllLights.add(OneLight);
         }
 
-        //OneTriangleModel = new TriangleModel( "src/main/resources/3d/duck.obj",
-        //        MaterialType.REDWOOD);
+        /*OneTriangleModel = new TriangleModel( "src/main/resources/3d/duck.obj",
+                MaterialType.REDWOOD);
         double x = -5.10949;
         double y = 4.13437;
         double z = 9.007105;
-        //OneTriangleModel.MoveModel(0+x, 20+y,75+z);
-        //AllTriangleModels.add(OneTriangleModel);
+        OneTriangleModel.MoveModel(0+x, 20+y,75+z);
+        AllTriangleModels.add(OneTriangleModel);*/
         //пол
         OneTriangleModel = new TriangleModel(new Vector3d(0, -20, -35),
                 new Vector3d(-105, -20, 70),
@@ -171,14 +170,17 @@ public class RayTracing3D {
 
         Vector3d color_kef = CalculateSpherePixelColor(camera, dir, 0);
 
-        double max_color_kef = Math.max(color_kef.x, Math.max(color_kef.y, color_kef.z));
-        if(max_color_kef>1)
-            color_kef = color_kef.getVectorScaled(1./max_color_kef);
-        Color pixelColor = new Color((int)(255*Math.max(0, Math.min(1,color_kef.x))),
-                (int)(255*Math.max(0, Math.min(1,color_kef.y))),
-                (int)(255*Math.max(0, Math.min(1,color_kef.z))));
-        if(pixelColor!=null)
-            Display.AddPointOnDisplayRT(i,height-j,pixelColor);
+        if(color_kef!=null) {
+            double max_color_kef = Math.max(color_kef.x, Math.max(color_kef.y, color_kef.z));
+            if (max_color_kef > 1)
+                color_kef = color_kef.getVectorScaled(1. / max_color_kef);
+            Color pixelColor = new Color((int) (255 * Math.max(0, Math.min(1, color_kef.x))),
+                    (int) (255 * Math.max(0, Math.min(1, color_kef.y))),
+                    (int) (255 * Math.max(0, Math.min(1, color_kef.z))));
+            Display.AddPointOnDisplayRT(i,j,pixelColor);
+        }
+        else
+            Display.AddPointOnDisplayRT(i,j,null);
     }
 
 
@@ -235,11 +237,17 @@ public class RayTracing3D {
 
             Vector3d result_0 = scene.material.color.getVectorScaled(diffuse_light_intensity * scene.material.albedo[0]);
             Vector3d result_1 = (new Vector3d(1.,1.,1.)).getVectorScaled(specular_light_intensity * scene.material.albedo[1]);
-            Vector3d result_2 = reflect_color.getVectorScaled(scene.material.albedo[2]);
-            Vector3d result_3 = refract_color.getVectorScaled(scene.material.albedo[3]);
-            return  result_0.getAddition(result_1.getAddition(result_2.getAddition(result_3)));// sphere color//resultColor
+            if(reflect_color!=null) {
+                Vector3d result_2 = reflect_color.getVectorScaled(scene.material.albedo[2]);
+                if (refract_color != null) {
+                    Vector3d result_3 = refract_color.getVectorScaled(scene.material.albedo[3]);
+                    return result_0.getAddition(result_1.getAddition(result_2.getAddition(result_3)));// sphere color//resultColor
+                }
+                return result_0.getAddition(result_1.getAddition(result_2));// sphere color//resultColor
+            }
+            return result_0.getAddition(result_1);// sphere color//resultColor
         }
-        return BackgroundColor;
+        return null;
     }
 
 

@@ -18,14 +18,24 @@ public class Display3D {
     public static JFrame frame;
     public static JLabel label;
     public static BufferedImage image;
+    public static BufferedImage image_back;
     public static ImageIcon imageicon;
-    public static File file = new File("src/main/resources/canvasfullhd.jpg");
+    public static File file_in = new File("src/main/resources/canvasfullhd.jpg");
+	public static File file_out = new File("src/main/resources/canvasfullhd_out.jpg");
+	public static File file_back = new File("src/main/resources/canvas_back.jpg");
 
     public Display3D() {
+    	try{
+			image = ImageIO.read(file_in);
+            image_back = ImageIO.read(file_back);
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(null, "Failed to open image !");
+		}
         display = new Color[widthVirtualDisplay][heightVirtualDisplay];
         for (int i = 0; i < widthVirtualDisplay; i++)
             for (int j = 0; j < heightVirtualDisplay; j++) {
-                display[i][j] = new Color(255, 255, 200);
+                //display[i][j] = new Color(255, 255, 200);
+				display[i][j] = null;
             }
         return;
     }
@@ -42,7 +52,7 @@ public class Display3D {
     }
 
     public static void AddPointOnDisplayRT(int x, int y, Color color) {
-        display[x + widthDelta][y + heightDelta] = color;
+    	display[x][y] = (color!=null)?color:new Color(image_back.getRGB(x,y));
     }
 
     public void AddCoordinateAxesIsometric(double rotateX, double rotateY, Color colorX, Color colorY, Color colorZ) {
@@ -64,55 +74,38 @@ public class Display3D {
 
 
     public void CreateAndOpenImage() {
-        try {
-            image = ImageIO.read(file);
-
             for (int x = 0; x < image.getWidth(); x++)
                 for (int y = 0; y < image.getHeight(); y++) {
                     image.setRGB(x, y, display[x + widthDelta][heightVirtualDisplay - y - 1 - heightDelta].getRGB());
                 }
             CreateFrameForImage(image);
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "Failed to open image !");
-        }
 
     }
 
     public void CreateAndOpenImage(boolean aliasing) {
-        try {
-            image = ImageIO.read(file);
+    	int h_img = image.getHeight();
+    	int w_img = image.getWidth();
 
-            if (aliasing) {
-                this.SSAO();
-                widthDelta = widthDelta / 2;
-                heightDelta = heightDelta / 2;
-            }
-            int a = image.getHeight();
-            int b = image.getWidth();
-            for (int x = 0; x < image.getWidth(); x++)
-                for (int y = 0; y < image.getHeight(); y++) {
-                    if (aliasing) {
-                        image.setRGB(x, y, aliasedDisplay[x][heightVirtualDisplay/2 - y].getRGB());
+    	this.SSAO();
+    	for (int x = 0; x < w_img; x++) {
+    		for (int y = 0; y < h_img; y++) {
+    			image.setRGB(x, y, aliasedDisplay[x][y].getRGB());
+    		}
+    	}
 
-                        if (y == 800)
-                            a = 0;
-                    }
-                    else {
-
-                        image.setRGB(x, y, display[x + widthDelta][heightVirtualDisplay - y - 1 - heightDelta].getRGB());
-                    }
-                }
-            CreateFrameForImage(image);
+    	CreateFrameForImage(image);
+    	try{
+    		ImageIO.write(image,"jpg",file_out);
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "Failed to open image !");
+            JOptionPane.showMessageDialog(null, "Failed to close image !");
         }
 
     }
 
     public void SSAO() {
-        aliasedDisplay = new Color[widthVirtualDisplay / 2 + 1][heightVirtualDisplay / 2 + 1];
-        for (int j = 0; j < heightVirtualDisplay - 2; j += 2) {
-            for (int i = 0; i < widthVirtualDisplay - 2; i += 2) {
+        aliasedDisplay = new Color[widthVirtualDisplay / 2][heightVirtualDisplay / 2];
+        for (int j = 0; j < heightVirtualDisplay - 1; j += 2) {
+            for (int i = 0; i < widthVirtualDisplay - 1; i += 2) {
                 int r = (display[i][j].getRed() + display[i + 1][j].getRed()
                         + display[i][j + 1].getRed() + display[i + 1][j + 1].getRed()) / 4;
                 int g = (display[i][j].getGreen() + display[i + 1][j].getGreen()
@@ -128,18 +121,6 @@ public class Display3D {
         for (int x = 0; x < image.getWidth(); x++)
             for (int y = 0; y < image.getHeight(); y++) {
                 image.setRGB(x, y, display[x + widthDelta][heightVirtualDisplay - y - 1 - heightDelta].getRGB());
-            }
-        //imageicon.setImage(image);
-        label.updateUI();
-    }
-
-    public void UpdateImage(boolean aliasing) {
-        for (int x = 0; x < image.getWidth(); x++)
-            for (int y = 0; y < image.getHeight(); y++) {
-                if (aliasing)
-                    image.setRGB(x, y, aliasedDisplay[x + widthDelta][heightVirtualDisplay - y - 1 - heightDelta].getRGB());
-                else
-                    image.setRGB(x, y, display[x + widthDelta][heightVirtualDisplay - y - 1 - heightDelta].getRGB());
             }
         //imageicon.setImage(image);
         label.updateUI();

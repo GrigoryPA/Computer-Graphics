@@ -86,12 +86,7 @@ public class TriangleModel {
         triangles.add(new Triangle(v3, v4, v1));
     }
 
-    public TriangleModel(Vector3d v1, double height, double width, MaterialType _materialType) {
-        material = new Material3D(_materialType);
-        triangles = new Vector<Triangle>();
-        triangles.add(new Triangle(v1, v1.getMoveY(height), v1.getMoveX(width).getMoveY(height)));
-        triangles.add(new Triangle(v1.getMoveX(width).getMoveY(height), v1.getMoveX(width), v1));
-    }
+
 
     public double IsIntersect(Vector3d orig, Vector3d dir){
         double dist_i;

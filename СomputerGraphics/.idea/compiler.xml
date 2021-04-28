@@ -6,8 +6,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="СomputerGraphics" />
+        <module name="computergraphics" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="СomputerGraphics" target="15" />
+    </bytecodeTargetLevel>
   </component>
 </project>
