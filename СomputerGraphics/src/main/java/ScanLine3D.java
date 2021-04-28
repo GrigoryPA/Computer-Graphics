@@ -27,14 +27,16 @@ import java.util.concurrent.atomic.AtomicInteger;
             4.2.1. Отвратительно написанный алгоритм, честное слово.
 */
 public class ScanLine3D {
+    ScreenData screen;
     Vector<Polyhedron> PolyhedronTable;
     Vector<Edge> EdgeTable;
     Map<Double, ArrayList<Edge>> GroupSortingTable;
     ArrayList<Edge> ActiveEdgesTable;
     double minKey = Double.MIN_VALUE;
 
-    ScanLine3D(Vector<Polyhedron> polyhedronTable, Vector<Edge> edgeTable) {
+    ScanLine3D(Vector<Polyhedron> polyhedronTable, Vector<Edge> edgeTable, ScreenData screen) {
         PolyhedronTable = polyhedronTable;
+        this.screen = screen;
         for (Polyhedron polyhedron: PolyhedronTable) {
             polyhedron.createEdges();
         }
@@ -46,14 +48,33 @@ public class ScanLine3D {
         ActiveEdgesTable = cloneList(GroupSortingTable.get(minKey));
 
         Edge currentEdge = ActiveEdgesTable.get(0);
+        int currentPolyhedronId = currentEdge.ownerPolyhedronId;
         Polyhedron currentPolyhedron = getOwnerPolyhedron(currentEdge);
         Color currentColor = currentPolyhedron.color;
         int N = 1; // number of active polyhedrons
+        int prevPolyhedronId = currentPolyhedronId;
 
-
+        for (int i = 0; i < ActiveEdgesTable.size(); i++) {
+            currentEdge = ActiveEdgesTable.get(i);
+            if (prevPolyhedronId == currentEdge.ownerPolyhedronId) {
+                putPoints();
+                currentColor = null;
+                N = 0;
+            } else {
+                // x = x_min_j
+                N += 1;
+                
+            }
+        }
 
         AET_Step();
 
+    }
+
+    void putPoints(int start, int end, int y, Color currentColor) {
+        for (int x = start; x < end; x++) {
+            screen.pointsColor[x][y] = currentColor;
+        }
     }
 
     Polyhedron getOwnerPolyhedron(Edge edge) {
