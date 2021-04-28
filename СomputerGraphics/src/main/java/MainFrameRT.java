@@ -95,8 +95,8 @@ public class MainFrameRT {
                 //try {
                     display.Clear();
                     RayTracing3D RT = new RayTracing3D(AllTabs.elementAt(0).Table, AllTabs.elementAt(1).Table, display);
-                            RT.RenderScene(display);
-                    display.CreateAndOpenImage();
+                    RT.RenderScene(display);
+                    display.CreateAndOpenImage(true);
                 //}
                 //catch(Exception e1){}
             }

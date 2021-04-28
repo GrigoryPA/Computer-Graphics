@@ -38,13 +38,13 @@ public class RayTracing3D {
             AllLights.add(OneLight);
         }
 
-        OneTriangleModel = new TriangleModel( "src/main/resources/3d/duck.obj",
-                MaterialType.REDWOOD);
+        //OneTriangleModel = new TriangleModel( "src/main/resources/3d/duck.obj",
+        //        MaterialType.REDWOOD);
         double x = -5.10949;
         double y = 4.13437;
         double z = 9.007105;
-        OneTriangleModel.MoveModel(0+x, 20+y,75+z);
-        AllTriangleModels.add(OneTriangleModel);
+        //OneTriangleModel.MoveModel(0+x, 20+y,75+z);
+        //AllTriangleModels.add(OneTriangleModel);
         //пол
         OneTriangleModel = new TriangleModel(new Vector3d(0, -20, -35),
                 new Vector3d(-105, -20, 70),
