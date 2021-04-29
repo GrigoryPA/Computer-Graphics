@@ -1,33 +1,12 @@
 import java.awt.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Vector;
 import java.util.concurrent.atomic.AtomicInteger;
 
-/*
-    1. Создать таблицы многоугольников и ребёр
-        1.1. Создать таблицу многоугольников
-            1.1.1. Вычислить коэффициенты A, B, C, D уравнения плоскости и Color грани.
-        1.2. Создать таблицу ребёр
-            1.2.1. Занести в неё все негоризонтальные рёбра Y_min != Y_max.
-                   Y_min, X_min, Y_max, X_max, tg_alpha (= delta_Y / delta_X).
-    2.
-        2.1. Сортировка ребёр по возрастанию Y_min и объединение в таблицу групповой сортировки.
-             Эта таблица содержит столько строк, сколько строк имеет дисплей. Может иметь пустые строки.
-        2.2. Если Y_min равны, дополнительно отсортировать по убыванию tg_alpha.
-    3.
-        3.1. Формирование таблицы активных рёбер, для которых Y_tek = Y_min_i
-    4. Обработка ТАР
-        4.1.
-            4.1.1. Считывание параметров первоого ребра. Определение соответствующего ребру i номер многоугольника в ТМ,
-                   и его цвет.
-            4.1.2. Поднимается флаг этого многоугольника.
-            4.1.3. В соответствии с этими данными определяется цвет сканирующего луча — луч подсвечивается соответствующим
-             цветом при значении x_min_i.
-            4.1.4. Количество поднятых флагов N активных многоугольников устанавливается равным 1, N = 1.
-        4.2.
-            4.2.1. Отвратительно написанный алгоритм, честное слово.
-*/
-public class ScanLine3D {
-    /*
+public class ScanLine {
+
     ScreenData screen;
     Vector<Polyhedron> PolyhedronTable;
     Vector<Edge> EdgeTable;
@@ -35,10 +14,10 @@ public class ScanLine3D {
     ArrayList<Edge> ActiveEdgesTable;
     double minKey = Double.MIN_VALUE;
 
-    ScanLine3D(Vector<Polyhedron> polyhedronTable, Vector<Edge> edgeTable, ScreenData screen) {
+    ScanLine(Vector<Polyhedron> polyhedronTable, Vector<Edge> edgeTable, ScreenData screen) {
         PolyhedronTable = polyhedronTable;
         this.screen = screen;
-        for (Polyhedron polyhedron: PolyhedronTable) {
+        for (Polyhedron polyhedron : PolyhedronTable) {
             polyhedron.createEdges();
         }
         EdgeTable = combineEdges();
@@ -79,7 +58,7 @@ public class ScanLine3D {
     }
 
     Polyhedron getOwnerPolyhedron(Edge edge) {
-        for (Polyhedron polyhedron: PolyhedronTable) {
+        for (Polyhedron polyhedron : PolyhedronTable) {
             if (polyhedron.polyhedronId == edge.ownerPolyhedronId)
                 return polyhedron;
         }
@@ -93,17 +72,17 @@ public class ScanLine3D {
     Vector<Edge> combineEdges() {
         Vector<Edge> combinedEdges = null;
 
-        for (Polyhedron polyhedron: PolyhedronTable) {
+        for (Polyhedron polyhedron : PolyhedronTable) {
             combinedEdges.addAll(polyhedron.edges);
         }
 
-        return  combinedEdges;
+        return combinedEdges;
     }
 
     Map<Double, ArrayList<Edge>> sortEdges() {
         Map<Double, ArrayList<Edge>> groupedEdges = new HashMap<>();
 
-        for (Edge edge: EdgeTable) {
+        for (Edge edge : EdgeTable) {
             if (!groupedEdges.containsKey(edge.y_min)) {
                 groupedEdges.put(edge.y_min, new ArrayList<>());
             }
@@ -129,56 +108,74 @@ public class ScanLine3D {
 
 class Polyhedron {
     private static final AtomicInteger polyhedronCounter = new AtomicInteger();
+
     int polyhedronId;
     double A, B, C, D;
+    int topScanString;
+
     {
         A = 0;
         B = 0;
         C = 0;
         D = 0;
+        topScanString = 0;
     }
+
     Color color = Color.BLACK;
     Vector<Point3D> points;
-    Vector<Edge> edges;
+    ArrayList<Edge> edges;
+
 
     public Polyhedron(double a, double b, double c, double d, Color color) {
         A = a;
         B = b;
         C = c;
         D = d;
+
+        generatePoints(getRandomNumber(3, 6));
+        createEdges();
         this.color = color;
         polyhedronId = polyhedronCounter.incrementAndGet();
     }
 
-    Vector<Point3D> createPoints(Polyhedron p, int n) { // генерация в точек в плоскости
+    Vector<Point3D> generatePoints(int n) { // генерация в точек в плоскости
         // нужен метод, который отсортирует точки в плоскости по часовой стрелке, иначе бред
         int min = 100, max = 600;
 
         for (int i = 0; i < n; i++) {
-            double x = getRandomNumber(min, max);
-            double y = getRandomNumber(min, max);
-            double z = (p.D - (p.A * x) - (p.B * y)) / p.C;
+            double x;
+            double y;
+            double z;
+            do {
+                x = getRandomNumber(min, max);
+                y = getRandomNumber(min, max);
+                z = (D - (A * x) - (B * y)) / C;
+            } while ((z > 400) || (z < -400));
             points.add(new Point3D(x, y, z));
         }
         return points;
     }
 
     void createEdges() {
-
         for (int i = 0; i < points.size() - 2; i++) {
-            double x_min = points.get(i).x;
-            double y_min = points.get(i).y;
-            double x_max = points.get(i + 1).x;
-            double y_max = points.get(i + 1).y;
-            if (y_min != y_max)
-                edges.add(new Edge(x_min, y_min, x_max, y_max, this.polyhedronId));
+            Point3D start = points.get(i);
+            Point3D end = points.get(i + 1);
+            edges.add(new Edge(start, end, this.polyhedronId));
         }
-        double x_min = points.get(points.size() - 1).x;
-        double y_min = points.get(points.size() - 1).y;
-        double x_max = points.get(0).x;
-        double y_max = points.get(0).y;
-        if (y_min != y_max)
-            edges.add(new Edge(x_min, y_min, x_max, y_max, this.polyhedronId));
+        Point3D start = points.get(points.size() - 1);
+        Point3D end = points.get(0);
+        edges.add(new Edge(start, end, this.polyhedronId));
+    }
+
+    int getGlobalMinimumZ(Edge e) {
+        int min = ;
+        if () {
+            int z =
+        } else {
+
+        }
+
+        return z;
     }
 
     public Integer getRandomNumber(int min, int max) {
@@ -188,30 +185,23 @@ class Polyhedron {
 
 class Edge {
     int ownerPolyhedronId;
-    double x_min, y_min;
-    double x_max, y_max;
-    double tg_alpha;
+    Point3D start, end;
+    //double tg_alpha;
 
-    public Edge(double x_min, double y_min, double x_max, double y_max, int ownerPolyhedronId) {
+    public Edge(Point3D start, Point3D end, int ownerPolyhedronId) {
         this.ownerPolyhedronId = ownerPolyhedronId;
-        this.x_min = x_min;
-        this.y_min = y_min;
-        this.x_max = x_max;
-        this.y_max = y_max;
-        this.tg_alpha = (y_max - y_min) / (x_max - x_min);
+        this.start = new Point3D(start);
+        this.end = new Point3D(end);
     }
 
     public Edge(Edge edge) {
         this.ownerPolyhedronId = edge.ownerPolyhedronId;
-        this.x_min = edge.x_min;
-        this.y_min = edge.y_min;
-        this.x_max = edge.x_max;
-        this.y_max = edge.y_max;
-        this.tg_alpha = edge.tg_alpha;
+        this.start = new Point3D(edge.start);
+        this.end = new Point3D(edge.end);
     }
 
 }
-
+/*
 class tanEdgeComparator implements Comparator<Edge> {
     @Override
     public int compare(Edge o1, Edge o2) {
@@ -221,6 +211,5 @@ class tanEdgeComparator implements Comparator<Edge> {
             return -1;
         return 0;
     }
-     */
 }
-
+ */

@@ -26,4 +26,8 @@ public class Point3D{
         this.z = p.z;
         this.k = p.k;
     }
+
+    public Point3D() {
+
+    }
 }
