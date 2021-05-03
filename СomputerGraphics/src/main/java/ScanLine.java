@@ -5,14 +5,17 @@ import java.util.Map;
 import java.util.Vector;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static java.lang.Math.abs;
+
 public class ScanLine {
 
     ScreenData screen;
     Vector<Polyhedron> PolyhedronTable;
     Vector<Edge> EdgeTable;
-    Map<Double, ArrayList<Edge>> GroupSortingTable;
-    ArrayList<Edge> ActiveEdgesTable;
-    double minKey = Double.MIN_VALUE;
+    Map<Integer, ArrayList<Polyhedron>> ScanGroupTable;
+    ArrayList<Polyhedron> ActiveLinePolyTable;
+    ArrayList<EdgeData> ActiveLineEdgeTable;
+    Integer minKey = Integer.MIN_VALUE;
 
     ScanLine(Vector<Polyhedron> polyhedronTable, Vector<Edge> edgeTable, ScreenData screen) {
         PolyhedronTable = polyhedronTable;
@@ -21,34 +24,20 @@ public class ScanLine {
             polyhedron.createEdges();
         }
         EdgeTable = combineEdges();
-        GroupSortingTable = sortEdges();
+        //GroupSortingTable = sortEdges();
     }
 
     void ScanLine() {
-        ActiveEdgesTable = cloneList(GroupSortingTable.get(minKey));
+        ActiveLinePolyTable = cloneList(ScanGroupTable.get(minKey));
+        ActiveLineEdgeTable = createALET();
 
-        Edge currentEdge = ActiveEdgesTable.get(0);
-        int currentPolyhedronId = currentEdge.ownerPolyhedronId;
-        Polyhedron currentPolyhedron = getOwnerPolyhedron(currentEdge);
-        Color currentColor = currentPolyhedron.color;
-        int N = 1; // number of active polyhedrons
-        int prevPolyhedronId = currentPolyhedronId;
+    }
 
-        for (int i = 0; i < ActiveEdgesTable.size(); i++) {
-            currentEdge = ActiveEdgesTable.get(i);
-            if (prevPolyhedronId == currentEdge.ownerPolyhedronId) {
-                putPoints();
-                currentColor = null;
-                N = 0;
-            } else {
-                // x = x_min_j
-                N += 1;
+    private ArrayList<EdgeData> createALET() {
+        ArrayList<EdgeData> ActiveLineEdgeTable;
 
-            }
-        }
 
-        AET_Step();
-
+        return ActiveLineEdgeTable;
     }
 
     void putPoints(int start, int end, int y, Color currentColor) {
@@ -79,6 +68,20 @@ public class ScanLine {
         return combinedEdges;
     }
 
+    Map<Integer, ArrayList<Polyhedron>> sortEdges() {
+        Map<Integer, ArrayList<Polyhedron>> groupedPolyhedrons = new HashMap<>();
+
+        for (Polyhedron polyhedron : PolyhedronTable) {
+            if (!groupedPolyhedrons.containsKey(polyhedron.topScanString)) {
+                groupedPolyhedrons.put(polyhedron.topScanString, new ArrayList<>());
+            }
+            groupedPolyhedrons.get(polyhedron.topScanString).add(polyhedron);
+        }
+
+        return groupedPolyhedrons;
+    }
+
+    /*
     Map<Double, ArrayList<Edge>> sortEdges() {
         Map<Double, ArrayList<Edge>> groupedEdges = new HashMap<>();
 
@@ -96,13 +99,46 @@ public class ScanLine {
 
         return groupedEdges;
     }
+     */
 
-    public static ArrayList<Edge> cloneList(ArrayList<Edge> original) {
-        ArrayList<Edge> clonedList = new ArrayList<>(original.size());
-        for (Edge element : original) {
-            clonedList.add(new Edge(element));
+    public static ArrayList<Polyhedron> cloneList(ArrayList<Polyhedron> original) {
+        ArrayList<Polyhedron> clonedList = new ArrayList<>(original.size());
+        for (Polyhedron element : original) {
+            clonedList.add(new Polyhedron(element));
         }
         return clonedList;
+    }
+
+    class EdgeData {
+        Edge edge;
+        int x;
+        double delta_x;
+        int delta_y;
+        int flag;
+
+        EdgeData(Edge edge, int scanLine) {
+            this.edge = edge;
+            x = getIntersectionX(edge, scanLine);
+            delta_x = getDeltaX(edge, scanLine);
+            delta_y = abs((int) (edge.start.y - edge.end.y));
+            flag = 0;
+        }
+
+        int getIntersectionX(Edge edge, int scanLine) {
+            double a = (edge.start.y - edge.end.y) / (edge.start.x - edge.end.x);
+            double b = edge.start.y - (a * edge.start.x);
+            double c = 0;
+            double d = scanLine;
+            Double x = (d - c) / (a - b);
+            return x.intValue();
+        }
+
+        double getDeltaX(Edge edge, int scanLine) {
+            double a = (edge.start.y - edge.end.y) / (edge.start.x - edge.end.x);
+            double b = edge.start.y - (a * edge.start.x);
+            double delta_x = ((scanLine - b) / a) - ((scanLine + 1 - b) / a);
+            return delta_x;
+        }
     }
 }
 
@@ -112,6 +148,8 @@ class Polyhedron {
     int polyhedronId;
     double A, B, C, D;
     int topScanString;
+    int botScanString;
+    int totalScanStrings;
 
     {
         A = 0;
@@ -132,14 +170,35 @@ class Polyhedron {
         C = c;
         D = d;
 
-        generatePoints(getRandomNumber(3, 6));
-        createEdges();
         this.color = color;
         polyhedronId = polyhedronCounter.incrementAndGet();
+
+        generatePoints(getRandomNumber(3, 6));
+        createEdges();
+        getTopScanString();
+        getBotScanString();
+        getTotalScanStrings();
+    }
+
+    public Polyhedron(Polyhedron p) {
+        A = p.A;
+        B = p.B;
+        C = p.C;
+        D = p.D;
+
+        color = p.color;
+        polyhedronId = p.polyhedronId;
+
+        points = p.points;
+        edges = p.edges;
+        topScanString = p.topScanString;
+        botScanString = p.botScanString;
+        totalScanStrings = p.totalScanStrings;
     }
 
     Vector<Point3D> generatePoints(int n) { // генерация в точек в плоскости
         // нужен метод, который отсортирует точки в плоскости по часовой стрелке, иначе бред
+        // однако если генерить только треугольники, то такой проблемы нет
         int min = 100, max = 600;
 
         for (int i = 0; i < n; i++) {
@@ -167,15 +226,24 @@ class Polyhedron {
         edges.add(new Edge(start, end, this.polyhedronId));
     }
 
-    int getGlobalMinimumZ(Edge e) {
-        int min = ;
-        if () {
-            int z =
-        } else {
-
+    void getTopScanString() {
+        topScanString = Integer.MIN_VALUE;
+        for (Edge edge : edges) {
+            if (edge.start.y > topScanString)
+                topScanString = (int) edge.start.y;
         }
+    }
 
-        return z;
+    void getBotScanString() {
+        botScanString = Integer.MAX_VALUE;
+        for (Edge edge : edges) {
+            if (edge.start.y < botScanString)
+                botScanString = (int) edge.start.y;
+        }
+    }
+
+    void getTotalScanStrings() {
+        totalScanStrings = topScanString - botScanString + 1;
     }
 
     public Integer getRandomNumber(int min, int max) {
