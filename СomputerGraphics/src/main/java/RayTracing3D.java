@@ -36,7 +36,7 @@ public class RayTracing3D {
             OneLight = new Light3D(TableLights, i);
             AllLights.add(OneLight);
         }
-/*
+
         OneTriangleModel = new TriangleModel( "src/main/resources/3d/duck.obj",
                 MaterialType.REDWOOD);
         double x = -5.10949;
@@ -309,7 +309,7 @@ public class RayTracing3D {
                 new Vector3d(-90, 0, 100),
                 MaterialType.MIRROR);
         AllTriangleModels.add(OneTriangleModel);
-*/
+
 
         //оконная рама (верхний брусок верх)
         OneTriangleModel = new TriangleModel(new Vector3d(-83,88,97),
@@ -400,13 +400,13 @@ public class RayTracing3D {
                 MaterialType.BROWNWOOD);
         AllTriangleModels.add(OneTriangleModel);
 
-/*
+
         //стена с окном(низ)
         OneTriangleModel = new TriangleModel(new Vector3d(-90,0,100),
                 new Vector3d(-90,35,100),
                 new Vector3d(90, 35, 100),
                 new Vector3d(90, 0, 100),
-                MaterialType.MIRROR);
+                MaterialType.STEEL);
         AllTriangleModels.add(OneTriangleModel);
         //стена с окном(верх)
         OneTriangleModel = new TriangleModel(new Vector3d(-90,85,100),
@@ -849,7 +849,7 @@ public class RayTracing3D {
               //  MaterialType.MIRROR);
         //AllTriangleModels.add(OneTriangleModel);
 
- */
+
 
     }
 
