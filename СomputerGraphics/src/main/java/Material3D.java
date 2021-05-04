@@ -35,8 +35,14 @@ public class Material3D{
                 specularExponent=10;
                 refractive = 1;
                 break;
-            case WOOD://red
+            case WOOD://wood
                 color = new Vector3d(0.8,0.6,0.4);
+                albedo = new double[]{0.9,0.1,0,0};
+                specularExponent=10;
+                refractive = 1;
+                break;
+            case BROWNWOOD://brown
+                color = new Vector3d(0.43,0.32,0.2);
                 albedo = new double[]{0.9,0.1,0,0};
                 specularExponent=10;
                 refractive = 1;
@@ -70,13 +76,25 @@ public class Material3D{
                 specularExponent=10;
                 refractive = 1;
                 break;
-            case 3://mirror
+            case 3://wood
+                color = new Vector3d(0.8,0.6,0.4);
+                albedo = new double[]{0.9,0.1,0,0};
+                specularExponent=10;
+                refractive = 1;
+                break;
+            case 4://brown
+                color = new Vector3d(0.43,0.32,0.2);
+                albedo = new double[]{0.9,0.1,0,0};
+                specularExponent=10;
+                refractive = 1;
+                break;
+            case 5://mirror
                 color = new Vector3d(1,1,1);
                 albedo = new double[]{0,10,0.8,0};
                 specularExponent=1425;
                 refractive = 1;
                 break;
-            case 4://glass
+            case 6://glass
                 color = new Vector3d(0.6,0.7,0.8);
                 albedo = new double[]{0,0.5,0.1,0.8};
                 specularExponent=125;

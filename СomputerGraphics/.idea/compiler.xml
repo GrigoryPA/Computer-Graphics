@@ -9,8 +9,5 @@
         <module name="computergraphics" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="СomputerGraphics" target="15" />
-    </bytecodeTargetLevel>
   </component>
 </project>

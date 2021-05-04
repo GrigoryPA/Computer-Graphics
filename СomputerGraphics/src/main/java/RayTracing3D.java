@@ -3,7 +3,7 @@ import java.awt.*;
 import java.util.Vector;
 
 public class RayTracing3D {
-    private Vector3d camera = new Vector3d(0,40,0);
+    private Vector3d camera = new Vector3d(0,60,0);
     private int dirZ = 1;
     private double fov = Math.PI/2;
     public  Vector<Sphere3D> AllSpheres;
@@ -37,119 +37,841 @@ public class RayTracing3D {
             AllLights.add(OneLight);
         }
 
-        /*OneTriangleModel = new TriangleModel( "src/main/resources/3d/duck.obj",
+        OneTriangleModel = new TriangleModel( "src/main/resources/3d/duck.obj",
                 MaterialType.REDWOOD);
         double x = -5.10949;
         double y = 4.13437;
         double z = 9.007105;
-        OneTriangleModel.MoveModel(0+x, 20+y,75+z);
-        AllTriangleModels.add(OneTriangleModel);*/
+        OneTriangleModel.MoveModel(0+x, 40+y,60+z);
+        AllTriangleModels.add(OneTriangleModel);
         //пол
-        OneTriangleModel = new TriangleModel(new Vector3d(0, -20, -35),
-                new Vector3d(-105, -20, 70),
-                new Vector3d(0,-20,175),
-                new Vector3d(105, -20, 70),
+        OneTriangleModel = new TriangleModel(new Vector3d(-105, 0, -35),
+                new Vector3d(-105, 0, 100),
+                new Vector3d(105,0,100),
+                new Vector3d(105, 0, -35),
                 MaterialType.STEEL);
         AllTriangleModels.add(OneTriangleModel);
 
         //потолок
-        OneTriangleModel = new TriangleModel(new Vector3d(0, 80, -35),
-                new Vector3d(105, 80,70),
-                new Vector3d(0,80,175),
-                new Vector3d(-105,80 ,70),
+        OneTriangleModel = new TriangleModel(new Vector3d(-105, 100, -35),
+                new Vector3d(105,100 ,-35),
+                new Vector3d(105,100,100),
+                new Vector3d(-105, 100,100),
                 MaterialType.STEEL);
         AllTriangleModels.add(OneTriangleModel);
 
         //левая ближняя стена
-        OneTriangleModel = new TriangleModel(new Vector3d(0,-20,-35),
-                new Vector3d(0,80,-35),
-                new Vector3d(-105,80,70),
-                new Vector3d(-105,-20,70),
+        OneTriangleModel = new TriangleModel(new Vector3d(0,0,-35),
+                new Vector3d(0,100,-35),
+                new Vector3d(-105,100,70),
+                new Vector3d(-105,0,70),
                 MaterialType.STEEL);
         AllTriangleModels.add(OneTriangleModel);
 
         //правая ближняя стена
-        OneTriangleModel = new TriangleModel(new Vector3d(0,-20,-35),
-                new Vector3d(105, -20 , 70),
-                new Vector3d(105, 80, 70),
-                new Vector3d(0, 80, -35),
+        OneTriangleModel = new TriangleModel(new Vector3d(0,0,-35),
+                new Vector3d(105, 0, 70),
+                new Vector3d(105, 100, 70),
+                new Vector3d(0, 100, -35),
                 MaterialType.STEEL);
         AllTriangleModels.add(OneTriangleModel);
 
-        //правая дальняя стена
-        OneTriangleModel = new TriangleModel(new Vector3d(0,-20,175),
-                new Vector3d(0,80,175),
-                new Vector3d(105,80,70),
-                new Vector3d(105, -20, 70),
-                MaterialType.STEEL);
+        //рамка для большого правого зеркала (нижний брусок лево)
+        OneTriangleModel = new TriangleModel(new Vector3d(90,0,100),
+                new Vector3d(90,4,100),
+                new Vector3d(86.4,4,98.2),
+                new Vector3d(86.4, 0, 98.2),
+                MaterialType.BROWNWOOD);
         AllTriangleModels.add(OneTriangleModel);
-        //левая дальняя стена(1)
-        OneTriangleModel = new TriangleModel(new Vector3d(0,-20,175),
-                new Vector3d(-105,-20,70),
-                new Vector3d(-105, 20, 70),
-                new Vector3d(0, 20, 175),
-                MaterialType.STEEL);
+        //рамка для большого правого зеркала (нижний брусок перед)
+        OneTriangleModel = new TriangleModel(new Vector3d(86.4,0,98.2),
+                new Vector3d(86.4,4,98.2),
+                new Vector3d(101.37,4,68.1),
+                new Vector3d(101.37, 0, 68.1),
+                MaterialType.BROWNWOOD);
         AllTriangleModels.add(OneTriangleModel);
-        //левая дальняя стена(2)
-        OneTriangleModel = new TriangleModel(new Vector3d(0,40,175),
-                new Vector3d(-105,40,70),
-                new Vector3d(-105, 80, 70),
-                new Vector3d(0, 80, 175),
-                MaterialType.STEEL);
+        //рамка для большого правого зеркала (нижний брусок право)
+        OneTriangleModel = new TriangleModel(new Vector3d(101.37,0,68.1),
+                new Vector3d(101.37,4,68.1),
+                new Vector3d(105,4,70),
+                new Vector3d(105, 0, 70),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //рамка для большого правого зеркала (нижний брусок верх)
+        OneTriangleModel = new TriangleModel(new Vector3d(86.4,4,98.2),
+                new Vector3d(90,4,100),
+                new Vector3d(105,4, 70),
+                new Vector3d(101.37, 4, 68.1),
+                MaterialType.BROWNWOOD);
         AllTriangleModels.add(OneTriangleModel);
 
+        //рамка для большого правого зеркала (левый брусок лево)
+        OneTriangleModel = new TriangleModel(new Vector3d(90,0,100),
+                new Vector3d(90,4,100),
+                new Vector3d(86.4,4,98.2),
+                new Vector3d(86.4, 0, 98.2),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //рамка для большого правого зеркала (левый брусок перед)
+        OneTriangleModel = new TriangleModel(new Vector3d(86.4,4,98.2),
+                new Vector3d(86.4,96,98.2),
+                new Vector3d(88.15,96,94.65),
+                new Vector3d(88.15, 4, 94.65),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //рамка для большого правого зеркала (левый брусок право)
+        OneTriangleModel = new TriangleModel(new Vector3d(88.15,4,94.65),
+                new Vector3d(88.15,96,94.65),
+                new Vector3d(91.8,96, 96.44),
+                new Vector3d(91.8, 4, 96.44),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+
+        //рамка для большого правого зеркала (правый брусок лево)
+        OneTriangleModel = new TriangleModel(new Vector3d(103.15,4,73.74),
+                new Vector3d(103.15,96,73.74),
+                new Vector3d(99.47,96,71.95),
+                new Vector3d(99.47,4,71.95),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //рамка для большого правого зеркала (правый брусок перед)
+        OneTriangleModel = new TriangleModel(new Vector3d(99.47,4,71.95),
+                new Vector3d(99.47,96,71.95),
+                new Vector3d(101.37,96,68.1),
+                new Vector3d(101.37,4,68.1),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //рамка для большого правого зеркала (правый брусок право)
+        OneTriangleModel = new TriangleModel(new Vector3d(101.37,4,68.1),
+                new Vector3d(101.37,96,68.1),
+                new Vector3d(105,96, 70),
+                new Vector3d(105, 4, 70),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+
+        //рамка для большого правого зеркала (верхний брусок лево)
+        OneTriangleModel = new TriangleModel(new Vector3d(90,96,100),
+                new Vector3d(90,100,100),
+                new Vector3d(86.4,100, 98.2),
+                new Vector3d(86.4,96, 98.2),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //рамка для большого правого зеркала (верхний брусок ниж)
+        OneTriangleModel = new TriangleModel(new Vector3d(90,100,100),
+                new Vector3d(86.4,100,98.2),
+                new Vector3d(101.37,100,68.1),
+                new Vector3d(105,100,70),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //рамка для большого правого зеркала (верхний брусок перед)
+        OneTriangleModel = new TriangleModel(new Vector3d(86.4,96,98.2),
+                new Vector3d(86.4,100,98.2),
+                new Vector3d(101.37,100,68.1),
+                new Vector3d(101.37,96,68.1),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //рамка для большого правого зеркала (верхний брусок право)
+        OneTriangleModel = new TriangleModel(new Vector3d(101.37,96,68.1),
+                new Vector3d(101.37,100,68.1),
+                new Vector3d(105,96, 70),
+                new Vector3d(105, 4, 70),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //рамка для большого правого зеркала (верхний брусок верх)
+        OneTriangleModel = new TriangleModel(new Vector3d(86.4,100,98.2),
+                new Vector3d(90,100,100),
+                new Vector3d(105,100, 70),
+                new Vector3d(101.37, 100, 68.1),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+
+        //правая дальняя стена(зеркало)
+        OneTriangleModel = new TriangleModel(new Vector3d(90,0,100),
+                new Vector3d(90,100,100),
+                new Vector3d(105,100,70),
+                new Vector3d(105, 0, 70),
+                MaterialType.MIRROR);
+        AllTriangleModels.add(OneTriangleModel);
+
+        //рамка для большого левого зеркала (нижний брусок лево)
+        OneTriangleModel = new TriangleModel(new Vector3d(-105,0,70),
+                new Vector3d(-105,4,70),
+                new Vector3d(-101.37,4,68.1),
+                new Vector3d(-101.37, 0, 68.1),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //рамка для большого левого зеркала (нижний брусок перед)
+        OneTriangleModel = new TriangleModel(new Vector3d(-101.37,0,68.1),
+                new Vector3d(-101.37,4,68.1),
+                new Vector3d(-86.4,4,98.2),
+                new Vector3d(-86.4,0,98.2),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //рамка для большого левого зеркала (нижний брусок право)
+        OneTriangleModel = new TriangleModel(new Vector3d(-86.4,0,98.2),
+                new Vector3d(-86.4,4,98.2),
+                new Vector3d(-90,4,100),
+                new Vector3d(-90,0,100),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //рамка для большого левого зеркала (нижний брусок верх)
+        OneTriangleModel = new TriangleModel(new Vector3d(-105,4,70),
+                new Vector3d(-90,4,100),
+                new Vector3d(-86.4,4, 98.2),
+                new Vector3d(-101.37, 4, 68.1),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+
+        //рамка для большого левого зеркала (левый брусок лево)
+        OneTriangleModel = new TriangleModel(new Vector3d(-105,4,70),
+                new Vector3d(-105,96,70),
+                new Vector3d(-101.37,96,68.1),
+                new Vector3d(-101.37, 4, 68.1),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //рамка для большого левого зеркала (левый брусок перед)
+        OneTriangleModel = new TriangleModel(new Vector3d(-101.37,4,68.1),
+                new Vector3d(-101.37,96,68.1),
+                new Vector3d(-99.47,96,71.95),
+                new Vector3d(-99.47,4,71.95),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //рамка для большого левого зеркала (левый брусок право)
+        OneTriangleModel = new TriangleModel(new Vector3d(-99.47,4,71.95),
+                new Vector3d(-99.47,96,71.95),
+                new Vector3d(-103.15,96, 73.74),
+                new Vector3d(-103.15,4, 73.74),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+
+        //рамка для большого левого зеркала (правый брусок лево)
+        OneTriangleModel = new TriangleModel(new Vector3d(-91.8,4,96.44),
+                new Vector3d(-91.8,96,96.44),
+                new Vector3d(-88.15,96,94.65),
+                new Vector3d(-88.15,4,94.65),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //рамка для большого левого зеркала (правый брусок перед)
+        OneTriangleModel = new TriangleModel(new Vector3d(-88.15,4,94.65),
+                new Vector3d(-88.15,96,94.65),
+                new Vector3d(-86.4,96,98.2),
+                new Vector3d(-86.4,4,98.2),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //рамка для большого левого зеркала (правый брусок право)
+        OneTriangleModel = new TriangleModel(new Vector3d(-86.4,4,98.2),
+                new Vector3d(-86.4,96,98.2),
+                new Vector3d(-90,96, 100),
+                new Vector3d(-90, 4, 100),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+
+        //рамка для большого левого зеркала (верхний брусок лево)
+        OneTriangleModel = new TriangleModel(new Vector3d(-105,96,70),
+                new Vector3d(-105,100,70),
+                new Vector3d(-101.37,100, 68.1),
+                new Vector3d(-101.37,96, 68.1),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //рамка для большого левого зеркала (верхний брусок ниж)
+        OneTriangleModel = new TriangleModel(new Vector3d(-101.37,100,68.1),
+                new Vector3d(-86.4, 100, 98.2),
+                new Vector3d(-90, 100, 100),
+                new Vector3d(-105, 100, 70),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //рамка для большого левого зеркала (верхний брусок перед)
+        OneTriangleModel = new TriangleModel(new Vector3d(-101.37,96,68.1),
+                new Vector3d(-101.37,100,68.1),
+                new Vector3d(-86.4, 100, 98.2),
+                new Vector3d(-86.4, 96, 98.2),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //рамка для большого левого зеркала (верхний брусок право)
+        OneTriangleModel = new TriangleModel(new Vector3d(-86.4,96,98.2),
+                new Vector3d(-86.4,100,98.2),
+                new Vector3d(-90, 100, 100),
+                new Vector3d(-90, 96, 100),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //рамка для большого левого зеркала (верхний брусок верх)
+        OneTriangleModel = new TriangleModel(new Vector3d(-105,100,70),
+                new Vector3d(-90,100,100),
+                new Vector3d(-86.4,100, 98.2),
+                new Vector3d(-101.37, 100, 68.1),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+
+        //левая дальняя стена(зеркало)
+        OneTriangleModel = new TriangleModel(new Vector3d(-105,0,70),
+                new Vector3d(-105,100,70),
+                new Vector3d(-90, 100, 100),
+                new Vector3d(-90, 0, 100),
+                MaterialType.MIRROR);
+        AllTriangleModels.add(OneTriangleModel);
+
+        //оконная рама (верхний брусок лево)
+        OneTriangleModel = new TriangleModel(new Vector3d(-83,85,100),
+                new Vector3d(-83,88,100),
+                new Vector3d(-83, 88, 97),
+                new Vector3d(-83, 85, 97),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //оконная рама (верхний брусок верх)
+        OneTriangleModel = new TriangleModel(new Vector3d(-83,88,97),
+                new Vector3d(-83,88,100),
+                new Vector3d(83, 88, 100),
+                new Vector3d(83, 88, 97),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //оконная рама (верхний брусок низ)
+        OneTriangleModel = new TriangleModel(new Vector3d(-83,88,97),
+                new Vector3d(83,88,97),
+                new Vector3d(83, 88, 100),
+                new Vector3d(-83, 88, 100),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //оконная рама (верхний брусок перед)
+        OneTriangleModel = new TriangleModel(new Vector3d(-83,85,97),
+                new Vector3d(-83,88,97),
+                new Vector3d(83, 88, 97),
+                new Vector3d(83, 85, 97),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //оконная рама (верхний брусок право)
+        OneTriangleModel = new TriangleModel(new Vector3d(83,88,97),
+                new Vector3d(83,88,100),
+                new Vector3d(83, 85, 100),
+                new Vector3d(83, 85, 97),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+
+        //оконная рама (левый брусок лево)
+        OneTriangleModel = new TriangleModel(new Vector3d(-83,85,100),
+                new Vector3d(-83,85,97),
+                new Vector3d(-83, 35, 97),
+                new Vector3d(-83, 35, 100),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //оконная рама (левый брусок перед)
+        OneTriangleModel = new TriangleModel(new Vector3d(-83,85,97),
+                new Vector3d(-80,85,97),
+                new Vector3d(-80, 35, 97),
+                new Vector3d(-83, 35, 97),
+                MaterialType.BROWNWOOD);
+        //оконная рама (левый брусок право)
+        OneTriangleModel = new TriangleModel(new Vector3d(-80,85,97),
+                new Vector3d(-80,85,100),
+                new Vector3d(-80, 35, 100),
+                new Vector3d(-80, 35, 97),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+
+        //оконная рама (правый брусок лево)
+        OneTriangleModel = new TriangleModel(new Vector3d(80,85,100),
+                new Vector3d(80,85,97),
+                new Vector3d(80, 35, 97),
+                new Vector3d(80, 35, 100),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //оконная рама (правый брусок перед)
+        OneTriangleModel = new TriangleModel(new Vector3d(80,85,97),
+                new Vector3d(83,85,97),
+                new Vector3d(83, 35, 97),
+                new Vector3d(80, 35, 97),
+                MaterialType.BROWNWOOD);
+        //оконная рама (правый брусок право)
+        OneTriangleModel = new TriangleModel(new Vector3d(83,85,97),
+                new Vector3d(83,85,100),
+                new Vector3d(83, 35, 100),
+                new Vector3d(83, 35, 97),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+
+        //оконная рама (нижний брусок лево)
+        OneTriangleModel = new TriangleModel(new Vector3d(-83,32,100),
+                new Vector3d(-83,35,100),
+                new Vector3d(-83, 35, 97),
+                new Vector3d(-83, 32, 97),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //оконная рама (нижний брусок верх)
+        OneTriangleModel = new TriangleModel(new Vector3d(-83,35,97),
+                new Vector3d(-83,35,100),
+                new Vector3d(83, 35, 100),
+                new Vector3d(83, 35, 97),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //оконная рама (нижний брусок низ)
+        OneTriangleModel = new TriangleModel(new Vector3d(-83,35,97),
+                new Vector3d(83,35,97),
+                new Vector3d(83, 35, 100),
+                new Vector3d(-83, 35, 100),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //оконная рама (нижний брусок перед)
+        OneTriangleModel = new TriangleModel(new Vector3d(-83,32,100),
+                new Vector3d(-83,35,100),
+                new Vector3d(83, 35, 100),
+                new Vector3d(83, 32, 100),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //оконная рама (нижний брусок право)
+        OneTriangleModel = new TriangleModel(new Vector3d(83,35,97),
+                new Vector3d(83,35,100),
+                new Vector3d(83, 32, 100),
+                new Vector3d(83, 32, 97),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+
+        //стена с окном(низ)
+        OneTriangleModel = new TriangleModel(new Vector3d(-90,0,100),
+                new Vector3d(-90,35,100),
+                new Vector3d(90, 35, 100),
+                new Vector3d(90, 0, 100),
+                MaterialType.STEEL);
+        AllTriangleModels.add(OneTriangleModel);
+        //стена с окном(верх)
+        OneTriangleModel = new TriangleModel(new Vector3d(-90,85,100),
+                new Vector3d(-90,100,100),
+                new Vector3d(90, 100, 100),
+                new Vector3d(90, 85, 100),
+                MaterialType.STEEL);
+        AllTriangleModels.add(OneTriangleModel);
+        //стена с окном(лево)
+        OneTriangleModel = new TriangleModel(new Vector3d(-90,35,100),
+                new Vector3d(-90,85,100),
+                new Vector3d(-80, 85, 100),
+                new Vector3d(-80, 35, 100),
+                MaterialType.STEEL);
+        AllTriangleModels.add(OneTriangleModel);
+        //стена с окном(право)
+        OneTriangleModel = new TriangleModel(new Vector3d(80,25,100),
+                new Vector3d(80,85,100),
+                new Vector3d(90, 85, 100),
+                new Vector3d(90, 35, 100),
+                MaterialType.STEEL);
+        AllTriangleModels.add(OneTriangleModel);
         //передняя часть тумбы
-        OneTriangleModel = new TriangleModel(new Vector3d(-15, -20 ,60),
-                new Vector3d(-15, 20,60),
-                new Vector3d(15, 20, 60),
-                new Vector3d(15, -20,60),
+        OneTriangleModel = new TriangleModel(new Vector3d(-15, 0 ,45),
+                new Vector3d(-15, 40,45),
+                new Vector3d(15, 40, 45),
+                new Vector3d(15, 0,45),
                 MaterialType.WOOD);
         AllTriangleModels.add(OneTriangleModel);
         //правая часть тумбы
-        OneTriangleModel = new TriangleModel(new Vector3d(15,-20,60),
-                new Vector3d(15,20, 60),
-                new Vector3d(15,20,90),
-                new Vector3d(15, -20, 90),
+        OneTriangleModel = new TriangleModel(new Vector3d(15,0,45),
+                new Vector3d(15,40, 45),
+                new Vector3d(15,40,75),
+                new Vector3d(15, 0, 75),
                 MaterialType.WOOD);
         AllTriangleModels.add(OneTriangleModel);
         //задняя часть тумбы
-        OneTriangleModel = new TriangleModel(new Vector3d(-15, -20, 90),
-                new Vector3d(15, -20,90),
-                new Vector3d(15,20,90),
-                new Vector3d(-15,20,90),
+        OneTriangleModel = new TriangleModel(new Vector3d(15, 0, 75),
+                new Vector3d(15, 40,75),
+                new Vector3d(-15,40,75),
+                new Vector3d(-15,0,75),
                 MaterialType.WOOD);
         AllTriangleModels.add(OneTriangleModel);
         //левая часть тумбы
-        OneTriangleModel = new TriangleModel(new Vector3d(-15, -20 ,90),
-                new Vector3d(-15,20,90),
-                new Vector3d(-15,20,60),
-                new Vector3d(-15, -20, 60),
+        OneTriangleModel = new TriangleModel(new Vector3d(-15, 0 ,75),
+                new Vector3d(-15,40,75),
+                new Vector3d(-15,40,45),
+                new Vector3d(-15, 0, 45),
                 MaterialType.WOOD);
         AllTriangleModels.add(OneTriangleModel);
         //крышка тумбы
-        OneTriangleModel = new TriangleModel(new Vector3d(-15,20,60),
-                new Vector3d(-15,20,90),
-                new Vector3d(15,20,90),
-                new Vector3d(15, 20,60),
+        OneTriangleModel = new TriangleModel(new Vector3d(-15,40,45),
+                new Vector3d(-15,40,75),
+                new Vector3d(15,40,75),
+                new Vector3d(15, 40,45),
                 MaterialType.WOOD);
         AllTriangleModels.add(OneTriangleModel);
-        /*
-        //1е зеркало
-        OneTriangleModel = new TriangleModel(new Vector3d(10.25, 40, 75), new Vector3d(10.25, 60 ,75), new Vector3d(12, 60, 67.25), MaterialType.MIRROR);
+
+
+
+        //рамка для левого зеркала (нижний брусок лево)
+        OneTriangleModel = new TriangleModel(new Vector3d(-14.25, 40, 66),
+                new Vector3d(-14.25, 41, 66),
+                new Vector3d(-13.8, 41, 65.2),
+                new Vector3d(-13.8, 40, 65.2),
+                MaterialType.BROWNWOOD);
         AllTriangleModels.add(OneTriangleModel);
-        //2е зеркало
-        OneTriangleModel = new TriangleModel(new Vector3d(4, 40, 80), new Vector3d(4, 60, 80), new Vector3d(10.25, 60, 75), MaterialType.MIRROR);
+        //рамка для левого зеркала (нижний брусок перед)
+        OneTriangleModel = new TriangleModel(new Vector3d(-13.8, 40, 65.2),
+                new Vector3d(-13.8, 41, 65.2),
+                new Vector3d(-6.5, 41, 69.12),
+                new Vector3d(-6.5, 40, 69.12),
+                MaterialType.BROWNWOOD);
         AllTriangleModels.add(OneTriangleModel);
-        //3е зеркало
-        OneTriangleModel = new TriangleModel(new Vector3d(4,40,80), new Vector3d(-4, 40, 80), new Vector3d(-4 , 60, 80), MaterialType.MIRROR);
+        //рамка для левого зеркала (нижний брусок право)
+        OneTriangleModel = new TriangleModel(new Vector3d(-6.5, 40, 69.12),
+                new Vector3d(-6.5, 41, 69.12),
+                new Vector3d(-7, 41, 70),
+                new Vector3d(-7, 40, 70),
+                MaterialType.BROWNWOOD);
         AllTriangleModels.add(OneTriangleModel);
+        //рамка для левого зеркала (нижний брусок верх)
+        OneTriangleModel = new TriangleModel(new Vector3d(-14.25, 41, 66),
+                new Vector3d(-7, 41, 70),
+                new Vector3d(-6.5, 41, 69.12),
+                new Vector3d(-13.8, 41, 65.2),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+
+        //рамка для левого зеркала (левый брусок лево)
+        OneTriangleModel = new TriangleModel(new Vector3d(-14.25, 41, 66),
+                new Vector3d(-14.25, 59, 66),
+                new Vector3d(-13.8, 59, 65.2),
+                new Vector3d(-13.8, 41, 65.2),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //рамка для левого зеркала (левый брусок перед)
+        OneTriangleModel = new TriangleModel(new Vector3d(-13.8, 41, 65.2),
+                new Vector3d(-13.8, 59, 65.2),
+                new Vector3d(-12.9, 59, 65.66),
+                new Vector3d(-12.9, 41, 65.66),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //рамка для левого зеркала (левый брусок право)
+        OneTriangleModel = new TriangleModel(new Vector3d(-12.9, 41, 65.66),
+                new Vector3d(-12.9, 59, 65.66),
+                new Vector3d(-13.36, 59, 66.5),
+                new Vector3d(-13.36, 41, 65.66),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+
+        //рамка для левого зеркала (правый брусок лево)
+        OneTriangleModel = new TriangleModel(new Vector3d(-7.87, 41, 69.52),
+                new Vector3d(-7.87, 59, 69.52),
+                new Vector3d(-7.4, 59, 68.62),
+                new Vector3d(-7.4, 41, 68.62),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //рамка для левого зеркала (правый брусок перед)
+        OneTriangleModel = new TriangleModel(new Vector3d(-7.4, 41, 68.62),
+                new Vector3d(-7.4, 59, 68.62),
+                new Vector3d(-6.5, 59, 69.12),
+                new Vector3d(-6.5, 41, 69.12),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //рамка для левого зеркала (правый брусок право)
+        OneTriangleModel = new TriangleModel(new Vector3d(-6.5, 41, 69.12),
+                new Vector3d(-6.5, 59, 69.12),
+                new Vector3d(-7, 59, 70),
+                new Vector3d(-7, 41, 70),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+
+        //рамка для левого зеркала (верхний брусок лево)
+        OneTriangleModel = new TriangleModel(new Vector3d(-14.25, 59, 66),
+                new Vector3d(-14.25, 60, 66),
+                new Vector3d(-13.8, 60, 65.2),
+                new Vector3d(-13.8, 59, 65.2),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //рамка для левого зеркала (верхний брусок низ)
+        OneTriangleModel = new TriangleModel(new Vector3d(-13.8, 59, 65.2),
+                new Vector3d(-6.5, 59, 69.12),
+                new Vector3d(-7, 59, 70),
+                new Vector3d(-14.25, 59, 66),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //рамка для левого зеркала (верхний брусок верх)
+        OneTriangleModel = new TriangleModel(new Vector3d(-13.8, 60, 65.2),
+                new Vector3d(-14.25, 60, 66),
+                new Vector3d(-7, 60, 70),
+                new Vector3d(-6.5, 60, 69.12),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //рамка для левого зеркала (верхний брусок перед)
+        OneTriangleModel = new TriangleModel(new Vector3d(-13.8, 59, 65.2),
+                new Vector3d(-13.8, 60, 65.2),
+                new Vector3d(-6.5, 60, 69.12),
+                new Vector3d(-6.5, 59, 69.12),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //рамка для левого зеркала (верхний брусок право)
+        OneTriangleModel = new TriangleModel(new Vector3d(-6.5, 59, 69.12),
+                new Vector3d(-6.5, 60, 69.12),
+                new Vector3d(-7, 60, 70),
+                new Vector3d(-7, 59, 70),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //рамка для левого зеркала (верхний брусок лево)
+        OneTriangleModel = new TriangleModel(new Vector3d(-14.25, 59, 66),
+                new Vector3d(-14.25, 60, 66),
+                new Vector3d(-13.8, 60, 65.2),
+                new Vector3d(-13.8, 59, 65.2),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+
+        //левое зеркало
+        OneTriangleModel = new TriangleModel(new Vector3d(-7, 40, 70),
+                new Vector3d(-14.25, 40, 66),
+                new Vector3d(-14.25, 60, 66),
+                new Vector3d(-7, 60, 70),
+                MaterialType.MIRROR);
+        AllTriangleModels.add(OneTriangleModel);
+
+        //рамка для правого зеркала (нижний брусок лево)
+        OneTriangleModel = new TriangleModel(new Vector3d(7, 40, 70),
+                new Vector3d(7, 41, 70),
+                new Vector3d(6.5, 41, 69.12),
+                new Vector3d(6.5, 40, 69.12),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //рамка для правого зеркала (нижний брусок перед)
+        OneTriangleModel = new TriangleModel(new Vector3d(6.5, 40, 69.12),
+                new Vector3d(6.5, 41, 69.12),
+                new Vector3d(13.8, 41, 65.2),
+                new Vector3d(13.8, 40, 65.2),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //рамка для правого зеркала (нижний брусок право)
+        OneTriangleModel = new TriangleModel(new Vector3d(13.8, 40,65.2),
+                new Vector3d(13.8, 41,65.2),
+                new Vector3d(14.25, 41, 66),
+                new Vector3d(14.25, 40, 66),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //рамка для правого зеркала (нижний брусок верх)
+        OneTriangleModel = new TriangleModel(new Vector3d(6.5, 41, 69.12),
+                new Vector3d(7, 41, 70),
+                new Vector3d(14.25, 41, 66),
+                new Vector3d(13.8, 41, 65.2),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //рамка для правого зеркала (левый брусок лево)
+        OneTriangleModel = new TriangleModel(new Vector3d(7, 41, 70),
+                new Vector3d(7, 59, 70),
+                new Vector3d(6.5, 59, 69.12),
+                new Vector3d(6.5, 41, 69.12),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //рамка для правого зеркала (левый брусок перед)
+        OneTriangleModel = new TriangleModel(new Vector3d(6.5, 41, 69.12),
+                new Vector3d(6.5, 59, 69.12),
+                new Vector3d(7.4, 59, 68.62),
+                new Vector3d(7.4, 41, 68.62),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //рамка для правого зеркала (левый брусок право)
+        OneTriangleModel = new TriangleModel(new Vector3d(7.4, 41, 68.62),
+                new Vector3d(7.4, 59, 68.62),
+                new Vector3d(7.87, 59, 69.52),
+                new Vector3d(7.87, 41, 69.52),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+
+        //рамка для правого зеркала (правый брусок лево)
+        OneTriangleModel = new TriangleModel(new Vector3d(13.36, 41, 66.5),
+                new Vector3d(13.36, 59, 66.5),
+                new Vector3d(12.9, 59, 65.66),
+                new Vector3d(12.9, 41, 65.66),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //рамка для правого зеркала (правый брусок перед)
+        OneTriangleModel = new TriangleModel(new Vector3d(12.9, 41, 65.66),
+                new Vector3d(12.9, 59, 65.66),
+                new Vector3d(13.8, 59, 65.2),
+                new Vector3d(13.8, 41, 65.2),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //рамка для правого зеркала (правый брусок право)
+        OneTriangleModel = new TriangleModel(new Vector3d(13.8, 41, 65.2),
+                new Vector3d(13.8, 59, 65.2),
+                new Vector3d(14.25, 59, 66),
+                new Vector3d(14.25, 41, 66),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+
+        //рамка для правого зеркала (верхний брусок лево)
+        OneTriangleModel = new TriangleModel(new Vector3d(14.25, 59, 66),
+                new Vector3d(14.25, 60, 66),
+                new Vector3d(13.8, 60, 65.2),
+                new Vector3d(13.8, 59, 65.2),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //рамка для правого зеркала (верхний брусок низ)
+        OneTriangleModel = new TriangleModel(new Vector3d(6.5, 59, 69.12),
+                new Vector3d(13.8, 59, 65.2),
+                new Vector3d(14.25, 59, 66),
+                new Vector3d(7, 59, 70),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //рамка для правого зеркала (верхний брусок верх)
+        OneTriangleModel = new TriangleModel(new Vector3d(6.5, 60, 69.12),
+                new Vector3d(7, 59, 70),
+                new Vector3d(14.25, 59, 66),
+                new Vector3d(13.8, 59, 65.2),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //рамка для правого зеркала (верхний брусок перед)
+        OneTriangleModel = new TriangleModel(new Vector3d(6.5, 59, 69.12),
+                new Vector3d(6.5, 60, 69.12),
+                new Vector3d(13.8, 60, 65.2),
+                new Vector3d(13.8, 59, 65.2),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //рамка для правого зеркала (верхний брусок право)
+        OneTriangleModel = new TriangleModel(new Vector3d(13.8, 59, 65.2),
+                new Vector3d(13.8, 60, 65.2),
+                new Vector3d(14.25, 60, 66),
+                new Vector3d(14.25, 59, 66),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //рамка для правого зеркала (верхний брусок лево)
+        OneTriangleModel = new TriangleModel( new Vector3d(7, 59, 70),
+                new Vector3d(7, 60, 70),
+                new Vector3d(6.5, 60, 69.12),
+                new Vector3d(6.5, 59, 69.12),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+
+        //правое зеркало
+        OneTriangleModel = new TriangleModel(new Vector3d(7, 40, 70),
+                new Vector3d(14.25, 40, 66),
+                new Vector3d(14.25, 60, 66),
+                new Vector3d(7, 60, 70),
+                MaterialType.MIRROR);
+        AllTriangleModels.add(OneTriangleModel);
+
+        //рамка для центрального зеркала (нижний брусок лево)
+        OneTriangleModel = new TriangleModel(new Vector3d(-6, 40, 70),
+                new Vector3d(-6, 41, 70),
+                new Vector3d(-6, 41, 69),
+                new Vector3d(-6, 40, 69),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //рамка для центрального зеркала (нижний брусок право)
+        OneTriangleModel = new TriangleModel(new Vector3d(6, 40, 70),
+                new Vector3d(6, 40, 69),
+                new Vector3d(6, 41, 69),
+                new Vector3d(6, 41, 70),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //рамка для центрального зеркала ( нижний брусок перед)
+        OneTriangleModel = new TriangleModel(new Vector3d(-6, 40, 70),
+                new Vector3d(-6, 41, 70),
+                new Vector3d(6, 41, 69),
+                new Vector3d(6, 40, 69),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //рамка для центрального зеркала (нижний брусок верх)
+        OneTriangleModel = new TriangleModel(new Vector3d(-6, 41, 70),
+                new Vector3d(6, 41, 70),
+                new Vector3d(6, 41, 69),
+                new Vector3d(-6, 41, 69),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+
+        //рамка для центрального зеркала (левый брусок лево)
+        OneTriangleModel = new TriangleModel(new Vector3d(-6, 41, 70),
+                new Vector3d(-6, 59, 70),
+                new Vector3d(-6, 59, 69),
+                new Vector3d(-6, 41, 69),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //рамка для центрального зеркала (левый брусок перед)
+        OneTriangleModel = new TriangleModel(new Vector3d(-6, 41, 69),
+                new Vector3d(-6, 59, 69),
+                new Vector3d(-5, 59, 69),
+                new Vector3d(-5, 41, 69),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //рамка для центрального зеркала (левый брусок право)
+        OneTriangleModel = new TriangleModel(new Vector3d(-5, 41, 70),
+                new Vector3d(-5, 41, 69),
+                new Vector3d(-5, 59, 69),
+                new Vector3d(-5, 59, 70),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+
+        //рамка для центрального зеркала (правый брусок лево)
+        OneTriangleModel = new TriangleModel(new Vector3d(5, 41, 70),
+                new Vector3d(5, 59, 70),
+                new Vector3d(5, 59, 69),
+                new Vector3d(5, 41, 69),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //рамка для центрального зеркала (правый брусок перед)
+        OneTriangleModel = new TriangleModel(new Vector3d(5, 41, 69),
+                new Vector3d(5, 59, 69),
+                new Vector3d(6, 59, 69),
+                new Vector3d(6, 41, 69),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //рамка для центрального зеркала (правый брусок право)
+        OneTriangleModel = new TriangleModel(new Vector3d(6, 41, 70),
+                new Vector3d(6, 41, 69),
+                new Vector3d(6, 59, 69),
+                new Vector3d(6, 59, 70),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+
+        //рамка для центрального зеркала (верхний брусок лево)
+        OneTriangleModel = new TriangleModel(new Vector3d(-6, 59, 70),
+                new Vector3d(-6, 60, 70),
+                new Vector3d(-6, 60, 69),
+                new Vector3d(-6, 59, 69),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //рамка для центрального зеркала (верхний брусок верх)
+        OneTriangleModel = new TriangleModel(new Vector3d(-6, 60, 69),
+                new Vector3d(-6, 60, 70),
+                new Vector3d(6, 60, 70),
+                new Vector3d(6, 60, 69),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //рамка для центрального зеркала (верхний брусок перед)
+        OneTriangleModel = new TriangleModel(new Vector3d(-6, 59, 69),
+                new Vector3d(-6, 60, 69),
+                new Vector3d(6, 60, 69),
+                new Vector3d(6, 59, 69),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //рамка для центрального зеркала (верхний брусок низ)
+        OneTriangleModel = new TriangleModel(new Vector3d(-6, 59, 70),
+                new Vector3d(-6, 60, 70),
+                new Vector3d(-6, 60, 69),
+                new Vector3d(-6, 59, 69),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+        //рамка для центрального зеркала (верхний брусок право)
+        OneTriangleModel = new TriangleModel(new Vector3d(6, 59, 69),
+                new Vector3d(6, 60, 69),
+                new Vector3d(6, 60, 70),
+                new Vector3d(6, 59, 70),
+                MaterialType.BROWNWOOD);
+        AllTriangleModels.add(OneTriangleModel);
+
+        //центральное зеркало
+        OneTriangleModel = new TriangleModel(new Vector3d(6,40,70),
+                new Vector3d(-6, 40, 70),
+                new Vector3d(-6 , 60, 70),
+                new Vector3d(6, 60, 70),
+                MaterialType.MIRROR);
+        AllTriangleModels.add(OneTriangleModel);
+
+
+
         //4 зеркало
-        OneTriangleModel = new TriangleModel(new Vector3d(-4, 60,80), new Vector3d(-4,60,80), new Vector3d(-10.25, 60,75), MaterialType.MIRROR);
-        AllTriangleModels.add(OneTriangleModel);
+        //OneTriangleModel = new TriangleModel(new Vector3d(11.25, 40,67),
+          //      new Vector3d(5,40,70),
+            //    new Vector3d(5, 60,70),
+              //  new Vector3d(11.25, 60,67),
+                //MaterialType.MIRROR);
+        //AllTriangleModels.add(OneTriangleModel);
+
         //5е зеркало
-        OneTriangleModel = new TriangleModel(new Vector3d(-10.25, 40, 75), new Vector3d(-10.25, 60,75), new Vector3d(-12,60,67.25), MaterialType.MIRROR);
-        AllTriangleModels.add(OneTriangleModel);
-        */
+       //OneTriangleModel = new TriangleModel(new Vector3d(-5, 60, 70),
+        //new Vector3d(-5, 80,62),
+          //      new Vector3d(5,80,62),
+            //    new Vector3d(5,60,70),
+              //  MaterialType.MIRROR);
+        //AllTriangleModels.add(OneTriangleModel);
+
     }
 
     public void RenderScene(Display3D display) {

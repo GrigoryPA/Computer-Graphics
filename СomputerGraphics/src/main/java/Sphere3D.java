@@ -3,21 +3,21 @@ import java.awt.*;
 
 public class Sphere3D {
     public Vector3d center;
-    public int radius = 20;
+    public double radius = 20;
     public Material3D material;
 
-    public Sphere3D(int x, int y, int z, int d, int R, int G, int B){
+    public Sphere3D(double x, double y, double z, double d, int R, int G, int B){
         center = new Vector3d (x,y,z);
         radius = d;
         material = new Material3D(new Color(R,G,B), new double[]{1,0}, 1);
     }
 
     public Sphere3D(JTable table, int row){
-        center = new Vector3d (Integer.parseInt((String) table.getValueAt(row, 0)),
-                Integer.parseInt((String) table.getValueAt(row, 1)),
-                Integer.parseInt((String) table.getValueAt(row, 2)));
+        center = new Vector3d (Double.parseDouble((String) table.getValueAt(row, 0)),
+                Double.parseDouble((String) table.getValueAt(row, 1)),
+                Double.parseDouble((String) table.getValueAt(row, 2)));
 
-        radius = Integer.parseInt((String) table.getValueAt(row, 3));
+        radius = Double.parseDouble((String) table.getValueAt(row, 3));
 
         material = new Material3D(Integer.parseInt((String) table.getValueAt(row, 4)));
     }

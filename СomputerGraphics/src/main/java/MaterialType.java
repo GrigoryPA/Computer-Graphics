@@ -4,5 +4,6 @@ public enum MaterialType
     REDWOOD,
     MIRROR,
     GLASS,
-    WOOD
+    WOOD,
+    BROWNWOOD
 }
