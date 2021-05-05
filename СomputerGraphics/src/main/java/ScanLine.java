@@ -1,21 +1,29 @@
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static java.lang.Math.abs;
 
 public class ScanLine {
-
     ScreenData screen;
     Vector<Polyhedron> PolyhedronTable;
-    Vector<Edge> EdgeTable;
+    //Vector<Edge> EdgeTable;
     Map<Integer, ArrayList<Polyhedron>> ScanGroupTable;
     ArrayList<Polyhedron> ActiveLinePolyTable;
     ArrayList<EdgeData> ActiveLineEdgeTable;
-    Integer minKey = Integer.MIN_VALUE;
+    Integer topLine = Integer.MIN_VALUE;
+
+    private static class visibleSegment {
+        private int polyId;
+
+        visibleSegment(int polyId) {
+            this.polyId = polyId;
+        }
+
+        public int getPolyId() {
+            return polyId;
+        }
+    }
 
     ScanLine(Vector<Polyhedron> polyhedronTable, Vector<Edge> edgeTable, ScreenData screen) {
         PolyhedronTable = polyhedronTable;
@@ -23,26 +31,130 @@ public class ScanLine {
         for (Polyhedron polyhedron : PolyhedronTable) {
             polyhedron.createEdges();
         }
-        EdgeTable = combineEdges();
-        //GroupSortingTable = sortEdges();
+        createScanGroupTable();
     }
 
-    void ScanLine() {
-        ActiveLinePolyTable = cloneList(ScanGroupTable.get(minKey));
-        ActiveLineEdgeTable = createALET();
+    void run() {
+        // Алгоритм начинает работу с верхней строки
+        for (int scanLine = topLine; scanLine < screen.height; scanLine++) {
+            addALPT(scanLine);
+            addALET(scanLine);
+            sortALET();
 
+            // Обработка ребёр
+            correctALET(scanLine);
+            correctALPT();
+        }
     }
 
-    private ArrayList<EdgeData> createALET() {
-        ArrayList<EdgeData> ActiveLineEdgeTable;
+    private void addALPT(int scanLine) {
+        for (Polyhedron p : ScanGroupTable.get(scanLine)) {
+            for (Polyhedron l : ActiveLinePolyTable) {
+                if (l.polyhedronId != p.polyhedronId)
+                    ActiveLinePolyTable.add(p);
+            }
+        }
+    }
+
+    private void addALET(Integer scanLine) {
+        for (Polyhedron p : ActiveLinePolyTable) {
+            for (Edge e : p.edges) {
+                if (isBetween((int) e.start.y, (int) e.end.y, scanLine))
+                    ActiveLineEdgeTable.add(new EdgeData(e, scanLine));
+            }
+        }
+    }
+
+    private void sortALET() {
+        ActiveLineEdgeTable.sort(new xEdgeDataComparator());
+    }
+
+    public static boolean isBetween(int a, int b, int checkedInt) {
+        return b > a ? checkedInt >= a && checkedInt <= b : checkedInt >= b && checkedInt <= a;
+    }
+
+    void processEdges(int scanLine) {
+        int x_left = 0;
+        int x_right = 0;
+        int x_max = screen.width;
+        int polyCounter = 0;
+        int seenId = -1;
+        visibleSegment visibleSegment = new visibleSegment(-1);
+
+        if (!(ActiveLineEdgeTable.isEmpty())) {
+            EdgeData current = ActiveLineEdgeTable.get(0);
+            current.getPolyByEdgeData();
+            x_right = current.x;
+            if (polyCounter == 0) {
+                //видимый отрезок - фон
+                visibleSegment.polyId = -1;
+            } else {
+                if (polyCounter > 1) {
+                    visibleSegment.polyId = getPolyLeftZMax().polyhedronId;
+                } else {
+                    visibleSegment.polyId = current.getPolyByEdgeData().polyhedronId;
+                }
+            }
+            // изменить признак активности многоугольника
+            if (active == 0)
+                active = 1;
+            else
+                active = 0;
+            if (active == 0)
+                polyCounter--;
+            else
+                polyCounter++;
+            print(visibleSegment.polyId);
+            x_left = x_right;
+        } else {
+            if (x_left < x_max) {
+                x_right = x_max;
+                visibleSegment.polyId = -1;
+            } else {
+                return;
+            }
+
+        }
+    }
 
 
-        return ActiveLineEdgeTable;
+
+    private Polyhedron getPolyLeftZMax() { // to do
+
+        return null;
+    }
+
+    private void correctALET(int scanLine) {
+        for (EdgeData e : ActiveLineEdgeTable) {
+            e.getDelta_y(scanLine);
+            e.correctX();
+        }
+    }
+
+    private void correctALPT() {
+        for (Polyhedron p : ActiveLinePolyTable) {
+            p.decreaseTotalScanStrings();
+            if (p.totalScanStrings < 0)
+                ActiveLinePolyTable.remove(p);
+        }
     }
 
     void putPoints(int start, int end, int y, Color currentColor) {
         for (int x = start; x < end; x++) {
             screen.pointsColor[x][y] = currentColor;
+        }
+    }
+
+    void createScanGroupTable() {
+        ScanGroupTable = new HashMap<>();
+        topLine = Integer.MIN_VALUE;
+        for (Polyhedron p : PolyhedronTable) {
+            if (!ScanGroupTable.containsKey(p.topScanString)) { // Если для этой строки ранее не были найдены многоугольники
+                ScanGroupTable.put(p.topScanString, new ArrayList<>()); // создать для неё список
+            }
+            ScanGroupTable.get(p.topScanString).add(p); // добавить многоугольник в список
+            if (p.topScanString > topLine)
+                topLine = p.topScanString;
         }
     }
 
@@ -53,53 +165,6 @@ public class ScanLine {
         }
         return null;
     }
-
-    void AET_Step() {
-
-    }
-
-    Vector<Edge> combineEdges() {
-        Vector<Edge> combinedEdges = null;
-
-        for (Polyhedron polyhedron : PolyhedronTable) {
-            combinedEdges.addAll(polyhedron.edges);
-        }
-
-        return combinedEdges;
-    }
-
-    Map<Integer, ArrayList<Polyhedron>> sortEdges() {
-        Map<Integer, ArrayList<Polyhedron>> groupedPolyhedrons = new HashMap<>();
-
-        for (Polyhedron polyhedron : PolyhedronTable) {
-            if (!groupedPolyhedrons.containsKey(polyhedron.topScanString)) {
-                groupedPolyhedrons.put(polyhedron.topScanString, new ArrayList<>());
-            }
-            groupedPolyhedrons.get(polyhedron.topScanString).add(polyhedron);
-        }
-
-        return groupedPolyhedrons;
-    }
-
-    /*
-    Map<Double, ArrayList<Edge>> sortEdges() {
-        Map<Double, ArrayList<Edge>> groupedEdges = new HashMap<>();
-
-        for (Edge edge : EdgeTable) {
-            if (!groupedEdges.containsKey(edge.y_min)) {
-                groupedEdges.put(edge.y_min, new ArrayList<>());
-            }
-            groupedEdges.get(edge.y_min).add(edge); // Надо сортировать по tg alpha
-            if (groupedEdges.get(edge.y_min).size() > 1) {
-                groupedEdges.get(edge.y_min).sort(new tanEdgeComparator());
-            }
-            if (minKey > edge.y_min)
-                minKey = edge.y_min;
-        }
-
-        return groupedEdges;
-    }
-     */
 
     public static ArrayList<Polyhedron> cloneList(ArrayList<Polyhedron> original) {
         ArrayList<Polyhedron> clonedList = new ArrayList<>(original.size());
@@ -118,26 +183,66 @@ public class ScanLine {
 
         EdgeData(Edge edge, int scanLine) {
             this.edge = edge;
-            x = getIntersectionX(edge, scanLine);
-            delta_x = getDeltaX(edge, scanLine);
-            delta_y = abs((int) (edge.start.y - edge.end.y));
+            getIntersectionX(scanLine);
+            getDelta_x(scanLine);
+            getDelta_y(scanLine);
             flag = 0;
         }
 
-        int getIntersectionX(Edge edge, int scanLine) {
+        void getIntersectionX(int scanLine) {
             double a = (edge.start.y - edge.end.y) / (edge.start.x - edge.end.x);
             double b = edge.start.y - (a * edge.start.x);
             double c = 0;
             double d = scanLine;
-            Double x = (d - c) / (a - b);
-            return x.intValue();
+            Double _x = (d - c) / (a - b);
+            x = _x.intValue();
         }
 
-        double getDeltaX(Edge edge, int scanLine) {
+        void getDelta_x(int scanLine) {
             double a = (edge.start.y - edge.end.y) / (edge.start.x - edge.end.x);
             double b = edge.start.y - (a * edge.start.x);
-            double delta_x = ((scanLine - b) / a) - ((scanLine + 1 - b) / a);
-            return delta_x;
+            delta_x = ((scanLine - b) / a) - ((scanLine + 1 - b) / a);
+        }
+
+        void getDelta_y(int scanLine) {
+            int top;
+            int bot;
+            if (edge.start.y > edge.end.y) {
+                top = (int) edge.start.y;
+                bot = (int) edge.end.y;
+            } else {
+                top = (int) edge.end.y;
+                bot = (int) edge.start.y;
+            }
+            if (bot < scanLine)
+                delta_y = -1;
+            else if (top < scanLine)
+                delta_y = abs(scanLine - bot);
+            else
+                delta_y = abs(top - bot);
+        }
+
+        void correctX() {
+            x += delta_x;
+        }
+
+        private Polyhedron getPolyByEdgeData() {
+            for (Polyhedron p : ActiveLinePolyTable) {
+                if (p.edges.contains(this.edge))
+                    return p;
+            }
+            return null;
+        }
+    }
+
+    class xEdgeDataComparator implements Comparator<EdgeData> {
+        @Override
+        public int compare(EdgeData o1, EdgeData o2) {
+            if (o1.x - o2.x > 0)
+                return 1;
+            if (o1.x - o2.x < 0)
+                return -1;
+            return 0;
         }
     }
 }
@@ -162,7 +267,6 @@ class Polyhedron {
     Color color = Color.BLACK;
     Vector<Point3D> points;
     ArrayList<Edge> edges;
-
 
     public Polyhedron(double a, double b, double c, double d, Color color) {
         A = a;
@@ -226,7 +330,7 @@ class Polyhedron {
         edges.add(new Edge(start, end, this.polyhedronId));
     }
 
-    void getTopScanString() {
+    private void getTopScanString() {
         topScanString = Integer.MIN_VALUE;
         for (Edge edge : edges) {
             if (edge.start.y > topScanString)
@@ -234,7 +338,7 @@ class Polyhedron {
         }
     }
 
-    void getBotScanString() {
+    private void getBotScanString() {
         botScanString = Integer.MAX_VALUE;
         for (Edge edge : edges) {
             if (edge.start.y < botScanString)
@@ -242,11 +346,15 @@ class Polyhedron {
         }
     }
 
-    void getTotalScanStrings() {
+    private void getTotalScanStrings() {
         totalScanStrings = topScanString - botScanString + 1;
     }
 
-    public Integer getRandomNumber(int min, int max) {
+    void decreaseTotalScanStrings() {
+        topScanString--;
+    }
+
+    private Integer getRandomNumber(int min, int max) {
         return (int) ((Math.random() * (max - min)) + min);
     }
 }
@@ -254,7 +362,6 @@ class Polyhedron {
 class Edge {
     int ownerPolyhedronId;
     Point3D start, end;
-    //double tg_alpha;
 
     public Edge(Point3D start, Point3D end, int ownerPolyhedronId) {
         this.ownerPolyhedronId = ownerPolyhedronId;
@@ -269,15 +376,3 @@ class Edge {
     }
 
 }
-/*
-class tanEdgeComparator implements Comparator<Edge> {
-    @Override
-    public int compare(Edge o1, Edge o2) {
-        if (o1.tg_alpha-o2.tg_alpha > 0)
-            return 1;
-        if (o1.tg_alpha-o2.tg_alpha < 0)
-            return -1;
-        return 0;
-    }
-}
- */
