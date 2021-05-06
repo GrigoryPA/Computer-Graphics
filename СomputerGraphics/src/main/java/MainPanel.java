@@ -11,20 +11,26 @@ public class MainPanel {
     private static JButton button3d;
     private static JButton button2d;
     private static JButton buttonRT;
+    private static JButton buttonSL;
 
     public static void main(String[] args) {
-        frameChoice =new JFrame();
-        frameChoice.setBounds(100,100, 256, 450);
+        frameChoice = new JFrame();
+        frameChoice.setBounds(100, 100, 256, 450);
         frameChoice.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         button2d = new JButton(new ImageIcon("src/main/resources/icons/2d.png"));
         button3d = new JButton(new ImageIcon("src/main/resources/icons/3d.png"));
         buttonRT = new JButton(new ImageIcon("src/main/resources/icons/2d.png"));
-        frameChoice.add(button2d,BorderLayout.NORTH);
-        frameChoice.add(button3d,BorderLayout.CENTER);
-        frameChoice.add(buttonRT,BorderLayout.SOUTH);
+        buttonSL = new JButton("Scan Line");
+
+        JPanel panel = new JPanel(new GridLayout(4, 1));
+        panel.add(button2d);
+        panel.add(button3d);
+        panel.add(buttonRT);
+        panel.add(buttonSL);
+        frameChoice.add(panel);
         frameChoice.setVisible(true);
 
-        button2d.addActionListener(new ActionListener(){
+        button2d.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 frameChoice.setVisible(false);
                 frame2d = new MainFrame2D();
@@ -32,7 +38,7 @@ public class MainPanel {
             }
         });
 
-        button3d.addActionListener(new ActionListener(){
+        button3d.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 frameChoice.setVisible(false);
                 frame3d = new MainFrame3D();
@@ -40,12 +46,22 @@ public class MainPanel {
             }
         });
 
-        buttonRT.addActionListener(new ActionListener(){
+        buttonSL.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                frameChoice.setVisible(false);
+                MainFrameSL frameSL = new MainFrameSL();
+                frameSL.MakeAndShow();
+            }
+        });
+
+        buttonRT.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 frameChoice.setVisible(false);
                 frameRT = new MainFrameRT();
                 frameRT.MakeAndShow();
             }
         });
+
+
     }
 }

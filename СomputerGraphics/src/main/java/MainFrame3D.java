@@ -91,7 +91,7 @@ public class MainFrame3D {
         frame.add(toolBar1, BorderLayout.NORTH);
 
 
-        String[] headers = {"X1", "Y1", "Z1","X2", "Y2", "Z2"};
+        String[] headers = {"X1", "Y1", "Z1", "X2", "Y2", "Z2"};
         OneTab = new MyTable(headers, "Main", 1);
         AllTabs.add(OneTab);
         tablePanel = new JTabbedPane();

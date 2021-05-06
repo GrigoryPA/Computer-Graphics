@@ -40,8 +40,7 @@ public class ScanLine {
             addALPT(scanLine);
             addALET(scanLine);
             sortALET();
-
-            // Обработка ребёр
+            processEdges(scanLine);
             correctALET(scanLine);
             correctALPT();
         }
@@ -78,6 +77,7 @@ public class ScanLine {
         int x_right = 0;
         int x_max = screen.width;
         int polyCounter = 0;
+        int active = 0;
         int seenId = -1;
         visibleSegment visibleSegment = new visibleSegment(-1);
 
@@ -90,7 +90,7 @@ public class ScanLine {
                 visibleSegment.polyId = -1;
             } else {
                 if (polyCounter > 1) {
-                    visibleSegment.polyId = getPolyLeftZMax().polyhedronId;
+                    visibleSegment.polyId = getPolyLeftZMax(scanLine, x_left).polyhedronId;
                 } else {
                     visibleSegment.polyId = current.getPolyByEdgeData().polyhedronId;
                 }
@@ -104,24 +104,39 @@ public class ScanLine {
                 polyCounter--;
             else
                 polyCounter++;
-            print(visibleSegment.polyId);
+            print(x_left, x_right, visibleSegment.polyId, scanLine);
             x_left = x_right;
         } else {
             if (x_left < x_max) {
                 x_right = x_max;
                 visibleSegment.polyId = -1;
+                print(x_left, x_right, visibleSegment.polyId, scanLine);
             } else {
                 return;
             }
-
         }
     }
 
+    private void print(int start, int end, int polyId, int scanLine) {
+        Color color = getPolyByIdALPT(polyId).color;
+        for (int i = start; i < end; i++) {
+            screen.pointsColor[i][scanLine] = color;
+        }
+    }
 
-
-    private Polyhedron getPolyLeftZMax() { // to do
-
-        return null;
+    private Polyhedron getPolyLeftZMax(int scanLine, int x_left) { // to do
+        Polyhedron r = null;
+        int x = x_left;
+        int y = scanLine;
+        double z_max = Double.MIN_VALUE;
+        for (Polyhedron p : ActiveLinePolyTable) {
+            double z = (p.D - (p.A * x) - (p.B * y)) / p.C;
+            if (z > z_max) {
+                z_max = z;
+                r = p;
+            }
+        }
+        return r;
     }
 
     private void correctALET(int scanLine) {
@@ -136,12 +151,6 @@ public class ScanLine {
             p.decreaseTotalScanStrings();
             if (p.totalScanStrings < 0)
                 ActiveLinePolyTable.remove(p);
-        }
-    }
-
-    void putPoints(int start, int end, int y, Color currentColor) {
-        for (int x = start; x < end; x++) {
-            screen.pointsColor[x][y] = currentColor;
         }
     }
 
@@ -162,6 +171,14 @@ public class ScanLine {
         for (Polyhedron polyhedron : PolyhedronTable) {
             if (polyhedron.polyhedronId == edge.ownerPolyhedronId)
                 return polyhedron;
+        }
+        return null;
+    }
+
+    Polyhedron getPolyByIdALPT(int polyId) {
+        for (Polyhedron p : ActiveLinePolyTable) {
+            if (polyId == p.polyhedronId)
+                return p;
         }
         return null;
     }
@@ -277,7 +294,7 @@ class Polyhedron {
         this.color = color;
         polyhedronId = polyhedronCounter.incrementAndGet();
 
-        generatePoints(getRandomNumber(3, 6));
+        generatePoints(3/*getRandomNumber(3, 6)*/);
         createEdges();
         getTopScanString();
         getBotScanString();
@@ -300,7 +317,23 @@ class Polyhedron {
         totalScanStrings = p.totalScanStrings;
     }
 
-    Vector<Point3D> generatePoints(int n) { // генерация в точек в плоскости
+    public Polyhedron(double a, double b, double c, double d, Color color, Point3D[] point3D) {
+        A = a;
+        B = b;
+        C = c;
+        D = d;
+
+        this.color = color;
+        polyhedronId = polyhedronCounter.incrementAndGet();
+
+        generatePoints(point3D/*getRandomNumber(3, 6)*/);
+        createEdges();
+        getTopScanString();
+        getBotScanString();
+        getTotalScanStrings();
+    }
+
+    void generatePoints(int n) { // генерация в точек в плоскости
         // нужен метод, который отсортирует точки в плоскости по часовой стрелке, иначе бред
         // однако если генерить только треугольники, то такой проблемы нет
         int min = 100, max = 600;
@@ -316,7 +349,22 @@ class Polyhedron {
             } while ((z > 400) || (z < -400));
             points.add(new Point3D(x, y, z));
         }
-        return points;
+    }
+
+    void generatePoints(Point3D[] point3D) { // генерация в точек в плоскости по данным из таблицы
+        int min = 100, max = 600;
+
+        for (int i = 0; i < point3D.length; i++) {
+            double x;
+            double y;
+            double z;
+            do {
+                x = point3D[i].x;
+                y = point3D[i].y;
+                z = (D - (A * x) - (B * y)) / C;
+            } while (Math.abs(z) > 400);
+            points.add(new Point3D(x, y, z));
+        }
     }
 
     void createEdges() {
