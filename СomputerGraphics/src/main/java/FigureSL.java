@@ -1,9 +1,9 @@
 import javax.swing.*;
+import java.util.Map;
 
 public class FigureSL {
-    public Segment[] Polyhedron;
-    public Rectangle[] Points;
-    public FigureSL(JTable SegmentTable, JTable RectangleTable) {
+    /*
+    public FigureSL(Map<Integer, Tab> tabs) {
         //colorFigure=color;
         try {
             Polyhedron = new Segment[SegmentTable.getRowCount()];
@@ -50,4 +50,6 @@ public class FigureSL {
             }
         }
     }
+
+     */
 }

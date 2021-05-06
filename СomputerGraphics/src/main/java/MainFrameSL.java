@@ -4,7 +4,9 @@ import javax.swing.table.JTableHeader;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Vector;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class MainFrameSL extends MainFrame3D {
     private JFrame frame2D;
@@ -17,7 +19,7 @@ public class MainFrameSL extends MainFrame3D {
     private int countRef = 0;
 
     JTabbedPane tabbedPane = new JTabbedPane();
-    private Vector<>
+    private Map<Integer, Tab> tabs = new HashMap<>();
 
     public void MakeAndShow() {
         frame2D = new JFrame("Scan Line");
@@ -37,58 +39,48 @@ public class MainFrameSL extends MainFrame3D {
         random.setToolTipText("Create random segments");
 
         JToolBar toolBar1 = new JToolBar();
+        toolBar1.add(addPoly);
+        toolBar1.add(deletePoly);
         toolBar1.add(addRow);
         toolBar1.add(deleteRow);
         toolBar1.add(random);
         toolBar1.add(draw);
         frame2D.add(toolBar1, BorderLayout.NORTH);
-
-        Font font = new Font("Verdana", Font.PLAIN, 24);
-        Font fontHeaders = new Font("Verdana", Font.CENTER_BASELINE, 16);
-
-        String[] PolyHeaders = {"A", "B", "C", "D", "R", "G", "B"};
-        String[][] PolyData;
-        PolyData = new String[1][7];
-        DefaultTableModel PolyTableModel = new DefaultTableModel(PolyData, PolyHeaders);
-        JTable PolyTable = new JTable(PolyTableModel);
-        JTableHeader PolyTableHeader = PolyTable.getTableHeader();
-        PolyTableHeader.setFont(fontHeaders);
-        PolyTable.setFont(font);
-        PolyTable.setAutoCreateRowSorter(true);
-        PolyTable.setRowHeight(PolyTable.getRowHeight() + 10);
-
-        String[] pointsHeaders = {"X", "Y"};
-        String[][] pointsData;
-        pointsData = new String[1][2];
-        DefaultTableModel PointsTableModel = new DefaultTableModel(pointsData, pointsHeaders);
-        JTable PointsTable = new JTable(PointsTableModel);
-        JTableHeader PointsTableHeader = PointsTable.getTableHeader();
-        PointsTableHeader.setFont(fontHeaders);
-        PointsTable.setFont(font);
-        PointsTable.setAutoCreateRowSorter(true);
-        PointsTable.setRowHeight(PointsTable.getRowHeight() + 10);
-
-
-        JScrollPane PolyScroller = new JScrollPane(PolyTable);
-        JScrollPane PointsScroller = new JScrollPane(PointsTable);
-        JPanel panel = new JPanel(new GridLayout(2, 1));
-        panel.add(PolyScroller);
-        panel.add(PointsScroller);
         frame2D.add(tabbedPane, BorderLayout.CENTER);
+
 
         frame2D.setVisible(true);
 
+        addPoly.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                createTab();
+            }
+        });
+
+        deletePoly.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                int selectedTab = tabbedPane.getSelectedIndex();
+                tabbedPane.remove(selectedTab);
+                int dataId = Integer.parseInt(tabbedPane.getTitleAt(selectedTab));
+                tabs.remove(dataId);
+            }
+        });
+
         addRow.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                PointsTableModel.addRow(new String[]{"", "", "", ""});
+                int selectedTab = tabbedPane.getSelectedIndex();
+                int dataId = Integer.parseInt(tabbedPane.getTitleAt(selectedTab));
+                tabs.get(dataId).Points.Data = new String[1][tabs.get(dataId).Points.Headers.length];
             }
         });
 
         deleteRow.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                int[] rows = PointsTable.getSelectedRows();
+                int selectedTab = tabbedPane.getSelectedIndex();
+                int dataId = Integer.parseInt(tabbedPane.getTitleAt(selectedTab));
+                int[] rows = tabs.get(dataId).Points.Table.getSelectedRows();
                 if (rows.length > 0) {
-                    PointsTableModel.removeRow(rows[0]);
+                    tabs.get(dataId).Points.TableModel.removeRow(rows[0]);
                 } else
                     JOptionPane.showMessageDialog(frame2D, "You must first select the rows.", "Failed to delete rows.", 0);
             }
@@ -96,99 +88,126 @@ public class MainFrameSL extends MainFrame3D {
 
         draw.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                display3D = new DisplayCS(new Color(217, 217, 217));
+                display3D = new Display3D();
                 //displayCS.AddCoordinateAxes();
-                figureOriginal = new FigureSL(PointsTable, PolyTable);
-                figureOriginal.AddFigure2DOnDisplayCS(Color.black);
+                figureOriginal = new FigureSL();
+                //figureOriginal.Add;
                 display3D.CreateAndOpenImage();
                 figureRealTime = figureOriginal;
             }
         });
 
-        check.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                display3D = new DisplayCS();
-                //displayCS.AddCoordinateAxes();
-                figureOriginal = new FigureSL(PointsTable, PolyTable);
-                figureOriginal.DrawCohenSutherland(Color.black, Color.blue);
-                display3D.CreateAndOpenImage();
-                //displayCS.UpdateImage();
-                figureRealTime = figureOriginal;
-            }
-        });
-
-        random.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                /* ??? ??????
-                PolyTableModel.removeRow(0);
-                PolyTableModel.addRow(new String[]{"-200", "-150", "200", "150"});
-                int a = PointsTableModel.getRowCount();
-                for (int i = 0; i < a; i++) {
-                    PointsTableModel.removeRow(0);
-                    int b = PointsTableModel.getRowCount();
+        random.addActionListener(new ActionListener() { // у меня плохая архитектура программы
+            public void actionPerformed(ActionEvent e) { // я тоже самое делаю в другом классе
+                tabs.clear();
+                tabbedPane.removeAll();
+                for (int i = 0; i < getRandomInteger(3, 6); i++) {
+                    createTab();
                 }
-                PointsTableModel.addRow(new String[]{"-40", "-15", "220", "220"});
-                //PolyTableModel.addRow(new String[]{"-200", "-150", "200", "150"});
-                */
-                PolyTableModel.removeRow(0);
-                PolyTableModel.addRow(new String[]{"-200", "-150", "200", "150"});
 
-                int a = PointsTableModel.getRowCount();
-                for (int i = 0; i < a; i++) {
-                    PointsTableModel.removeRow(0);
-                    int b = PointsTableModel.getRowCount();
-                }
-                for (int i = 0; i < 10; i++) {
-                    String[] temp = new String[4];
-                    for (int j = 0; j < temp.length; j += 2) {
-                        temp[j] = getRandomNumber(-350, 350).toString();
-                        temp[j + 1] = getRandomNumber(-250, 250).toString();
+                double A = 0, B = 0, C = 0, D = 0;
+                for (Map.Entry<Integer, Tab> entry : tabs.entrySet()) { // генерация плоскости
+
+                    int min = 100, max = 600;
+                    int nOfPointsToGen = getRandomInteger(3, 3);
+                    int[] x = new int[nOfPointsToGen];
+                    int[] y = new int[nOfPointsToGen];
+                    double[] z = new double[nOfPointsToGen];
+                    for (int i = 0, retry = 0; i < nOfPointsToGen; i++) { // генерация точек
+                        if (retry == 0) {
+                            A = getRandomDouble(1, 25) / 5;
+                            B = getRandomDouble(1, 25) / 5;
+                            C = getRandomDouble(1, 25) / 5;
+                            D = getRandomDouble(1, 100);
+                            retry = 20;
+                            i = 0;
+                        }
+                        do {
+                            x[i] = getRandomInteger(min, max);
+                            y[i] = getRandomInteger(min, max);
+                            z[i] = (D - (A * x[i]) - (B * y[i])) / C;
+                            retry--;
+                        } while (((z[i] > 500) || (z[i] < -500)) && (retry == 0));
                     }
-                    PointsTableModel.addRow(temp);
+                    String[][] a = new String[nOfPointsToGen][2];
+                    for (int j = 0; j < nOfPointsToGen; j++) {
+                        a[j][0] = String.valueOf(x[j]);
+                        a[j][1] = String.valueOf(y[j]);
+                        entry.getValue().Points.TableModel.addRow(a);
+                    }
+                    String[] b = new String[7];
+                    b[0] = String.valueOf(A);
+                    b[1] = String.valueOf(B);
+                    b[2] = String.valueOf(C);
+                    b[3] = String.valueOf(D);
+                    b[4] = String.valueOf(getRandomInteger(0, 255));
+                    b[5] = String.valueOf(getRandomInteger(0, 255));
+                    b[6] = String.valueOf(getRandomInteger(0, 255));
+                    entry.getValue().Poly.TableModel.removeRow(0);
+                    entry.getValue().Poly.TableModel.addRow(b);
                 }
             }
         });
     }
 
+    private static final AtomicInteger tabCounter = new AtomicInteger();
+
     void createTab() {
+        Integer tabId = tabCounter.incrementAndGet();
+        String tabName = tabId.toString();
 
-        Font font = new Font("Verdana", Font.PLAIN, 24);
-        Font fontHeaders = new Font("Verdana", Font.CENTER_BASELINE, 16);
-
-        String[] PolyHeaders = {"A", "B", "C", "D", "R", "G", "B"};
-        String[][] PolyData;
-        PolyData = new String[1][7];
-        DefaultTableModel PolyTableModel = new DefaultTableModel(PolyData, PolyHeaders);
-        JTable PolyTable = new JTable(PolyTableModel);
-        JTableHeader PolyTableHeader = PolyTable.getTableHeader();
-        PolyTableHeader.setFont(fontHeaders);
-        PolyTable.setFont(font);
-        PolyTable.setAutoCreateRowSorter(true);
-        PolyTable.setRowHeight(PolyTable.getRowHeight() + 10);
-
-        String[] pointsHeaders = {"X", "Y"};
-        String[][] pointsData;
-        pointsData = new String[1][2];
-        DefaultTableModel PointsTableModel = new DefaultTableModel(pointsData, pointsHeaders);
-        JTable PointsTable = new JTable(PointsTableModel);
-        JTableHeader PointsTableHeader = PointsTable.getTableHeader();
-        PointsTableHeader.setFont(fontHeaders);
-        PointsTable.setFont(font);
-        PointsTable.setAutoCreateRowSorter(true);
-        PointsTable.setRowHeight(PointsTable.getRowHeight() + 10);
-
-
-        JScrollPane PolyScroller = new JScrollPane(PolyTable);
-        JScrollPane PointsScroller = new JScrollPane(PointsTable);
         JPanel panel = new JPanel(new GridLayout(2, 1));
-        panel.add(PolyScroller);
-        panel.add(PointsScroller);
+        tabbedPane.addTab(tabName, panel);
 
-        tabbedPane.addTab("1", panel);
+        tabs.put(tabId, new Tab(new String[]{"A", "B", "C", "D", "R", "G", "B"},
+                new String[]{"X", "Y"}));
+
+        panel.add(tabs.get(tabId).Poly.Scroller);
+        panel.add(tabs.get(tabId).Poly.Scroller);
+
         frame2D.setVisible(true);
     }
 
-    public Integer getRandomNumber(int min, int max) {
+    public Integer getRandomInteger(int min, int max) {
         return (int) ((Math.random() * (max - min)) + min);
+    }
+
+    public Double getRandomDouble(int min, int max) {
+        return ((Math.random() * (max - min)) + min);
+    }
+}
+
+class Tab {
+    Table Poly;
+    Table Points;
+
+    Tab(String[] PolyHeaders, String[] PointsHeaders) {
+        Poly = new Table(PolyHeaders);
+        Points = new Table(PointsHeaders);
+    }
+}
+
+class Table {
+    String[] Headers;
+    String[][] Data;
+    DefaultTableModel TableModel;
+    JTable Table;
+    JTableHeader TableHeader;
+    JScrollPane Scroller;
+
+    Table(String[] Headers) {
+        Font font = new Font("Verdana", Font.PLAIN, 24);
+        Font fontHeaders = new Font("Verdana", Font.CENTER_BASELINE, 16);
+
+        this.Headers = Headers; //{"A", "B", "C", "D", "R", "G", "B"};
+        Data = new String[1][this.Headers.length];
+        TableModel = new DefaultTableModel(Data, Headers);
+        Table = new JTable(TableModel);
+        TableHeader = Table.getTableHeader();
+        TableHeader.setFont(fontHeaders);
+        Table.setFont(font);
+        Table.setAutoCreateRowSorter(true);
+        Table.setRowHeight(Table.getRowHeight() + 10);
+        Scroller = new JScrollPane(Table);
     }
 }
