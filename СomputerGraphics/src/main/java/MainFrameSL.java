@@ -23,7 +23,7 @@ public class MainFrameSL extends MainFrame3D {
 
     public void MakeAndShow() {
         frame2D = new JFrame("Scan Line");
-        frame2D.setBounds(50, 50, 400, 450);
+        frame2D.setBounds(50, 50, 800, 450);
         frame2D.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         JButton addPoly = new JButton("Add poly");
@@ -47,7 +47,6 @@ public class MainFrameSL extends MainFrame3D {
         toolBar1.add(draw);
         frame2D.add(toolBar1, BorderLayout.NORTH);
         frame2D.add(tabbedPane, BorderLayout.CENTER);
-
 
         frame2D.setVisible(true);
 
@@ -88,11 +87,12 @@ public class MainFrameSL extends MainFrame3D {
 
         draw.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                display3D = new Display3D();
+                ScreenData screen = new ScreenData(700, 700);
                 //displayCS.AddCoordinateAxes();
-                figureOriginal = new FigureSL();
+                figureOriginal = new FigureSL(tabs, screen);
+                figureOriginal.DrawScanLine();
                 //figureOriginal.Add;
-                display3D.CreateAndOpenImage();
+                screen.CreateAndOpenImage();
                 figureRealTime = figureOriginal;
             }
         });
@@ -108,17 +108,17 @@ public class MainFrameSL extends MainFrame3D {
                 double A = 0, B = 0, C = 0, D = 0;
                 for (Map.Entry<Integer, Tab> entry : tabs.entrySet()) { // генерация плоскости
 
-                    int min = 100, max = 600;
+                    int min = -300, max = 300;
                     int nOfPointsToGen = getRandomInteger(3, 3);
                     int[] x = new int[nOfPointsToGen];
                     int[] y = new int[nOfPointsToGen];
                     double[] z = new double[nOfPointsToGen];
                     for (int i = 0, retry = 0; i < nOfPointsToGen; i++) { // генерация точек
                         if (retry == 0) {
-                            A = getRandomDouble(1, 25) / 5;
-                            B = getRandomDouble(1, 25) / 5;
-                            C = getRandomDouble(1, 25) / 5;
-                            D = getRandomDouble(1, 100);
+                            A = getNotZeroDouble(-25, 25) / 5;
+                            B = getNotZeroDouble(-25, 25) / 5;
+                            C = getNotZeroDouble(-25, 25) / 5;
+                            D = getRandomDouble(-100, 100);
                             retry = 20;
                             i = 0;
                         }
@@ -127,19 +127,22 @@ public class MainFrameSL extends MainFrame3D {
                             y[i] = getRandomInteger(min, max);
                             z[i] = (D - (A * x[i]) - (B * y[i])) / C;
                             retry--;
+                            if ((z[i] > 500) || (z[i] < -500))
+                                retry--;
                         } while (((z[i] > 500) || (z[i] < -500)) && (retry == 0));
                     }
+                    entry.getValue().Points.TableModel.removeRow(0);
                     String[][] a = new String[nOfPointsToGen][2];
                     for (int j = 0; j < nOfPointsToGen; j++) {
                         a[j][0] = String.valueOf(x[j]);
                         a[j][1] = String.valueOf(y[j]);
-                        entry.getValue().Points.TableModel.addRow(a);
+                        entry.getValue().Points.TableModel.addRow(a[j]);
                     }
                     String[] b = new String[7];
-                    b[0] = String.valueOf(A);
-                    b[1] = String.valueOf(B);
-                    b[2] = String.valueOf(C);
-                    b[3] = String.valueOf(D);
+                    b[0] = String.format("%.2f", A);
+                    b[1] = String.format("%.2f", B);
+                    b[2] = String.format("%.2f", C);
+                    b[3] = String.format("%.2f", D);
                     b[4] = String.valueOf(getRandomInteger(0, 255));
                     b[5] = String.valueOf(getRandomInteger(0, 255));
                     b[6] = String.valueOf(getRandomInteger(0, 255));
@@ -163,17 +166,27 @@ public class MainFrameSL extends MainFrame3D {
                 new String[]{"X", "Y"}));
 
         panel.add(tabs.get(tabId).Poly.Scroller);
-        panel.add(tabs.get(tabId).Poly.Scroller);
+        panel.add(tabs.get(tabId).Points.Scroller);
 
         frame2D.setVisible(true);
     }
 
     public Integer getRandomInteger(int min, int max) {
-        return (int) ((Math.random() * (max - min)) + min);
+        double r = Math.random();
+        int d = max - min;
+        return (int) ((r * d) + min);
     }
 
     public Double getRandomDouble(int min, int max) {
         return ((Math.random() * (max - min)) + min);
+    }
+
+    private Double getNotZeroDouble(int min, int max) {
+        double A;
+        do {
+            A = getRandomDouble(min, max);
+        } while (A == 0);
+        return A;
     }
 }
 

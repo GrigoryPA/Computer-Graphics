@@ -17,9 +17,9 @@ public class MainPanel {
         frameChoice = new JFrame();
         frameChoice.setBounds(100, 100, 256, 450);
         frameChoice.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        button2d = new JButton(new ImageIcon("src/main/resources/icons/2d.png"));
-        button3d = new JButton(new ImageIcon("src/main/resources/icons/3d.png"));
-        buttonRT = new JButton(new ImageIcon("src/main/resources/icons/2d.png"));
+        button2d = new JButton("2d");
+        button3d = new JButton("3d");
+        buttonRT = new JButton("Raytracing");
         buttonSL = new JButton("Scan Line");
 
         JPanel panel = new JPanel(new GridLayout(4, 1));

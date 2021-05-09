@@ -1,55 +1,60 @@
 import javax.swing.*;
+import java.awt.*;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Vector;
 
 public class FigureSL {
-    /*
-    public FigureSL(Map<Integer, Tab> tabs) {
+    ScanLine scanLine;
+    ScreenData screen;
+    NumberFormat format = NumberFormat.getInstance(Locale.getDefault());
+    Number number;
+
+    public FigureSL(Map<Integer, Tab> tabs, ScreenData screen) {
         //colorFigure=color;
         try {
-            Polyhedron = new Segment[SegmentTable.getRowCount()];
-            for (int i = 0; i < SegmentTable.getRowCount(); i++) {
-                Point point1 = new Point();
-                point1.x = Integer.parseInt((String) SegmentTable.getValueAt(i, 0));
-                point1.y = Integer.parseInt((String) SegmentTable.getValueAt(i, 1));
-                Point point2 = new Point();
-                point2.x = Integer.parseInt((String) SegmentTable.getValueAt(i, 2));
-                point2.y = Integer.parseInt((String) SegmentTable.getValueAt(i, 3));
-                Polyhedron[i] = new Segment(point1, point2);
-                Polyhedron[i].i = i;
+            Vector<Polyhedron> Polyhedrons = new Vector<>();
+            for (Map.Entry<Integer, Tab> entry : tabs.entrySet()) {
+                Table PolyTable = entry.getValue().Poly;
+                Polyhedron Polyhedron;
+
+                double A = parseDouble((String) PolyTable.Table.getValueAt(0, 0));
+                double B = parseDouble((String) PolyTable.Table.getValueAt(0, 1));
+                double C = parseDouble((String) PolyTable.Table.getValueAt(0, 2));
+                double D = parseDouble((String) PolyTable.Table.getValueAt(0, 3));
+                int r = Integer.parseInt((String) PolyTable.Table.getValueAt(0, 4));
+                int g = Integer.parseInt((String) PolyTable.Table.getValueAt(0, 5));
+                int b = Integer.parseInt((String) PolyTable.Table.getValueAt(0, 6));
+                Color c = new Color(r, g, b);
+
+                Table PointsTable = entry.getValue().Points;
+                Point3D[] Points3D = new Point3D[PointsTable.Table.getRowCount()];
+                for (int i = 0; i < PointsTable.Table.getRowCount(); i++) {
+                    Point3D p = new Point3D();
+                    p.x = parseDouble((String) PointsTable.Table.getValueAt(i, 0));
+                    p.y = parseDouble((String) PointsTable.Table.getValueAt(i, 1));
+                    Points3D[i] = p;
+                }
+                Polyhedron = new Polyhedron(A, B, C, D, c, Points3D);
+                Polyhedrons.add(Polyhedron);
             }
-            Points = new Rectangle();
-            Points.BottomLeft.x = Integer.parseInt((String) RectangleTable.getValueAt(0, 0));
-            Points.BottomLeft.y = Integer.parseInt((String) RectangleTable.getValueAt(0, 1));
-            Points.TopRight.x = Integer.parseInt((String) RectangleTable.getValueAt(0, 2));
-            Points.TopRight.y = Integer.parseInt((String) RectangleTable.getValueAt(0, 3));
+            scanLine = new ScanLine(Polyhedrons, screen);
+            this.screen = screen;
         } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "All values should be integer!\nBlank cells and rows are not allowed!");
+        } catch (ParseException e) {
             JOptionPane.showMessageDialog(null, "All values should be integer!\nBlank cells and rows are not allowed!");
         }
     }
 
-    public void AddFigure2DOnDisplayCS(Color colorFigure) {
-        Line2D.clear();
-        Color fillColor = new Color(250, 250,250);
-        Line2D.AddRectangleOnDisplayBresenham(Points, colorFigure, fillColor);
-        for (int i = 0; i < Polyhedron.length; i++)
-            Line2D.AddLineSigmentOnDisplayBresenham(Polyhedron[i], colorFigure);
+    public void DrawScanLine() {
+        scanLine.run();
     }
 
-    public void DrawCohenSutherland(Color colorFigure, Color colorAlternative) {
-        Line2D.clear();
-        Color fillColor = new Color(250, 250,250);
-        Line2D.AddRectangleOnDisplayBresenham(Points, colorFigure, fillColor);
-        CohenSutherland2D cohenSutherland2D = new CohenSutherland2D();
-        for (int i = 0; i < Polyhedron.length; i++) {
-            if (cohenSutherland2D.CohenSutherland(Points, Polyhedron[i]))
-                Line2D.AddLineSigmentOnDisplayBresenham(Polyhedron[i], colorFigure);
-            else {
-                Line2D.AddLineSigmentOnDisplayBresenham(Polyhedron[i].point1, Polyhedron[i]._point1, colorAlternative);
-                Line2D.AddLineSigmentOnDisplayBresenham(Polyhedron[i]._point1, Polyhedron[i]._point2, Color.RED);
-                Line2D.AddLineSigmentOnDisplayBresenham(Polyhedron[i].point2, Polyhedron[i]._point2, colorAlternative);
-            }
-        }
+    private double parseDouble(String a) throws ParseException {
+        number = format.parse(a);
+        return number.doubleValue();
     }
-
-     */
 }

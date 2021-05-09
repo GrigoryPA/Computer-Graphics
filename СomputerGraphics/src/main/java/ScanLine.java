@@ -25,7 +25,7 @@ public class ScanLine {
         }
     }
 
-    ScanLine(Vector<Polyhedron> polyhedronTable, Vector<Edge> edgeTable, ScreenData screen) {
+    ScanLine(Vector<Polyhedron> polyhedronTable, ScreenData screen) {
         PolyhedronTable = polyhedronTable;
         this.screen = screen;
         for (Polyhedron polyhedron : PolyhedronTable) {
@@ -36,7 +36,9 @@ public class ScanLine {
 
     void run() {
         // Алгоритм начинает работу с верхней строки
-        for (int scanLine = topLine; scanLine < screen.height; scanLine++) {
+        ActiveLinePolyTable = new ArrayList<>();
+        ActiveLineEdgeTable = new ArrayList<>();
+        for (int scanLine = topLine; scanLine > -screen.height/2; scanLine--) {
             addALPT(scanLine);
             addALET(scanLine);
             sortALET();
@@ -47,12 +49,16 @@ public class ScanLine {
     }
 
     private void addALPT(int scanLine) {
-        for (Polyhedron p : ScanGroupTable.get(scanLine)) {
-            for (Polyhedron l : ActiveLinePolyTable) {
-                if (l.polyhedronId != p.polyhedronId)
+        if (ScanGroupTable.get(scanLine) != null)
+            for (Polyhedron p : ScanGroupTable.get(scanLine)) {
+                boolean alreadyContains = false;
+                for (Polyhedron l : ActiveLinePolyTable) {
+                    if (l.polyhedronId != p.polyhedronId)
+                        alreadyContains = true;
+                }
+                if (alreadyContains == false)
                     ActiveLinePolyTable.add(p);
             }
-        }
     }
 
     private void addALET(Integer scanLine) {
@@ -73,17 +79,19 @@ public class ScanLine {
     }
 
     void processEdges(int scanLine) {
-        int x_left = 0;
+        int x_left = -screen.width / 2;
         int x_right = 0;
-        int x_max = screen.width;
+        int x_max = screen.width / 2;
         int polyCounter = 0;
         int active = 0;
         int seenId = -1;
         visibleSegment visibleSegment = new visibleSegment(-1);
 
-        if (!(ActiveLineEdgeTable.isEmpty())) {
+        while (!(ActiveLineEdgeTable.isEmpty())) {
             EdgeData current = ActiveLineEdgeTable.get(0);
-            current.getPolyByEdgeData();
+            ActiveLineEdgeTable.remove(0);
+
+            //current.getPolyByEdgeData();
             x_right = current.x;
             if (polyCounter == 0) {
                 //видимый отрезок - фон
@@ -106,21 +114,24 @@ public class ScanLine {
                 polyCounter++;
             print(x_left, x_right, visibleSegment.polyId, scanLine);
             x_left = x_right;
-        } else {
-            if (x_left < x_max) {
-                x_right = x_max;
-                visibleSegment.polyId = -1;
-                print(x_left, x_right, visibleSegment.polyId, scanLine);
-            } else {
-                return;
-            }
         }
+
+        if (x_left < x_max) {
+            x_right = x_max;
+            visibleSegment.polyId = -1;
+            print(x_left, x_right, visibleSegment.polyId, scanLine);
+        }
+        return;
     }
 
     private void print(int start, int end, int polyId, int scanLine) {
-        Color color = getPolyByIdALPT(polyId).color;
+        Color color;
+        if (polyId == -1)
+            color = new Color(255, 255, 255);
+        else
+            color = getPolyByIdALPT(polyId).color;
         for (int i = start; i < end; i++) {
-            screen.pointsColor[i][scanLine] = color;
+            screen.AddPointOnDisplay(i, scanLine, color);
         }
     }
 
@@ -243,7 +254,7 @@ public class ScanLine {
             x += delta_x;
         }
 
-        private Polyhedron getPolyByEdgeData() {
+        Polyhedron getPolyByEdgeData() {
             for (Polyhedron p : ActiveLinePolyTable) {
                 if (p.edges.contains(this.edge))
                     return p;
@@ -336,7 +347,9 @@ class Polyhedron {
     void generatePoints(int n) { // генерация в точек в плоскости
         // нужен метод, который отсортирует точки в плоскости по часовой стрелке, иначе бред
         // однако если генерить только треугольники, то такой проблемы нет
-        int min = 100, max = 600;
+        int min = -200, max = 200;
+
+        points = new Vector<>();
 
         for (int i = 0; i < n; i++) {
             double x;
@@ -352,23 +365,25 @@ class Polyhedron {
     }
 
     void generatePoints(Point3D[] point3D) { // генерация в точек в плоскости по данным из таблицы
-        int min = 100, max = 600;
+        int min = -200, max = 200;
+
+        points = new Vector<>();
 
         for (int i = 0; i < point3D.length; i++) {
             double x;
             double y;
             double z;
-            do {
-                x = point3D[i].x;
-                y = point3D[i].y;
-                z = (D - (A * x) - (B * y)) / C;
-            } while (Math.abs(z) > 400);
+
+            x = point3D[i].x;
+            y = point3D[i].y;
+            z = (D - (A * x) - (B * y)) / C;
             points.add(new Point3D(x, y, z));
         }
     }
 
     void createEdges() {
-        for (int i = 0; i < points.size() - 2; i++) {
+        edges = new ArrayList<>();
+        for (int i = 0; i < points.size() - 1; i++) {
             Point3D start = points.get(i);
             Point3D end = points.get(i + 1);
             edges.add(new Edge(start, end, this.polyhedronId));
