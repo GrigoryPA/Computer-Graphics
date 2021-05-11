@@ -12,8 +12,10 @@ public class ScreenData {
     static Color[][] pointsColor;
     static Point Zero;
     private static JFrame frame;
-    private BufferedImage image;
+    private static JLabel label;
+    private BufferedImage image = null;
     public static File file;
+
 
     public ScreenData(int width, int height, Color[][] pointsColor) {
         this.width = width;
@@ -40,41 +42,79 @@ public class ScreenData {
         this.pointsColor = s.pointsColor;
     }
 
-    public static void AddPointOnDisplay(double x, double y, Color color) {
-        pointsColor[Zero.x + (int) x][Zero.y + (int) y] = color;
+    public static void AddPointOnDisplay(int x, int y, Color color) {
+        int _x = x;
+        int _y = y;
+        if (_y >= height / 2)
+            _y = height / 2 - 1;
+        if (_x >= width / 2)
+            _x = width / 2 - 1;
+        if (_y <= -height / 2)
+            _y = -height / 2 + 1;
+        if (_x < -width / 2)
+            _x = -width / 2;
+        int final_x = Zero.x + _x;
+        int final_y = Zero.y + _y;
+
+        pointsColor[Zero.x + _x][Zero.y + _y] = color;
     }
 
     public void CreateAndOpenImage() {
-        file = new File("src/main/resources/canvas.png");
+        file = new File("src/main/resources/picture.png");
         try {
-            System.out.println(file.getAbsolutePath());
-            image = ImageIO.read(file);
 
-            for (int x = 0; x < image.getWidth(); x++)
-                for (int y = 0; y < image.getHeight(); y++) {
-                    image.setRGB(x, y, pointsColor[x][height - y - 1].getRGB());
-                }
-            CreateFrameForImage(image);
+            if (image == null) {
+                image = ImageIO.read(file);
+
+                for (int x = 0; x < image.getWidth(); x++)
+                    for (int y = 0; y < image.getHeight(); y++) {
+                        int a;
+                        if (x < 0)
+                            a = 0;
+                        if (height - y < 0)
+                            a = 1;
+                        if (x >= 30)
+                            a = 1;
+                        if (height - y >= 30)
+                            a = 1;
+                        image.setRGB(x, y, pointsColor[x][height - y - 1].getRGB());
+                    }
+                /*
+                for (int x = 14; x < 16; x++)
+                    for (int y = 14; y < 16; y++) {
+                        int a;
+                        if (x < 0)
+                            a = 0;
+                        if (height - y < 0)
+                            a = 1;
+                        if (x >= 30)
+                            a = 1;
+                        if (height - y >= 30)
+                            a = 1;
+                        //image.setRGB(x, y, Color.BLACK.getRGB());
+                    }
+                */
+                CreateFrameForImage(image);
+            }
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, "Failed to open image !");
         }
     }
 
     public static void CreateFrameForImage(BufferedImage image) {
-        JLabel label = new JLabel();
-        if (frame == null) {
-            frame = new JFrame();
-            frame.setTitle("stained_image");
-            frame.setSize(image.getWidth(), image.getHeight());
-            frame.setLocation(500, 50);
-            frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-            label = new JLabel();
-            ImageIcon imageicon = new ImageIcon(image);
-            label.setIcon(imageicon);
-            frame.getContentPane().add(label, BorderLayout.CENTER);
-            frame.setLocationRelativeTo(null);
-            frame.pack();
-            frame.setVisible(true);
-        } else label.setIcon(new ImageIcon(image));
+        //if (frame == null) {
+        frame = new JFrame();
+        frame.setTitle("stained_image");
+        frame.setSize(image.getWidth(), image.getHeight());
+        frame.setLocation(500, 50);
+        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        label = new JLabel();
+        ImageIcon imageicon = new ImageIcon(image);
+        label.setIcon(imageicon);
+        frame.getContentPane().add(label, BorderLayout.CENTER);
+        frame.setLocationRelativeTo(null);
+        frame.pack();
+        frame.setVisible(true);
+        //} else label.setIcon(new ImageIcon(image));
     }
 }

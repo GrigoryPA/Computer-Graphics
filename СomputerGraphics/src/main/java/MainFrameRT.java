@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.util.Vector;
 
 public class MainFrameRT {
+    /*
     private JFrame frame;
     public Display3D display = new Display3D();
     private JToolBar toolBar1;
@@ -128,4 +129,6 @@ public class MainFrameRT {
         }
         return returnTab;
     }
+
+     */
 }

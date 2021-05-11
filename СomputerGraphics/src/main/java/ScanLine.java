@@ -1,4 +1,6 @@
 import java.awt.*;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -11,7 +13,9 @@ public class ScanLine {
     Map<Integer, ArrayList<Polyhedron>> ScanGroupTable;
     ArrayList<Polyhedron> ActiveLinePolyTable;
     ArrayList<EdgeData> ActiveLineEdgeTable;
+    ArrayList<EdgeData> ALET;
     Integer topLine = Integer.MIN_VALUE;
+    private int botLine = Integer.MAX_VALUE;
 
     private static class visibleSegment {
         private int polyId;
@@ -38,7 +42,10 @@ public class ScanLine {
         // јлгоритм начинает работу с верхней строки
         ActiveLinePolyTable = new ArrayList<>();
         ActiveLineEdgeTable = new ArrayList<>();
-        for (int scanLine = topLine; scanLine > -screen.height/2; scanLine--) {
+        int a;
+        for (int scanLine = topLine; scanLine > botLine /*-screen.height / 2*/; scanLine--) {
+            System.out.println("");
+            System.out.print("scanLine = " + scanLine + " |");
             addALPT(scanLine);
             addALET(scanLine);
             sortALET();
@@ -53,7 +60,7 @@ public class ScanLine {
             for (Polyhedron p : ScanGroupTable.get(scanLine)) {
                 boolean alreadyContains = false;
                 for (Polyhedron l : ActiveLinePolyTable) {
-                    if (l.polyhedronId != p.polyhedronId)
+                    if (l.polyhedronId == p.polyhedronId)
                         alreadyContains = true;
                 }
                 if (alreadyContains == false)
@@ -64,8 +71,48 @@ public class ScanLine {
     private void addALET(Integer scanLine) {
         for (Polyhedron p : ActiveLinePolyTable) {
             for (Edge e : p.edges) {
-                if (isBetween((int) e.start.y, (int) e.end.y, scanLine))
+                boolean contains = false;
+                for (EdgeData ed : ActiveLineEdgeTable) {
+                    if (ed.edge.equals(e))
+                        contains = true;
+                }
+                if ((contains == false) && (isBetween((int) e.start.y, (int) e.end.y, scanLine)))
                     ActiveLineEdgeTable.add(new EdgeData(e, scanLine));
+            }
+        }
+        int temp;
+        if (scanLine == 0)
+            temp = 1;
+
+        for (int i = 0; i < ActiveLineEdgeTable.size(); i++) {
+            EdgeData ed1 = ActiveLineEdgeTable.get(i);
+            for (int j = 0; j < ActiveLineEdgeTable.size(); j++) {
+                EdgeData ed2 = ActiveLineEdgeTable.get(j);
+                double a = ed1.x;
+                double b = ed2.x;
+                boolean equal = false;
+                if (isBetween(a + 0.01, a - 0.01, b))
+                    equal = true;
+                //if ((ed1.x == ed2.x) && !(ed1.equals(ed2))) {
+                if ((equal) && !(ed1.equals(ed2))) {
+                    if (ed1.used == true) {
+                        if (ed2.used == true) {
+                            ;
+                        } else {
+                            ActiveLineEdgeTable.remove(ed1);
+                            i--;
+                            j--;
+                        }
+                    } else if (ed2.used == true) {
+                        if (ed1.used == true) {
+                            ;
+                        } else {
+                            ActiveLineEdgeTable.remove(ed2);
+                            i--;
+                            j--;
+                        }
+                    }
+                }
             }
         }
     }
@@ -78,21 +125,31 @@ public class ScanLine {
         return b > a ? checkedInt >= a && checkedInt <= b : checkedInt >= b && checkedInt <= a;
     }
 
+    public static boolean isBetween(double a, double b, double checkedDouble) {
+        return b > a ? checkedDouble >= a && checkedDouble <= b : checkedDouble >= b && checkedDouble <= a;
+    }
+
     void processEdges(int scanLine) {
         int x_left = -screen.width / 2;
         int x_right = 0;
         int x_max = screen.width / 2;
         int polyCounter = 0;
-        int active = 0;
-        int seenId = -1;
+        ALET = cloneList(ActiveLineEdgeTable);
         visibleSegment visibleSegment = new visibleSegment(-1);
 
-        while (!(ActiveLineEdgeTable.isEmpty())) {
-            EdgeData current = ActiveLineEdgeTable.get(0);
-            ActiveLineEdgeTable.remove(0);
+        int i = 0;
+        while (ALET.size() > i) {
+            EdgeData current = null;
+            EdgeData right = null;
 
-            //current.getPolyByEdgeData();
-            x_right = current.x;
+            current = getEdgeData(ALET, i);
+            i++;
+            right = getRight(current, scanLine);
+            //if (ALET.size() > 1)
+            //   right = ALET.get(1);
+            //ALET.remove(0);
+
+            x_right = (int) Math.round(current.x);
             if (polyCounter == 0) {
                 //видимый отрезок - фон
                 visibleSegment.polyId = -1;
@@ -100,18 +157,22 @@ public class ScanLine {
                 if (polyCounter > 1) {
                     visibleSegment.polyId = getPolyLeftZMax(scanLine, x_left).polyhedronId;
                 } else {
-                    visibleSegment.polyId = current.getPolyByEdgeData().polyhedronId;
+                    visibleSegment.polyId = getActivePolys().get(0).polyhedronId; //current.getPolyByEdgeData().polyhedronId;
                 }
             }
             // изменить признак активности многоугольника
-            if (active == 0)
-                active = 1;
-            else
-                active = 0;
-            if (active == 0)
+            if (right != null) {
+                if (right.flag == 0)
+                    right.flag = 1;
+                else
+                    right.flag = 0;
+            } else
+                current.flag = 0;
+            if ((right == null) || (right.flag == 0))
                 polyCounter--;
             else
                 polyCounter++;
+
             print(x_left, x_right, visibleSegment.polyId, scanLine);
             x_left = x_right;
         }
@@ -124,13 +185,78 @@ public class ScanLine {
         return;
     }
 
+    EdgeData getEdgeData(ArrayList<EdgeData> a, int i) {
+        a.get(i).usedThisLine = true;
+        return a.get(i);
+    }
+
+    private EdgeData getRight(EdgeData left, int scanLine) {
+        EdgeData right = null;
+        Polyhedron p = getOwnerPolyhedron(left.edge);
+        Edge e_r = null;
+        for (Edge e : p.edges) {
+            if (!(e.equals(left.edge))) {
+                boolean contains = false;
+                for (int i = 0; i < ALET.size(); i++) {
+                    if (ALET.get(i).edge.equals(e))
+                        contains = true;
+                }
+                if (contains)
+                    if ((isBetween((int) e.start.y, (int) e.end.y, scanLine)))
+                        if (e_r == null)
+                            e_r = e;
+                        else {
+                            double top_e_r;
+                            double top_e;
+                            if (e.start.y > e.end.y)
+                                top_e = e.start.y;
+                            else
+                                top_e = e.end.y;
+                            if (e_r.start.y > e_r.end.y)
+                                top_e_r = e_r.start.y;
+                            else
+                                top_e_r = e_r.end.y;
+
+                            if (top_e < top_e_r)
+                                e_r = e;
+                        }
+            }
+        }
+        right = getEdgeDataByEdge(e_r);
+        if (right != null) {
+            if (right.usedThisLine == false)
+                return right;
+            else
+                return null;
+        } else
+            return null;
+    }
+
+    private ArrayList<Polyhedron> getActivePolys() {
+        ArrayList<Polyhedron> polyhedronArrayList = new ArrayList<>();
+        for (EdgeData e : ALET) {
+            if (e.flag == 1)
+                polyhedronArrayList.add(e.getPolyByEdgeData());
+        }
+        return polyhedronArrayList;
+    }
+
+    private EdgeData getEdgeDataByEdge(Edge e) {
+        for (EdgeData ed : ALET) {
+            if (ed.edge.equals(e))
+                return ed;
+        }
+        return null;
+    }
+
     private void print(int start, int end, int polyId, int scanLine) {
         Color color;
+        System.out.print(" " + start + " " + end + " " + polyId + " |");
         if (polyId == -1)
             color = new Color(255, 255, 255);
         else
             color = getPolyByIdALPT(polyId).color;
-        for (int i = start; i < end; i++) {
+        for (int i = start; i <= end; i++) {
             screen.AddPointOnDisplay(i, scanLine, color);
         }
     }
@@ -139,8 +265,9 @@ public class ScanLine {
         Polyhedron r = null;
         int x = x_left;
         int y = scanLine;
-        double z_max = Double.MIN_VALUE;
-        for (Polyhedron p : ActiveLinePolyTable) {
+        double z_max = -Double.MAX_VALUE;
+        ArrayList<Polyhedron> ActivePolys = getActivePolys();
+        for (Polyhedron p : ActivePolys) {
             double z = (p.D - (p.A * x) - (p.B * y)) / p.C;
             if (z > z_max) {
                 z_max = z;
@@ -151,8 +278,15 @@ public class ScanLine {
     }
 
     private void correctALET(int scanLine) {
-        for (EdgeData e : ActiveLineEdgeTable) {
+        for (int i = 0; i < ActiveLineEdgeTable.size(); i++) {
+            EdgeData e = ActiveLineEdgeTable.get(i);
             e.getDelta_y(scanLine);
+            if (e.delta_y < 0) {
+                ActiveLineEdgeTable.remove(e);
+                i--;
+            }
+            e.flag = 0;
+            e.used = true;
             e.correctX();
         }
     }
@@ -175,6 +309,8 @@ public class ScanLine {
             ScanGroupTable.get(p.topScanString).add(p); // добавить многоугольник в список
             if (p.topScanString > topLine)
                 topLine = p.topScanString;
+            if (p.botScanString < botLine)
+                botLine = p.botScanString;
         }
     }
 
@@ -194,20 +330,23 @@ public class ScanLine {
         return null;
     }
 
-    public static ArrayList<Polyhedron> cloneList(ArrayList<Polyhedron> original) {
-        ArrayList<Polyhedron> clonedList = new ArrayList<>(original.size());
-        for (Polyhedron element : original) {
-            clonedList.add(new Polyhedron(element));
+    public ArrayList<EdgeData> cloneList(ArrayList<EdgeData> original) {
+        ArrayList<EdgeData> clonedList = new ArrayList<>(original.size());
+        for (EdgeData element : original) {
+            clonedList.add(new EdgeData(element));
         }
         return clonedList;
     }
 
+
     class EdgeData {
         Edge edge;
-        int x;
+        double x;
         double delta_x;
         int delta_y;
         int flag;
+        boolean used = false;
+        boolean usedThisLine = false;
 
         EdgeData(Edge edge, int scanLine) {
             this.edge = edge;
@@ -217,19 +356,31 @@ public class ScanLine {
             flag = 0;
         }
 
+        EdgeData(EdgeData edgeData) {
+            this.edge = edgeData.edge;
+            this.x = edgeData.x;
+            this.delta_x = edgeData.delta_x;
+            this.delta_y = edgeData.delta_y;
+            this.flag = edgeData.flag;
+        }
+
         void getIntersectionX(int scanLine) {
             double a = (edge.start.y - edge.end.y) / (edge.start.x - edge.end.x);
             double b = edge.start.y - (a * edge.start.x);
             double c = 0;
             double d = scanLine;
-            Double _x = (d - c) / (a - b);
-            x = _x.intValue();
+            Double _x = (d - b) / (a - c);
+
+            x = truncDouble(_x);
+            //System.out.println("getIntersectionX - x = " + x + " | Edge p1:" + "(" + edge.start.x + ", " + edge.start.y + ") p2:" + "(" + edge.end.x + ", " + edge.end.y + ")");
         }
 
         void getDelta_x(int scanLine) {
             double a = (edge.start.y - edge.end.y) / (edge.start.x - edge.end.x);
             double b = edge.start.y - (a * edge.start.x);
             delta_x = ((scanLine - b) / a) - ((scanLine + 1 - b) / a);
+            delta_x = truncDouble(delta_x);
+            //System.out.println("getDelta_X - x = " + delta_x + " | Edge p1:" + "(" + edge.start.x + ", " + edge.start.y + ") p2:" + "(" + edge.end.x + ", " + edge.end.y + ")");
         }
 
         void getDelta_y(int scanLine) {
@@ -242,16 +393,17 @@ public class ScanLine {
                 top = (int) edge.end.y;
                 bot = (int) edge.start.y;
             }
-            if (bot < scanLine)
+            if (bot >= scanLine)
                 delta_y = -1;
-            else if (top < scanLine)
-                delta_y = abs(scanLine - bot);
+            else if (top > scanLine)
+                delta_y = scanLine - bot;
             else
-                delta_y = abs(top - bot);
+                delta_y = top - bot;
         }
 
         void correctX() {
             x += delta_x;
+            x = truncDouble(x);
         }
 
         Polyhedron getPolyByEdgeData() {
@@ -260,6 +412,13 @@ public class ScanLine {
                     return p;
             }
             return null;
+        }
+
+        private Double truncDouble(double d) {
+            Double truncatedDouble = BigDecimal.valueOf(d)
+                    .setScale(4, RoundingMode.HALF_UP)
+                    .doubleValue();
+            return truncatedDouble;
         }
     }
 

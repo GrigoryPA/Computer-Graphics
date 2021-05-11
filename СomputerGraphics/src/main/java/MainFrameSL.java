@@ -101,10 +101,10 @@ public class MainFrameSL extends MainFrame3D {
             public void actionPerformed(ActionEvent e) { // я тоже самое делаю в другом классе
                 tabs.clear();
                 tabbedPane.removeAll();
-                for (int i = 0; i < getRandomInteger(3, 6); i++) {
+                for (int i = 0; i < getRandomInteger(3, 4); i++) {
                     createTab();
                 }
-
+                int u = 0;
                 double A = 0, B = 0, C = 0, D = 0;
                 for (Map.Entry<Integer, Tab> entry : tabs.entrySet()) { // генерация плоскости
 
@@ -115,10 +115,18 @@ public class MainFrameSL extends MainFrame3D {
                     double[] z = new double[nOfPointsToGen];
                     for (int i = 0, retry = 0; i < nOfPointsToGen; i++) { // генерация точек
                         if (retry == 0) {
+                            /*
                             A = getNotZeroDouble(-25, 25) / 5;
                             B = getNotZeroDouble(-25, 25) / 5;
                             C = getNotZeroDouble(-25, 25) / 5;
                             D = getRandomDouble(-100, 100);
+                             */
+
+                            A = 0;
+                            B = 0;
+                            C = -1;
+                            D = -u;
+
                             retry = 20;
                             i = 0;
                         }
@@ -131,6 +139,15 @@ public class MainFrameSL extends MainFrame3D {
                                 retry--;
                         } while (((z[i] > 500) || (z[i] < -500)) && (retry == 0));
                     }
+                    /*
+                    if (u == 0) {
+                        x = new int[]{-8, -2, 5};
+                        y = new int[]{0, -4, 4};
+                    } else {
+                        x = new int[]{-3, -9, 8};
+                        y = new int[]{6, 3, -2};
+                    }
+                    */
                     entry.getValue().Points.TableModel.removeRow(0);
                     String[][] a = new String[nOfPointsToGen][2];
                     for (int j = 0; j < nOfPointsToGen; j++) {
@@ -148,6 +165,8 @@ public class MainFrameSL extends MainFrame3D {
                     b[6] = String.valueOf(getRandomInteger(0, 255));
                     entry.getValue().Poly.TableModel.removeRow(0);
                     entry.getValue().Poly.TableModel.addRow(b);
+
+                    u++;
                 }
             }
         });

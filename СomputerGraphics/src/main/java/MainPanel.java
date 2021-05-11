@@ -42,7 +42,7 @@ public class MainPanel {
             public void actionPerformed(ActionEvent e) {
                 frameChoice.setVisible(false);
                 frame3d = new MainFrame3D();
-                frame3d.MakeAndShow();
+                //frame3d.MakeAndShow();
             }
         });
 
@@ -58,7 +58,7 @@ public class MainPanel {
             public void actionPerformed(ActionEvent e) {
                 frameChoice.setVisible(false);
                 frameRT = new MainFrameRT();
-                frameRT.MakeAndShow();
+                //frameRT.MakeAndShow();
             }
         });
 

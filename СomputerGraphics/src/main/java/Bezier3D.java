@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Vector;
 
-public class    Bezier3D {
+public class    Bezier3D { /*
     public double[][] points;
     public double[][] grid;
     public int[][] gridResult;
@@ -34,7 +34,7 @@ public class    Bezier3D {
             {-5, 5, 15,1},
             {5, 5, 15,1},
             {, , ,}};
-*/
+
     public Bezier3D(Vector<MyTable> AllTabs) {
         int buf=0;
         points = new double[COUNT_W * COUNT_U*2][4];
@@ -201,5 +201,6 @@ public class    Bezier3D {
             return f * getFactorial(f - 1);
         }
     }
+    */
 }
 

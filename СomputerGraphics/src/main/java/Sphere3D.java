@@ -37,7 +37,4 @@ public class Sphere3D {
         if (t0 < 0) return -1;
         return t0;
     }
-
-
-
 }

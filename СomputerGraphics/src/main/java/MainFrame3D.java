@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 import java.util.Vector;
 
 
-public class MainFrame3D {
+public class MainFrame3D { /*
     private JFrame frame;
 	private Display3D display;
 	private JToolBar toolBar1;
@@ -287,5 +287,6 @@ public class MainFrame3D {
         }
         return returnTab;
     }
-	
+
+	*/
 }
